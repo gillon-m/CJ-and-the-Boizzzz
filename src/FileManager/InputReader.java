@@ -22,7 +22,6 @@ public class InputReader {
 	String fileName, trimmedFileName = "";
 	//String fixedFileName = "/media/cj/SHARED/workspace/Java/306-project1/input/ex1_in.dot";
 	public InputReader() {
-		
 	}
 	
 	/**
