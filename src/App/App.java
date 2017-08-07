@@ -3,14 +3,18 @@ package App;
 import java.io.*;
 
 import FileManager.*;
+import SearchSpace.SearchSpace;
 //C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 public class App {
 	private static Vertex _root;
 	public static void main(String[] args) throws IOException {
 		InputReader ir = new InputReader();
 		Graph graph = ir.readFile();
-		setUpChildrenParents(graph);
-		setUpLevelsOfNodes(graph);	
+		SearchSpace searchSpace = new SearchSpace(graph);	
+		searchSpace.makeSearchSpace();						// Creates all possible schedules
+		searchSpace.tempPrintOutSchedules();				// prints out all possible schedules
+		//setUpChildrenParents(graph);
+		//setUpLevelsOfNodes(graph);	
 	}
 	
 

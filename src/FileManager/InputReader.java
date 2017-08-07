@@ -20,7 +20,7 @@ import App.Vertex;
 public class InputReader {
 	BufferedReader br;
 	String fileName, trimmedFileName = "";
-	//String fixedFileName = "/media/cj/SHARED/workspace/Java/306-project1/input/ex1_in.dot";
+	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
 	public InputReader() {
 	}
 	
@@ -54,7 +54,7 @@ public class InputReader {
 		File file = new File(trimmedFileName);
 		
 		// Alternately, can hardcode absolute filepath
-		// File file = new File(fixedFileName);
+		//File file = new File(fixedFileName);
 
 		Graph graph = null;
 		
