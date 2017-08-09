@@ -42,12 +42,14 @@ public class Processor {
 	
 	
 	/**
-	 * Adds an EMPTY time slot into the processor's schedule
+	 * Adds an empty time slot into the processor's schedule
+	 * 
+	 * Empty name is '-'
 	 * 
 	 * @param emptyTimeLength is the time weight of the empty time slot
 	 */
 	public void addEmptyTimeSlots(int emptyTimeLength) {
-		Vertex empty = new Vertex("EMPTY", emptyTimeLength);
+		Vertex empty = new Vertex("-", emptyTimeLength);
 		_countEmptySlots++;
 		this.addTimeSlots(empty);
 	}
@@ -108,9 +110,8 @@ public class Processor {
 		int timeCount = 0;
 		for(Vertex v : _scheduleOfProcessor) {
 			timeCount  += v.getWeight();
-			process += " " + v.getName() + ":" + timeCount + " ";
+			process += "\t" + v.getName() + ":" + timeCount;
 		}
-		process+="\nTotal time: " + this.getLatestTime();
 	    return process;
 	} 
 }

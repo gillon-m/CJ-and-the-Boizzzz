@@ -11,8 +11,9 @@ public class App {
 		InputReader ir = new InputReader();
 		Graph graph = ir.readFile();
 		SearchSpace searchSpace = new SearchSpace(graph);	
-		searchSpace.makeSearchSpace();						// Creates all possible schedules
-		searchSpace.tempPrintOutSchedules();				// prints out all possible schedules
+		searchSpace.makeSearchSpace();								// Creates all possible schedules
+		//searchSpace.tempPrintOutSchedules();						// prints out all possible schedules
+		searchSpace.tempPrintOutLastNodeScheduleInTimeOrder();		// prints out schedule for last vertex
 		//setUpChildrenParents(graph);
 		//setUpLevelsOfNodes(graph);	
 	}

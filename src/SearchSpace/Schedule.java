@@ -160,22 +160,22 @@ public class Schedule {
 				int timeTakenToThisVertex = p.getTime(vertex);
 				if(timeTakenToThisVertex > maxTime) {
 					maxTime = timeTakenToThisVertex;
-					maxTimeProcessor = countProcessor;
+					maxTimeProcessor = s.getAllProcessors().indexOf(p);
 					maxTimeVertex = vertex;
 				}
 				countProcessor++;
 			}
 		}
 		Processor p = s.getProcessor(processor);
-		if(maxTimeProcessor != processor) {
+		if(maxTimeProcessor != processor) {			// if dependent vertex is  different to specified processor
 			//Switch + cost
-			if(maxTime > p.getLatestTime()) {
-				p.addEmptyTimeSlots(maxTime + this.switchProcessorCost(maxTimeVertex, v));
+			if(maxTime + this.switchProcessorCost(maxTimeVertex, v) > p.getLatestTime()) {
+				p.addEmptyTimeSlots(maxTime + this.switchProcessorCost(maxTimeVertex, v)-p.getLatestTime());
 			}
-		} else {
+		} else {									// if dependent vertex is the same as the specified processor
 			//  cost
 			if(maxTime > p.getLatestTime()) {
-				p.addEmptyTimeSlots(p.getLatestTime()-maxTime);
+				p.addEmptyTimeSlots(maxTime-p.getLatestTime());
 			}
 		}
 	}
@@ -223,6 +223,15 @@ public class Schedule {
 	/**
 	 * get methods
 	 */
+	public int getTimeOfSchedule() {
+		int timeTakesToDoSchedule = 0;
+		for(Processor p : _processors) {
+			if(p.getLatestTime() > timeTakesToDoSchedule) {
+				timeTakesToDoSchedule = p.getLatestTime();
+			}
+		}
+		return timeTakesToDoSchedule;
+	}
 	public int getNumberOfProcessors() {
 		return _numberOfProcessors;
 	}

@@ -20,7 +20,7 @@ import App.Vertex;
 public class InputReader {
 	BufferedReader br;
 	String fileName, trimmedFileName = "";
-	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
+	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex2_in.dot";
 	public InputReader() {
 	}
 	
