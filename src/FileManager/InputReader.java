@@ -11,11 +11,7 @@ import App.Graph;
 import App.Vertex;
 
 /**
- * Class that loads a dot file to be analysed and reads it to produce a 
- * graph object.
- *  
- * 
- *
+ * Class that loads a dot file to be analysed and reads it to produce a graph object.
  */
 public class InputReader {
 	String _inputFileName;
@@ -24,7 +20,6 @@ public class InputReader {
 	}
 	/**
 	 * method that reads off the file and stores information into ////data structures////
-	 * 
 	 */
 	public Graph readFile() {
 		File file = new File(_inputFileName);
