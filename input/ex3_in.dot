@@ -18,7 +18,6 @@ digraph "example3" {
 	i [weight=3];
 	e -> i [weight=3];
 	j [weight=3];
-	f -> j [weight=4];
 	b -> j [weight=6];
 	k [weight=2];
 	j -> k [weight=6];
