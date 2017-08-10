@@ -11,7 +11,11 @@ import App.Graph;
 import App.Vertex;
 
 /**
- * Class that loads a dot file to be analysed and reads it to produce a graph object.
+ * Class that loads a dot file to be analysed and reads it to produce a 
+ * graph object.
+ *  
+ * 
+ *
  */
 public class InputReader {
 	String _inputFileName;
@@ -20,6 +24,7 @@ public class InputReader {
 	}
 	/**
 	 * method that reads off the file and stores information into ////data structures////
+	 * 
 	 */
 	public Graph readFile() {
 		File file = new File(_inputFileName);
@@ -32,17 +37,29 @@ public class InputReader {
 			Map<String, Vertex> verticesRead = new HashMap<String, Vertex>();
 			List<Edge> edges = new ArrayList<Edge>();
 			while ((line = br.readLine()) != null) {
+				line = line.trim(); //Remove leading and trailing whitespace
 				if (line.endsWith(";")) {
-					line = line.trim(); //Remove leading and trailing whitespace
+//					line = line.trim(); //Remove leading and trailing whitespace
 					if (line.contains("->")) { //Line is an edge
 						String[] values = line.split(" ");
-						Vertex sourceVertex = verticesRead.get(values[0]);
-						Vertex destinationVertex = verticesRead.get(values[2]);
+						for (String s : verticesRead.keySet()) {
+							System.out.println("key " + s);
+							System.out.println("value " + verticesRead.get(s).getName());
+						}
+						for (String s : values) {
+							s.replaceAll("\\t+", "");
+							if (verticesRead.containsKey(s)){
+								System.out.println("A NEW TEST " + s);
+							}
+						}
+						Vertex sourceVertex = verticesRead.get(values[0].replaceAll("\\t+",""));
+						Vertex destinationVertex = verticesRead.get(values[2].replaceAll("\\t+",""));
+						System.out.println(sourceVertex);
 						int weight = Integer.parseInt(values[3].replaceAll("[\\D]", "")); //Retrieve weight as integer
 						edges.add(new Edge(sourceVertex, destinationVertex, weight));
 					} else { //Line is a vertex
 						String[] nameAndWeight = line.split(" ");
-						String name = nameAndWeight[0];
+  						String name = nameAndWeight[0].replaceAll("\\t+", "");
 						int weight = Integer.parseInt(nameAndWeight[1].replaceAll("[\\D]", "")); //Retrieve weight as integer
 						Vertex newVertex = new Vertex(name, weight);
 						verticesRead.put(name, newVertex);
