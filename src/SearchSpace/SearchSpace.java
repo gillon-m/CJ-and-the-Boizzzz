@@ -1,7 +1,12 @@
 package SearchSpace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import App.Edge;
 import App.Graph;
@@ -35,12 +40,12 @@ public class SearchSpace {
 	 * 
 	 */
 	public void makeSearchSpace() {
-		List<Vertex> allVertex = new ArrayList<Vertex>(_graph.getVertices());
+		List<Vertex> allVertices = new ArrayList<Vertex>(_graph.getVertices());
 		Schedule s = new Schedule(_graph, _numberOfProcessors);
 		Schedule[] schedules = new Schedule[_numberOfProcessors];
 		
 		// Generates all the possible schedules for the Root Vertex
-		schedules = s.generateAllPossibleSchedule(allVertex.get(0));
+		schedules = s.generateAllPossibleSchedule(allVertices.get(0));
 		
 		// Using this line will create schedules for all possible root Vertex schedule variations 
 		// e.g. 'A' vertex on processor 1 and processor 2 and so on
@@ -56,8 +61,61 @@ public class SearchSpace {
 	 * Temporary method, I am just using it to check if the schedules are all there
 	 */
 	public void tempPrintOutSchedules() {
+		Map<Integer, Schedule> schedule = new TreeMap<Integer, Schedule>();
+		Map<String, Vertex> verticesName = new TreeMap<String, Vertex>();
+		for(Vertex v : _graph.getVertices()) {
+			verticesName.put(v.getName(),v);
+		}
+		for(String vertexName : verticesName.keySet()) {
+			Map<Integer, Schedule> tempScheduleForSpecifiedVertex = new TreeMap<Integer, Schedule>();
+			tempScheduleForSpecifiedVertex = this.tempGetScheduleForSpecifiedVertex(verticesName.get(vertexName));
+			this.tempPrintItOut(tempScheduleForSpecifiedVertex,verticesName.get(vertexName));
+		}
+	}
+	public void tempPrintOutLastNodeScheduleInTimeOrder() {
+		Map<Integer, Schedule> scheduleForLastNodeInTimeOrder = new TreeMap<Integer, Schedule>();
+		Vertex lastVertex = this.tempGetLastVertex();
+		if(lastVertex == null) {
+			this.tempPrintOutSchedules();
+			return;
+		}
+		scheduleForLastNodeInTimeOrder = this.tempGetScheduleForSpecifiedVertex(lastVertex);
+		this.tempPrintItOut(scheduleForLastNodeInTimeOrder,lastVertex);
+	}
+	private Vertex tempGetLastVertex() {
+		List<Vertex> allVertices = new ArrayList<Vertex>(_graph.getVertices());
+		List<Edge> allEdges = new ArrayList<Edge>(_graph.getEdges());
+		Vertex lastVertex = null;
+		for(Vertex vertex : allVertices) {
+			boolean hasChild = false;
+			for(Edge edge : allEdges) {
+				if(edge.getSource().equals(vertex)) {
+					hasChild = true;
+					lastVertex = vertex;
+					break;
+				}
+			}
+			if(!hasChild) {
+				return vertex;
+			}
+		}
+		return lastVertex;
+	}
+	private Map<Integer, Schedule> tempGetScheduleForSpecifiedVertex(Vertex vertex){
+		Map<Integer, Schedule> scheduleForSpecifiedVertex = new TreeMap<Integer, Schedule>();
 		for(Schedule schedule : _schedules) {
-			System.out.println("Schedule " + schedule.getLastUsedVertex().getName() + " variation:\n" + schedule.toString());
+			if(schedule.getLastUsedVertex().getName().equals(vertex.getName())) {
+				scheduleForSpecifiedVertex.put(schedule.getTimeOfSchedule(),schedule);
+			}
+		}
+		return scheduleForSpecifiedVertex;
+	}
+	private void tempPrintItOut(Map<Integer, Schedule> scheduleToPrint, Vertex vertex) {
+		System.out.println("\n\nSchedules for the vertex: " + vertex.getName() + "\n");
+		int count = 0;
+		for(Integer scheduleTime : scheduleToPrint.keySet()) {
+			System.out.println("Schedule " + scheduleToPrint.get(scheduleTime).getLastUsedVertex().getName() + count + "\tMax Time: " + scheduleTime + "\n" + scheduleToPrint.get(scheduleTime).toString());
+			count++;
 		}
 	}
 
