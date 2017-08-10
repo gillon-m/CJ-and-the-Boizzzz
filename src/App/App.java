@@ -3,11 +3,13 @@ package App;
 import java.io.*;
 import FileManager.*;
 import SearchSpace.SearchSpace;
-//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 public class App {
 	private static Vertex _root;
+	
+	// When running through the eclipse, change this fixedFileName so that you dont have to give arguments each time you run.
 	static String fixedFileName = "/home/cj/eclipse-workspace/CJ-and-the-Boizzzz/input/ex2_in.dot";
 	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
+	//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 
 	static String _inputFileName = ""; 
 	static int _noOfProcessors = 2; // for now its set at 2
@@ -33,7 +35,7 @@ public class App {
 				System.out.println("Number of Processors needs to be given as a digit. ie. 5 instead of five");
 				System.exit(0);
 			}
-			if (args.length > 2) { // When additional optional parameters are passed
+			if (args.length > 2) { // When additional optional parameters are passed in
 				for (int i = 2; i < args.length; i++) {
 					try {
 						if (args[i].equals("-p")) {
@@ -53,13 +55,18 @@ public class App {
 					}
 				}
 			}
-			printOptionsForConfirmation();
-			getUsersConfirmation();
+			confirmOptionsAndExecute();
 		}
+		// When arguments are not passed in ie. through eclipse - use fixedFileName instead of taking argument
 		startExecution(fixedFileName);
 	}
 	
-	private static void printOptionsForConfirmation() {
+	/**
+	 * This method prints off the selected options before the scheduler starts executing.
+	 * User confirms by pressing y which then allows the scheduler to start execution.
+	 * If user does not press y, the program is halt and has to be re-executed.
+	 */
+	private static void confirmOptionsAndExecute() {
 		System.out.println("*********************************************************************");
 		System.out.println("The Input Graph to be scheduled is: " + _inputFileName);
 		System.out.println("The Number of Processors to be used is: " + _noOfProcessors);
@@ -74,8 +81,6 @@ public class App {
 		System.out.println("The Name of Output File is to be: " + _outputFileName);
 		System.out.println("*********************************************************************");
 		System.out.println("If options are correctly set, Press \"y\" for yes. The program will start executing automatically. If you want to make changes, press any other key to exit and re-execute the file.");		
-	}
-	private static void getUsersConfirmation() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String line;
 		try {
@@ -88,6 +93,10 @@ public class App {
 		} catch (IOException e) {
 		}		
 	}
+	/**
+	 * Runs scheduler once user confirms the options selected.
+	 * @param fileName
+	 */
 	private static void startExecution(String fileName) {
 		InputReader ir = new InputReader(fileName);
 		Graph graph = ir.readFile();
