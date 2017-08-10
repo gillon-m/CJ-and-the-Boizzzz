@@ -22,11 +22,12 @@ import App.Vertex;
  */
 public class SearchSpace {
 	private Graph _graph;
-	private final int _numberOfProcessors = 2;		// Could ask how many processor the user want, but for now it is always 2 processors
+	private int _numberOfProcessors;				// Could ask how many processor the user want, but for now it is always 2 processors
 	private List<Schedule> _schedules;				// _schedules variable contains all the possible schedules that are created
 	private List<ScheduleEdge> _schedulesEdges;		// _schedulesEdges variable store the relationships between schedules
 	
-	public SearchSpace(Graph g) {
+	public SearchSpace(Graph g, int noOfProcessors) {
+		_numberOfProcessors = noOfProcessors;
 		_graph = new Graph(new ArrayList<Vertex>(g.getVertices()), new ArrayList<Edge>(g.getEdges()));
 		_schedules = new ArrayList<Schedule>();
 		_schedulesEdges = new ArrayList<ScheduleEdge>();
@@ -57,9 +58,42 @@ public class SearchSpace {
 			this.generateChildSchedulesForThisSchedule(schedules[i], schedules[i].getChildVertices());
 		}
 	}
+	public String outputToPrint() {
+		Map<Integer, Schedule> scheduleForLastNodeInTimeOrder = new TreeMap<Integer, Schedule>();
+		Vertex lastVertex = this.tempGetLastVertex();
+		if(lastVertex == null) {
+			String output = "";
+			Map<Integer, Schedule> schedule = new TreeMap<Integer, Schedule>();
+			Map<String, Vertex> verticesName = new TreeMap<String, Vertex>();
+			for(Vertex v : _graph.getVertices()) {
+				verticesName.put(v.getName(),v);
+			}
+			for(String vertexName : verticesName.keySet()) {
+				Map<Integer, Schedule> tempScheduleForSpecifiedVertex = new TreeMap<Integer, Schedule>();
+				tempScheduleForSpecifiedVertex = this.tempGetScheduleForSpecifiedVertex(verticesName.get(vertexName));
+				output += firstOutput(tempScheduleForSpecifiedVertex,verticesName.get(vertexName));
+			}
+			return output;
+		}
+		scheduleForLastNodeInTimeOrder = this.tempGetScheduleForSpecifiedVertex(lastVertex);
+		return firstOutput(scheduleForLastNodeInTimeOrder,lastVertex);
+	}
+	private String firstOutput(Map<Integer, Schedule> scheduleToPrint, Vertex vertex) {
+		int shortestTime = ((TreeMap<Integer, Schedule>) scheduleToPrint).firstKey();
+		return scheduleToPrint.get(shortestTime).toString();
+	}
+	
 	/**
 	 * Temporary method, I am just using it to check if the schedules are all there
 	 */
+	private void tempPrintItOut(Map<Integer, Schedule> scheduleToPrint, Vertex vertex) {
+		System.out.println("\n\nSchedules for the vertex: " + vertex.getName() + "\n");
+		int count = 0;
+		for(Integer scheduleTime : scheduleToPrint.keySet()) {
+			System.out.println("Schedule " + scheduleToPrint.get(scheduleTime).getLastUsedVertex().getName() + count + "\tMax Time: " + scheduleTime + "\n" + scheduleToPrint.get(scheduleTime).toString());
+			count++;
+		}
+	}
 	public void tempPrintOutSchedules() {
 		Map<Integer, Schedule> schedule = new TreeMap<Integer, Schedule>();
 		Map<String, Vertex> verticesName = new TreeMap<String, Vertex>();
@@ -112,14 +146,6 @@ public class SearchSpace {
 			//}
 		}
 		return scheduleForSpecifiedVertex;
-	}
-	private void tempPrintItOut(Map<Integer, Schedule> scheduleToPrint, Vertex vertex) {
-		System.out.println("\n\nSchedules for the vertex: " + vertex.getName() + "\n");
-		int count = 0;
-		for(Integer scheduleTime : scheduleToPrint.keySet()) {
-			System.out.println("Schedule " + scheduleToPrint.get(scheduleTime).getLastUsedVertex().getName() + count + "\tMax Time: " + scheduleTime + "\n" + scheduleToPrint.get(scheduleTime).toString());
-			count++;
-		}
 	}
 	public void tempPrintVertices() {
 		System.out.println("Vertices: ");

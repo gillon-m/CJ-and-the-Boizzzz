@@ -22,15 +22,6 @@ public class Schedule {
 	private Vertex _lastUsedVertex;			// the last Vertex that was added onto this Schedule
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
 	
-	
-	/**
-	 * If not specified, the program assumes there are two processors
-	 * 
-	 * @param g is for input data
-	 */
-	public Schedule(Graph g) {
-		this(g,2);
-	}
 	public Schedule(Graph g, int n) {
 		_graph = new Graph(new ArrayList<Vertex>(g.getVertices()), new ArrayList<Edge>(g.getEdges()));
 		_numberOfProcessors = n;
