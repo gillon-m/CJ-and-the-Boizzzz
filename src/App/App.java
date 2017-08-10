@@ -17,7 +17,6 @@ public class App {
 		//setUpChildrenParents(graph);
 		//setUpLevelsOfNodes(graph);	
 	}
-	
 
 	private static void setUpChildrenParents(Graph graph) {
 		for (Vertex v : graph.getVertices()) {

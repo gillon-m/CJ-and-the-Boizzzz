@@ -155,28 +155,28 @@ public class Schedule {
 		Vertex maxTimeVertex = null; 
 		
 		for(Vertex vertex : dependentVertices) {
-			int countProcessor = 0;
 			for(Processor p : new ArrayList<Processor>(s.getAllProcessors())) {
 				int timeTakenToThisVertex = p.getTime(vertex);
-				if(timeTakenToThisVertex > maxTime) {
-					maxTime = timeTakenToThisVertex;
-					maxTimeProcessor = s.getAllProcessors().indexOf(p);
-					maxTimeVertex = vertex;
+				// if dependent vertex and specified vertex is in different processor 
+				if(!p.equals(s.getProcessor(processor)) && timeTakenToThisVertex!=0) {		//timeTakenToThisVertex equals zero when vertex is not found
+					// check switch cost from dependent vertex is bigger than the largest time in the processor
+					if(timeTakenToThisVertex+this.switchProcessorCost(vertex, v) > maxTime) {
+						maxTime = timeTakenToThisVertex +this.switchProcessorCost(vertex, v);
+						maxTimeProcessor = s.getAllProcessors().indexOf(p);
+						maxTimeVertex = vertex;
+					}
+				} else {
+					if(timeTakenToThisVertex > maxTime) {
+						maxTime = timeTakenToThisVertex;
+						maxTimeProcessor = s.getAllProcessors().indexOf(p);
+						maxTimeVertex = vertex;
+					}
 				}
-				countProcessor++;
 			}
 		}
 		Processor p = s.getProcessor(processor);
-		if(maxTimeProcessor != processor) {			// if dependent vertex is  different to specified processor
-			//Switch + cost
-			if(maxTime + this.switchProcessorCost(maxTimeVertex, v) > p.getLatestTime()) {
-				p.addEmptyTimeSlots(maxTime + this.switchProcessorCost(maxTimeVertex, v)-p.getLatestTime());
-			}
-		} else {									// if dependent vertex is the same as the specified processor
-			//  cost
-			if(maxTime > p.getLatestTime()) {
-				p.addEmptyTimeSlots(maxTime-p.getLatestTime());
-			}
+		if(maxTime > p.getLatestTime()) {
+			p.addEmptyTimeSlots(maxTime-p.getLatestTime());
 		}
 	}
 	

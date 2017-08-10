@@ -107,6 +107,9 @@ public class SearchSpace {
 			if(schedule.getLastUsedVertex().getName().equals(vertex.getName())) {
 				scheduleForSpecifiedVertex.put(schedule.getTimeOfSchedule(),schedule);
 			}
+			//if(schedule.getLastUsedVertex().getName().equals("c")) {
+			//	System.out.println("Schedule c\tMax Time: " + schedule.getTimeOfSchedule() + "\n" + schedule.toString());
+			//}
 		}
 		return scheduleForSpecifiedVertex;
 	}
@@ -116,6 +119,19 @@ public class SearchSpace {
 		for(Integer scheduleTime : scheduleToPrint.keySet()) {
 			System.out.println("Schedule " + scheduleToPrint.get(scheduleTime).getLastUsedVertex().getName() + count + "\tMax Time: " + scheduleTime + "\n" + scheduleToPrint.get(scheduleTime).toString());
 			count++;
+		}
+	}
+	public void tempPrintVertices() {
+		System.out.println("Vertices: ");
+		for(Vertex v : _graph.getVertices()) {
+			System.out.print(v.getName() + " ");
+		}
+		System.out.println();
+	}
+	public void tempPrintEdges() {
+		System.out.println("Edges: ");
+		for(Edge e : _graph.getEdges()) {
+			System.out.println(e.getSource().getName() + "->" + e.getDestination().getName() + " weight:" + e.getWeight());
 		}
 	}
 
