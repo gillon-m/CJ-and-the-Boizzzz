@@ -19,4 +19,18 @@ public class Graph {
 	public List<Edge> getEdges() {
 		return _edges;
 	}
+	
+	/**
+	 * Adds vertex to graph
+	 */
+	public void addVertex(Vertex v){
+		_vertices.add(v);
+	}
+	
+	/**
+	 * Adds edge to graph
+	 */
+	public void addEdge(Edge e){
+		_edges.add(e);
+	}
 }

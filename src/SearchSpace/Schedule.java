@@ -23,7 +23,7 @@ public class Schedule {
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
 	
 	public Schedule(Graph g, int n) {
-		_graph = new Graph(new ArrayList<Vertex>(g.getVertices()), new ArrayList<Edge>(g.getEdges()));
+		_graph = g;
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
 		_childVertices = new ArrayList<Vertex>();
