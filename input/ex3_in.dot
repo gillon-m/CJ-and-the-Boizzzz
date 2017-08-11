@@ -1,19 +1,19 @@
 digraph "example3" {
-        a [weight=2];
-        b [weight=4];
-        a −> b [weight=6];
-        c [weight=4];
-        a −> c [weight=2];
-        d [weight=5];
+	a [weight=2];
+	b [weight=4];
+	a -> b [weight=6];
+	c [weight=4];
+	a -> c [weight=2];
+	d [weight=5];
 	a -> d [weight=3];
 	e [weight=4];
 	a -> e [weight=4];
 	f [weight=3];
-        b −> f [weight=4];
+	b -> f [weight=4];
 	g [weight=2];
 	c -> g [weight=2];
 	h [weight=5];
-       	d −> h [weight=4];
+	d -> h [weight=4];
 	e -> h [weight=2];
 	i [weight=3];
 	e -> i [weight=3];
