@@ -30,6 +30,7 @@ public class SearchSpace {
 	private List<Schedule> _openSchedules; 			//stores the schedules that need to be checked
 	private List<Schedule> _closedSchedules;		//stores the schedules that have been checked
 	
+	private final static String START_NODE_NAME = "IMAGINARY_STARTING_NODE";
 	
 	public SearchSpace(Graph g, int noOfProcessors) {
 		_numberOfProcessors = noOfProcessors;
@@ -38,7 +39,7 @@ public class SearchSpace {
 		_schedulesEdges = new ArrayList<ScheduleEdge>();
 		
 		
-		_startVertex = new Vertex("START", 0);
+		_startVertex = new Vertex(START_NODE_NAME, 0);
 		_graph.addVertex(_startVertex);
 
 	}
@@ -60,7 +61,9 @@ public class SearchSpace {
 	 */
 	private void findRootVertices() {
 		List<Vertex> rootVertices = new LinkedList<Vertex>();
-		for(Vertex v: _graph.getVertices()){
+		List<Vertex> vertices = _graph.getVertices();
+		for(int i = 0; i<vertices.size()-1;i++){ //looks at all vertices except the last vertex with is the START
+			Vertex v = vertices.get(i);
 			if(v.getParents().size()==0){
 				_startVertex.addChild(v);
 				v.addParent(_startVertex);

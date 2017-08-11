@@ -54,6 +54,7 @@ public class Graph {
 			System.out.println();
 			System.out.println();
 		}
+		System.out.println();
 		System.out.println("Edges");
 		for(Edge e: _edges){
 			System.out.println(e.getSource().getName()+"->"+e.getDestination().getName());
