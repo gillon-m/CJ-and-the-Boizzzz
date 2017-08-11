@@ -67,6 +67,20 @@ public class InputReader {
 				}
 			}
 			List<Vertex> vertices = new ArrayList<>(verticesRead.values());
+			
+			//update parents and children of vertices
+			for(Vertex v: vertices){
+				for(Edge e: edges){
+					if(e.getSource().equals(v)){
+						v.addChild(e.getDestination());
+					}
+					else if(e.getDestination().equals(v)){
+						v.addParent(e.getSource());
+					}
+				}
+			}
+			
+			//create graph
 			graph = new Graph(vertices, edges); //Create graph
 			br.close();
 		} catch (IOException e) {
