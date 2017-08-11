@@ -10,12 +10,12 @@ public class App {
 	private static Vertex _root;
 	
 	// When running through the eclipse, change this fixedFileName so that you dont have to give arguments each time you run.
-	static String fixedFileName = "/home/cj/eclipse-workspace/CJ-and-the-Boizzzz/input/ex1_in.dot";
+	static String fixedFileName = "E:\\stuff\\uni\\SOFTENG306\\CJ-and-the-Boizzzz\\input\\Nodes_7_OutTree.dot";
 	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
 	//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 
 	static String _inputFileName = ""; 
-	static int _noOfProcessors = 4; // for now its set at 2
+	static int _noOfProcessors = 2; // for now its set at 2
 	static int _noOfCores = -1;
 	static boolean _visualisationOn = false; // by default visualisation is off 
 	static String _outputFileName = "Output.dot";
