@@ -38,7 +38,6 @@ public class SearchSpace {
 		_schedules = new ArrayList<Schedule>();
 		_schedulesEdges = new ArrayList<ScheduleEdge>();
 		
-		
 		_startVertex = new Vertex(START_NODE_NAME, 0);
 		_graph.addVertex(_startVertex);
 
@@ -46,18 +45,12 @@ public class SearchSpace {
 
 	public void makeSearchSpace() {
 		findRootVertices();
-
+		Schedule s = new Schedule(_graph, _numberOfProcessors);
 	}
-	
-
-	public String outputToPrint() {
-		return null;
-	}
-
 	
 	/**
 	 * Helper method to find the root nodes of a graph. Sets the parent of the root
-	 * node to the _startVertex. Updates the children of _startVertex to be the root nodes
+	 * nodes to be the _startVertex. Updates the children of _startVertex to be the root nodes. Also updates the edges of the graph
 	 */
 	private void findRootVertices() {
 		List<Vertex> rootVertices = new LinkedList<Vertex>();
@@ -72,4 +65,8 @@ public class SearchSpace {
 		}
 	}
 
+	public String outputToPrint() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
