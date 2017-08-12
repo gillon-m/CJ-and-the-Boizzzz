@@ -18,10 +18,13 @@ import App.Vertex;
  *
  */
 public class InputReader {
+	
 	String _inputFileName;
+	
 	public InputReader(String inputFileName) {
 		_inputFileName = inputFileName;
 	}
+	
 	/**
 	 * method that reads off the file and stores information into ////data structures////
 	 * 
@@ -31,45 +34,37 @@ public class InputReader {
 
 		Graph graph = null;
 		
-		try { // read file
+		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = "";
 			Map<String, Vertex> verticesRead = new HashMap<String, Vertex>();
-			List<Edge> edges = new ArrayList<Edge>();
+			Map<Integer, Edge> edgesRead = new HashMap<Integer, Edge>();
+			int edgeCount = 0;
 			while ((line = br.readLine()) != null) {
 				line = line.trim(); //Remove leading and trailing whitespace
-				if (line.endsWith(";")) {
-//					line = line.trim(); //Remove leading and trailing whitespace
-					if (line.contains("->")) { //Line is an edge
-						String[] values = line.split(" ");
-						for (String s : verticesRead.keySet()) {
-//							System.out.println("key " + s);
-//							System.out.println("value " + verticesRead.get(s).getName());
-						}
-						for (String s : values) {
-							s.replaceAll("\\t+", "");
-							if (verticesRead.containsKey(s)){
-//								System.out.println("A NEW TEST " + s);
-							}
-						}
-						Vertex sourceVertex = verticesRead.get(values[0].replaceAll("\\t+",""));
-						Vertex destinationVertex = verticesRead.get(values[2].replaceAll("\\t+",""));
-//						System.out.println(sourceVertex);
-						int weight = Integer.parseInt(values[3].replaceAll("[\\D]", "")); //Retrieve weight as integer
-						edges.add(new Edge(sourceVertex, destinationVertex, weight));
-					} else { //Line is a vertex
-						String[] nameAndWeight = line.split(" ");
-  						String name = nameAndWeight[0].replaceAll("\\t+", "");
-						int weight = Integer.parseInt(nameAndWeight[1].replaceAll("[\\D]", "")); //Retrieve weight as integer
+				line = line.replaceAll("\t", ""); //Remove all tab characters from the line
+				if (line.endsWith(";")) { //If line is part of the graph
+					String[] values = line.split(" ");
+					if (values.length == 2) { //Line is a vertex
+  						String name = values[0];
+						int weight = Integer.parseInt(values[1].replaceAll("[\\D]", ""));
 						Vertex newVertex = new Vertex(name, weight);
 						verticesRead.put(name, newVertex);
+					} else if (values.length == 4) { //Line is an edge
+						edgeCount++;
+						Vertex sourceVertex = verticesRead.get(values[0]);
+						Vertex destinationVertex = verticesRead.get(values[2]);
+						int weight = Integer.parseInt(values[3].replaceAll("[\\D]", ""));
+						edgesRead.put(edgeCount,new Edge(sourceVertex, destinationVertex, weight));
 					}
 				}
 			}
 			List<Vertex> vertices = new ArrayList<>(verticesRead.values());
+			List<Edge> edges = new ArrayList<Edge>(edgesRead.values());
 			graph = new Graph(vertices, edges); //Create graph
 			br.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 		return graph; //Return created graph object
