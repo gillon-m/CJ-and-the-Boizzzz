@@ -10,7 +10,7 @@ public class App {
 	private static Vertex _root;
 	
 	// When running through the eclipse, change this fixedFileName so that you dont have to give arguments each time you run.
-	static String fixedFileName = "C:\\Program Files\\Eclipse\\eclipse\\workspace\\306\\CJ-and-the-Boizzzz\\input\\Nodes_10_Random.dot";
+	static String fixedFileName = "C:\\Program Files\\Eclipse\\eclipse\\workspace\\306\\CJ-and-the-Boizzzz\\input\\ex3_in.dot";
 	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
 	//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 
