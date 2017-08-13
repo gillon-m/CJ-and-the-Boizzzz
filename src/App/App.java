@@ -4,14 +4,14 @@ import java.io.*;
 import java.util.Map;
 
 import FileManager.*;
-import SearchSpace.Schedule;
-import SearchSpace.SearchSpace;
+import Scheduler.Schedule;
+import Scheduler.SearchSpace;
 public class App {
 	private static Vertex _root;
 	
 	// When running through the eclipse, change this fixedFileName so that you dont have to give arguments each time you run.
-	static String fixedFileName = "C:\\Program Files\\Eclipse\\eclipse\\workspace\\306\\CJ-and-the-Boizzzz\\input\\ex3_in.dot";
-	//String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\ex1_in.dot";
+	//static String fixedFileName = "C:\\Program Files\\Eclipse\\eclipse\\workspace\\306\\CJ-and-the-Boizzzz\\input\\ex3_in.dot";
+	static String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\Nodes_10_Random.dot";
 	//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 
 	static String _inputFileName = ""; 
@@ -19,7 +19,8 @@ public class App {
 	static int _noOfCores = -1;
 	static boolean _visualisationOn = false; // by default visualisation is off 
 	static String _outputFileName = "Output.dot";
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws Exception {
 		if (args.length > 0) { // When a jar file is being executed
 			try {
 				_inputFileName = args[0];
@@ -68,8 +69,9 @@ public class App {
 	 * This method prints off the selected options before the scheduler starts executing.
 	 * User confirms by pressing y which then allows the scheduler to start execution.
 	 * If user does not press y, the program is halt and has to be re-executed.
+	 * @throws Exception 
 	 */
-	private static void confirmOptionsAndExecute() {
+	private static void confirmOptionsAndExecute() throws Exception {
 		System.out.println("*********************************************************************");
 		System.out.println("The Input Graph to be scheduled is: " + _inputFileName);
 		System.out.println("The Number of Processors to be used is: " + _noOfProcessors);
@@ -99,17 +101,21 @@ public class App {
 	/**
 	 * Runs scheduler once user confirms the options selected.
 	 * @param fileName
+	 * @throws Exception 
 	 */
-	private static void startExecution(String inputFileName) {
+	private static void startExecution(String inputFileName) throws Exception {
 		InputReader ir = new InputReader(inputFileName);
 		Graph graph = ir.readFile();
-		SearchSpace searchSpace = new SearchSpace(graph, _noOfProcessors);	
-		searchSpace.makeSearchSpace();								// Creates all possible schedules
-		//searchSpace.tempPrintOutSchedules();						// prints out all possible schedules
-		searchSpace.tempPrintOutLastNodeScheduleInTimeOrder();		// prints out schedule for last vertex
-		String output = searchSpace.outputToPrint();
-		OutputWriter ow = new OutputWriter(_outputFileName, inputFileName);
-		ow.writeToFile(output);
+		graph.setUpForMakingSchedules();
+		SearchSpace searchSpace = new SearchSpace( _noOfProcessors);	
+		Schedule s =  searchSpace.getOptimalSchedule();
+		System.out.println("Vertex: " + s.getLastUsedVertex().getName() + "\n");
+		System.out.println(s.toString());
+		//searchSpace.makeSearchSpace();								// Creates all possible schedules
+		//searchSpace.tempPrintOutLastNodeScheduleInTimeOrder();		// prints out schedule for last vertex
+		//String output = searchSpace.outputToPrint();
+		//OutputWriter ow = new OutputWriter(_outputFileName, inputFileName);
+		//ow.writeToFile(output);
 		
 		//setUpChildrenParents(graph);
 		//setUpLevelsOfNodes(graph);	

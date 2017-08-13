@@ -1,4 +1,4 @@
-package SearchSpace;
+package Scheduler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,17 +18,15 @@ import App.Vertex;
 public class Processor {
 	private int _latestTime;							// Is the time this processor has currently used up to
 	private ArrayList<Vertex> _scheduleOfProcessor;		// Contains the list of tasks (includes empty tasks which fills the gaps)
-	private int _countEmptySlots;					
+			
 	
-	public Processor(Graph g) {
+	public Processor() {
 		_latestTime = 0;
 		_scheduleOfProcessor = new ArrayList<Vertex>();
-		_countEmptySlots = 0;
 	}
 	public Processor(Processor p) {
 		_latestTime = p.getLatestTime();
 		_scheduleOfProcessor = new ArrayList<Vertex>(p.getScheduleOfProcessor());
-		_countEmptySlots = p.getEmptySlots();
 	}
 	
 	/**
@@ -50,7 +48,6 @@ public class Processor {
 	 */
 	public void addEmptyTimeSlots(int emptyTimeLength) {
 		Vertex empty = new Vertex("-", emptyTimeLength);
-		_countEmptySlots++;
 		this.addTimeSlots(empty);
 	}
 
@@ -79,9 +76,6 @@ public class Processor {
 	}
 	private ArrayList<Vertex> getScheduleOfProcessor(){
 		return _scheduleOfProcessor;
-	}
-	private int getEmptySlots() {
-		return _countEmptySlots;
 	}
 	/**
 	 * gets back the time including the specified vertex's time is on 
