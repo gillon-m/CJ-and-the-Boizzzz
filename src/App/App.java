@@ -5,17 +5,18 @@ import java.util.Map;
 
 import FileManager.*;
 import Scheduler.Schedule;
-import Scheduler.SearchSpace;
+import Scheduler.Scheduler;
 public class App {
 	private static Vertex _root;
 	
 	// When running through the eclipse, change this fixedFileName so that you dont have to give arguments each time you run.
 	//static String fixedFileName = "C:\\Program Files\\Eclipse\\eclipse\\workspace\\306\\CJ-and-the-Boizzzz\\input\\ex3_in.dot";
-	static String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\Nodes_10_Random.dot";
+	static String fixedFileName = "C:\\Projects\\CJ-and-the-Boizzzz\\input\\Nodes_11_OutTree.dot";
+	// Nodes_7_OutTree     Nodes_8_Random     Nodes_9_SeriesParallel     Nodes_10_Random    Nodes_11_OutTree
 	//C:\Users\Andon\Desktop\CJ-and-the-Boizzzz-master\input\ex1_in.dot
 
 	static String _inputFileName = ""; 
-	static int _noOfProcessors = 4; // for now its set at 2
+	static int _noOfProcessors = 2; // for now its set at 2
 	static int _noOfCores = -1;
 	static boolean _visualisationOn = false; // by default visualisation is off 
 	static String _outputFileName = "Output.dot";
@@ -107,15 +108,13 @@ public class App {
 		InputReader ir = new InputReader(inputFileName);
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		SearchSpace searchSpace = new SearchSpace( _noOfProcessors);	
-		Schedule s =  searchSpace.getOptimalSchedule();
-		System.out.println("Vertex: " + s.getLastUsedVertex().getName() + "\n");
-		System.out.println(s.toString());
-		//searchSpace.makeSearchSpace();								// Creates all possible schedules
-		//searchSpace.tempPrintOutLastNodeScheduleInTimeOrder();		// prints out schedule for last vertex
-		//String output = searchSpace.outputToPrint();
-		//OutputWriter ow = new OutputWriter(_outputFileName, inputFileName);
-		//ow.writeToFile(output);
+		Scheduler scheduler = new Scheduler( _noOfProcessors);	
+		Schedule s =  scheduler.getOptimalSchedule();
+		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
+							+"\n"+ s.toString();
+		System.out.println(output);
+		OutputWriter ow = new OutputWriter(_outputFileName, inputFileName);
+		ow.writeToFile(output);
 		
 		//setUpChildrenParents(graph);
 		//setUpLevelsOfNodes(graph);	

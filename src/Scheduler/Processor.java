@@ -16,7 +16,7 @@ import App.Vertex;
  */
 
 public class Processor {
-	private int _latestTime;							// Is the time this processor has currently used up to
+	private int _latestTime;							// Is the time this processor is currently up to
 	private ArrayList<Vertex> _scheduleOfProcessor;		// Contains the list of tasks (includes empty tasks which fills the gaps)
 			
 	
