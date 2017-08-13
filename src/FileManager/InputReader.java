@@ -36,6 +36,11 @@ public class InputReader {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
+			
+			String firstLine = br.readLine();
+			String nameOfGraphPlusQMarks = firstLine.split(" ")[1];
+			String nameOfGraph = nameOfGraphPlusQMarks.substring(1, nameOfGraphPlusQMarks.length()-1);
+			
 			String line = "";
 			Map<String, Vertex> verticesRead = new HashMap<String, Vertex>();
 			Map<Integer, Edge> edgesRead = new HashMap<Integer, Edge>();
@@ -61,7 +66,7 @@ public class InputReader {
 			}
 			List<Vertex> vertices = new ArrayList<>(verticesRead.values());
 			List<Edge> edges = new ArrayList<Edge>(edgesRead.values());
-			graph = new Graph(vertices, edges); //Create graph
+			graph = new Graph(nameOfGraph, vertices, edges); //Create graph
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();

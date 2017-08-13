@@ -49,12 +49,12 @@ public class App {
 	private void startExecution() {
 		InputReader ir = new InputReader(DIRECTORY + _inputFileName);
 		Graph graph = ir.readFile();
-//		SearchSpace searchSpace = new SearchSpace(graph, _noOfProcessors);	
-//		searchSpace.makeSearchSpace();
-//		searchSpace.tempPrintOutLastNodeScheduleInTimeOrder();	
+		SearchSpace searchSpace = new SearchSpace(graph, _noOfProcessors);	
+		searchSpace.makeSearchSpace();
+		
 //		Schedule s = null;
-//		OutputWriter ow = new OutputWriter(_outputFileName);
-//		ow.writeToFile(s);
+//		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
+//		ow.writeToFile();
 	}
 	
 	/**

@@ -77,7 +77,7 @@ public class Processor {
 	public int getLatestTime() {
 		return _latestTime;
 	}
-	private ArrayList<Vertex> getScheduleOfProcessor(){
+	public ArrayList<Vertex> getScheduleOfProcessor(){
 		return _scheduleOfProcessor;
 	}
 	private int getEmptySlots() {

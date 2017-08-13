@@ -23,7 +23,7 @@ public class Schedule {
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
 	
 	public Schedule(Graph g, int n) {
-		_graph = new Graph(new ArrayList<Vertex>(g.getVertices()), new ArrayList<Edge>(g.getEdges()));
+		_graph = g;
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
 		_childVertices = new ArrayList<Vertex>();
@@ -39,7 +39,7 @@ public class Schedule {
 			Processor processor = new Processor(p);
 			_processors.add(processor);
 		}
-		_graph = new Graph(new ArrayList<Vertex>(s.getGraph().getVertices()), new ArrayList<Edge>(s.getGraph().getEdges()));
+		_graph = s.getGraph();
 		_usedVertices = new ArrayList<Vertex>(s.getAllUsedVertices());
 		_childVertices = new ArrayList<Vertex>(s.getChildVertices());
 	}
@@ -244,7 +244,20 @@ public class Schedule {
 	public List<Vertex> getChildVertices(){
 		return _childVertices;
 	}
-	
+	public int getProcessorIndex(Vertex v) {
+		int index = -1;
+		for (int i = 0; i < _processors.size(); i++) {
+			if (_processors.get(i).getScheduleOfProcessor().contains(v)) {
+				index = i;
+			}
+		}
+		return index;
+	}
+	public int getStartTime(Vertex v) {
+		int index = getProcessorIndex(v);
+		int finishTime = _processors.get(index).getTime(v);
+		return finishTime - v.getWeight();
+	}
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

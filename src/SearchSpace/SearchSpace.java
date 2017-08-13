@@ -28,7 +28,7 @@ public class SearchSpace {
 	
 	public SearchSpace(Graph g, int noOfProcessors) {
 		_numberOfProcessors = noOfProcessors;
-		_graph = new Graph(new ArrayList<Vertex>(g.getVertices()), new ArrayList<Edge>(g.getEdges()));
+		_graph = g;
 		_schedules = new ArrayList<Schedule>();
 		_schedulesEdges = new ArrayList<ScheduleEdge>();
 	}
@@ -40,7 +40,7 @@ public class SearchSpace {
 	 * Caution: This method currently assumes the first Vertex in the list is the root Vertex 
 	 * 
 	 */
-	public void makeSearchSpace() {
+	public Schedule makeSearchSpace() {
 		List<Vertex> allVertices = new ArrayList<Vertex>(_graph.getVertices());
 		Schedule s = new Schedule(_graph, _numberOfProcessors);
 		Schedule[] schedules = new Schedule[_numberOfProcessors];
@@ -57,6 +57,7 @@ public class SearchSpace {
 			_schedules.add(schedules[i]);
 			this.generateChildSchedulesForThisSchedule(schedules[i], schedules[i].getChildVertices());
 		}
+		return schedules[0];
 	}
 	public String outputToPrint() {
 		Map<Integer, Schedule> scheduleForLastNodeInTimeOrder = new TreeMap<Integer, Schedule>();
