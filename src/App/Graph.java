@@ -85,7 +85,7 @@ public class Graph {
 	}
 	/**
 	 * This helper method topologically sorts a given di-graph.
-	 * As of right now, I(Andon)'m not sure as to whether this method will actually be helpful. But it has been implemented
+	 * As of right now, I'm not sure as to whether this method will actually be helpful. But it has been implemented
 	 * as by meeting discussion. Open to any other ideas for generating schedules. 
 	 * @param root : the start node at which to begin tree traversal.
 	 * @param target : the target node that we want to find the height of.

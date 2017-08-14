@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import App.Edge;
 import App.Graph;
@@ -27,11 +28,11 @@ import Components.ScheduleComparator;
  */
 public class Scheduler {
 	private int _numberOfProcessors;					
-	private PriorityQueue<Schedule> _openSchedules;
+	private PriorityBlockingQueue<Schedule> _openSchedules;
 	//private List<Schedule> _closedSchedules;
 	
 	public Scheduler(int numberOfProcessors) {
-		_openSchedules = new PriorityQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
+		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		//_closedSchedules = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 	}
