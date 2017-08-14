@@ -1,4 +1,4 @@
-package Scheduler;
+package scheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
-import Components.ScheduleComparator;
+import app.Edge;
+import app.Graph;
+import app.Vertex;
+import components.ScheduleComparator;
 /**
  * This Class uses the Schedule Class and Processor Class 
  * to make schedules using the information from the Graph Variable which 

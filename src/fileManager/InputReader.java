@@ -1,4 +1,4 @@
-package FileManager;
+package fileManager;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
+import app.Edge;
+import app.Graph;
+import app.Vertex;
 
 /**
  * Class that loads a dot file to be analysed and reads it to produce a 

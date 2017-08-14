@@ -1,14 +1,14 @@
-package FileManager;
+package fileManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
-import Scheduler.Schedule;
+import app.Edge;
+import app.Graph;
+import app.Vertex;
+import scheduler.Schedule;
 
 public class OutputWriter {
 	String OUTPUT_DIRECTORY = "./output/";

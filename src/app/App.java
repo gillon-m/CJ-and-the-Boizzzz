@@ -1,10 +1,10 @@
-package App;
+package app;
 
 import java.io.*;
 
-import FileManager.*;
-import Scheduler.Schedule;
-import Scheduler.Scheduler;
+import fileManager.*;
+import scheduler.Schedule;
+import scheduler.Scheduler;
 /**
  * The main class of the program. Takes input arguments from user input, reads the input file 
  * and creates a graph, then uses it to create a correct schedule which is written as an output file.

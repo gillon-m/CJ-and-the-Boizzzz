@@ -1,11 +1,11 @@
-package Scheduler;
+package scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
+import app.Edge;
+import app.Graph;
+import app.Vertex;
 /**
  * 
  * Class to represent Schedule of tasks

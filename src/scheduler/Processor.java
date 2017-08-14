@@ -1,12 +1,12 @@
-package Scheduler;
+package scheduler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
+import app.Edge;
+import app.Graph;
+import app.Vertex;
 
 /**
  * Processor class represents the individual processor in a schedule

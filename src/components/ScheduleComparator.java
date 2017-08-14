@@ -1,8 +1,8 @@
-package Components;
+package components;
 
 import java.util.Comparator;
 
-import Scheduler.Schedule;
+import scheduler.Schedule;
 
 public class ScheduleComparator implements Comparator<Schedule> {
 
