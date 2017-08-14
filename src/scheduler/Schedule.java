@@ -61,7 +61,7 @@ public class Schedule {
 	}
 	
 	private void updateUsedVertices(Vertex v) {
-		_lastUsedVertex = new Vertex(v.getName(),v.getWeight());
+		_lastUsedVertex = v;
 		_usedVertices.add(v);
 	}
 	/**
