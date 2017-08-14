@@ -1,8 +1,7 @@
-/Components/
-/Scheduler/
-/App/
-/FileManager/
 /app/
 /components/
 /fileManager/
 /scheduler/
+/graph/
+/App.class
+/TaskScheduler.class

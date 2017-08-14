@@ -1,18 +1,10 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import app.Edge;
-import app.Graph;
-import app.Vertex;
+import graph.Graph;
+import graph.Vertex;
 import components.ScheduleComparator;
 /**
  * This Class uses the Schedule Class and Processor Class 

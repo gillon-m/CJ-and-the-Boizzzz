@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import app.Edge;
-import app.Graph;
-import app.Vertex;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 import scheduler.Schedule;
 
 public class OutputWriter {

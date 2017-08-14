@@ -6,15 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.Edge;
-import app.Graph;
-import app.Vertex;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 
 /**
- * Class that loads a dot file to be analysed and reads it to produce a 
- * graph object.
- *  
+ * Class that loads a dot file to be analysed and reads it to produce a graph object.
  * 
+ * @author CJ Bang, Brad Miller
  *
  */
 public class InputReader {

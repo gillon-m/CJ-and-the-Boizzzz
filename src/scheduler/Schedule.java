@@ -3,9 +3,9 @@ package scheduler;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.Edge;
-import app.Graph;
-import app.Vertex;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 /**
  * 
  * Class to represent Schedule of tasks
