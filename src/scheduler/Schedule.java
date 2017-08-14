@@ -247,11 +247,15 @@ public class Schedule {
 		}
 		return index;
 	}
-	public int getStartTime(Vertex v) {
+	public int getVertexStartTime(Vertex v) {
+		return getVertexFinishTime(v) - v.getWeight();
+	}
+	public int getVertexFinishTime(Vertex v) {
 		int index = getProcessorIndex(v);
 		int finishTime = _processors.get(index).getTime(v);
-		return finishTime - v.getWeight();
+		return finishTime;
 	}
+
 
 	/**
 	 * To adjust the format and the data that should be returned

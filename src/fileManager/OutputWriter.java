@@ -35,7 +35,7 @@ public class OutputWriter {
 			}
 			fw.write("digraph \"output" + name + "\" {\n");
 			for (Vertex v: _graph.getVertices()) {
-				fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getStartTime(v) + ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");
+				fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getVertexStartTime(v) + ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");
 			}
 			for (Edge e: _graph.getEdges()) {				
 				fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");

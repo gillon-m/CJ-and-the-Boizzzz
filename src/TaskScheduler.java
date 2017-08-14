@@ -33,13 +33,15 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
+		//  Nodes_7_OutTree		Nodes_8_Random		Nodes_9_SeriesParallel		Nodes_10_Random		Nodes_11_OutTree
+		//String[] test = new String[] {"Nodes_11_OutTree.dot","4"};
 		new TaskScheduler(args);
 	}
 	
 	public TaskScheduler(String[] args) throws Exception{
 		parseArguments(args);
-		//startExecution();
-		confirmOptionsAndExecute();
+		startExecution();
+		//confirmOptionsAndExecute();
 		
 	}
 	/**

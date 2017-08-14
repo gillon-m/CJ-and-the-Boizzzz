@@ -1,6 +1,10 @@
 package scheduler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
@@ -21,11 +25,11 @@ import components.ScheduleComparator;
 public class Scheduler {
 	private int _numberOfProcessors;					
 	private PriorityBlockingQueue<Schedule> _openSchedules;
-	//private List<Schedule> _closedSchedules;
+	private List<Schedule> _closedSchedules;
 	
 	public Scheduler(int numberOfProcessors) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
-		//_closedSchedules = new ArrayList<Schedule>();
+		_closedSchedules = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 	}
 	
@@ -57,7 +61,8 @@ public class Scheduler {
 			//		+"\n"+ currentSchedule.toString());
 			
 			_openSchedules.remove(currentSchedule);
-			//_closedSchedules.add(currentSchedule);
+			_closedSchedules.add(currentSchedule);
+			//System.out.println("Size: "+_openSchedules.size());
 			
 			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 				return currentSchedule;
@@ -107,22 +112,36 @@ public class Scheduler {
 	 */
 	private boolean checkScheduleOnOpenSchedule(Schedule childSchedule) {
 		boolean passesCondition = true;
+		for(Schedule schedule : _closedSchedules) {
+			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
+				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
+					passesCondition = false;
+					break;
+				}
+			}
+		}
 		for(Schedule schedule : _openSchedules) {
-			if(schedule.getLastUsedVertex().getName().equals(childSchedule.getLastUsedVertex().getName())){
-				if(childSchedule.getTimeOfSchedule() <= schedule.getTimeOfSchedule()) {
-					if(childSchedule.getAllUsedVertices().contains(schedule.getAllUsedVertices())) {
-						_openSchedules.remove(schedule);
-						passesCondition = true;
-					}
-				}else {
-					if (schedule.getAllUsedVertices().contains(childSchedule.getAllUsedVertices())) {
-						passesCondition = false;
-						break;
-					} 
+			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
+				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
+					passesCondition = false;
+					break;
 				}
 			}
 		}
 		return passesCondition;
+	}
+	/**
+	 * Checks if the list is the same, does not have to be in order
+	 * 
+	 * @param l1
+	 * @param l2
+	 * @return
+	 */
+	public static <T> boolean isList1EqualToList2InNoOrder(List<T> l1, List<T> l2) {
+	    final Set<T> s1 = new HashSet<>(l1);
+	    final Set<T> s2 = new HashSet<>(l2);
+
+	    return s1.equals(s2);
 	}
 	/**
 	 * This method adds root schedules to openschedules
