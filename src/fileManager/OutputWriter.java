@@ -31,7 +31,7 @@ public class OutputWriter {
 			String name = _graph.getName();
 			char c = name.charAt(0);
 			if (Character.isLowerCase(c)) {
-				name = Character.toUpperCase(c) + name.substring(1, name.length()-1);
+				name = Character.toUpperCase(c) + name.substring(1, name.length());
 			}
 			fw.write("digraph \"output" + name + "\" {\n");
 			for (Vertex v: _graph.getVertices()) {
