@@ -51,7 +51,7 @@ public class TaskScheduler {
 	 */
 	private void startExecution() throws Exception {
 		//InputReader ir = new InputReader(DIRECTORY + _inputFileName);
-		InputReader ir = new InputReader(_inputFileName);
+		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
@@ -76,7 +76,7 @@ public class TaskScheduler {
 			_inputFileName = args[0];
 			_outputFileName = _inputFileName.substring(0, _inputFileName.length()-4) + "-output.dot";
 			//FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
-			FileReader fr = new FileReader(new File(_inputFileName));
+			FileReader fr = new FileReader(new File(_inputFileName)); //input file must be in same directory as jar file
 		} catch (ArrayIndexOutOfBoundsException e){
 			System.out.println(FILENAME_NOT_GIVEN);
 			System.exit(0);
