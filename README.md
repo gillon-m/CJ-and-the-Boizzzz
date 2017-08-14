@@ -1,2 +1,2 @@
-# CJ-and-the-Boizzzz Group 12
-Stuff for SOFTENG 306 Project 1
+# Group 12: CJ-and-the-Boizzzz
+This Java application is a task scheduler which returns a optimum schedule from a given directed acyclic graph.
