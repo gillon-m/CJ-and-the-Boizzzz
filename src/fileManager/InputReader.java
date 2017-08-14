@@ -12,6 +12,9 @@ import graph.Vertex;
 
 /**
  * Class that loads a dot file to be analysed and reads it to produce a graph object.
+ * This reads the given input file line by line and process each line to store important
+ * values to create a graph object. The graph object has a name, list of vertices, and 
+ * list of edges.
  * 
  * @author CJ Bang, Brad Miller
  *
@@ -23,10 +26,10 @@ public class InputReader {
 	public InputReader(String inputFileName) {
 		_inputFileName = inputFileName;
 	}
-	
+
 	/**
-	 * method that reads off the file and stores information into ////data structures////
-	 * 
+	 * method that reads off the file and stores information into data structure
+	 * @return Graph
 	 */
 	public Graph readFile() {
 		File file = new File(_inputFileName);
@@ -35,9 +38,9 @@ public class InputReader {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String firstLine = br.readLine();
-			String nameOfGraphPlusQMarks = firstLine.split(" ")[1];
-			String nameOfGraph = nameOfGraphPlusQMarks.substring(1, nameOfGraphPlusQMarks.length()-1);
+			String firstLine = br.readLine(); // reads the first line for the graph name
+			String nameOfGraphPlusQMarks = firstLine.split(" ")[1]; // first word is always digraph, second is always the name of the graph
+			String nameOfGraph = nameOfGraphPlusQMarks.substring(1, nameOfGraphPlusQMarks.length()-1); // remove quotation marks from the graph name
 
 			String line = "";
 			Map<String, Vertex> verticesRead = new HashMap<String, Vertex>();
@@ -55,9 +58,9 @@ public class InputReader {
 						verticesRead.put(name, newVertex);
 					} else if (values.length == 4) { //Line is an edge
 						edgeCount++;
-						Vertex sourceVertex = verticesRead.get(values[0]);
-						Vertex destinationVertex = verticesRead.get(values[2]);
-						int weight = Integer.parseInt(values[3].replaceAll("[\\D]", ""));
+						Vertex sourceVertex = verticesRead.get(values[0]); // the first string is the source vertex 
+						Vertex destinationVertex = verticesRead.get(values[2]); // the second string is the destination vertex (2nd being the arrow)
+						int weight = Integer.parseInt(values[3].replaceAll("[\\D]", "")); 
 						edgesRead.put(edgeCount,new Edge(sourceVertex, destinationVertex, weight));
 					}
 				}

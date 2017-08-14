@@ -238,6 +238,10 @@ public class Schedule {
 	public List<Vertex> getChildVertices(){
 		return _childVertices;
 	}
+
+	/**
+	 * Finds which processor this vertex is running at and returns the index
+	 */
 	public int getProcessorIndex(Vertex v) {
 		int index = -1;
 		for (int i = 0; i < _processors.size(); i++) {
