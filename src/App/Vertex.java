@@ -13,8 +13,6 @@ public class Vertex {
 	private String _name;
 	private int _weight;
 	private int _level;
-	private int _start;
-	private int _processorNo;
 	private List<Vertex> _children = new ArrayList<Vertex>();
 	private List<Vertex> _parents = new ArrayList<Vertex>();
 	
@@ -26,15 +24,11 @@ public class Vertex {
 	public String getName() {
 		return _name;
 	}
+	
 	public int getWeight() {
 		return _weight;
 	}
-	public void setStart(int start) {
-		_start = start;
-	}
-	public void setProcessorNo(int processorNo) {
-		_processorNo = processorNo;
-	}
+	
 	public void setLevel(int level) {
 		_level = level;
 	}

@@ -1,4 +1,4 @@
-package SearchSpace;
+package Scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +17,17 @@ import App.Vertex;
 public class Schedule {
 	private int _numberOfProcessors;		// Number of Processors that is going to be used for scheduling
 	private List<Processor> _processors;	// List of Processors that contains the tasks
-	private Graph _graph;					// input data
 	private List<Vertex> _usedVertices;		// stores the used Vertices for this schedule
 	private Vertex _lastUsedVertex;			// the last Vertex that was added onto this Schedule
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
 	
-	public Schedule(Graph g, int n) {
-		_graph = g;
+	public Schedule(int n) {
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
 		_childVertices = new ArrayList<Vertex>();
 		_processors = new ArrayList<Processor>();
 		for(int i = 0; i < n; i++) {
-			_processors.add(new Processor(_graph));
+			_processors.add(new Processor());
 		}
 	}
 	public Schedule(Schedule s) {
@@ -39,7 +37,6 @@ public class Schedule {
 			Processor processor = new Processor(p);
 			_processors.add(processor);
 		}
-		_graph = s.getGraph();
 		_usedVertices = new ArrayList<Vertex>(s.getAllUsedVertices());
 		_childVertices = new ArrayList<Vertex>(s.getChildVertices());
 	}
@@ -53,7 +50,7 @@ public class Schedule {
 	 * @param v
 	 * @return
 	 */
-	public Schedule[] generateAllPossibleSchedule(Vertex v) {
+	public Schedule[] generateAllPossibleScheduleForSpecifiedVertex(Vertex v) {
 		Schedule[] allSchedule = new Schedule[_numberOfProcessors];
 		for(int i = 0; i < _numberOfProcessors; i++) {
 			allSchedule[i] = makeScheduleAndAddToSpecifiedProcessor(i,v); 
@@ -74,7 +71,7 @@ public class Schedule {
 	 */
 	private void updateChildVertices(Vertex v) {
 		_childVertices.remove(v);
-		List<Edge> allEdges = new ArrayList<Edge>(_graph.getEdges());
+		List<Edge> allEdges = new ArrayList<Edge>(Graph.getInstance().getEdges());
 		for(Edge e : allEdges) {
 			if(e.getSource().equals(v) && !_childVertices.contains(e.getDestination())) {
 				if(this.checkChildVertexDependency(e.getDestination())) {
@@ -91,7 +88,7 @@ public class Schedule {
 	 * @return
 	 */
 	private boolean checkChildVertexDependency(Vertex childVertex) {
-		List<Edge> allEdges = new ArrayList<Edge>(_graph.getEdges());
+		List<Edge> allEdges = new ArrayList<Edge>(Graph.getInstance().getEdges());
 		for(Edge e : allEdges) {
 			if(e.getDestination().equals(childVertex) && !_usedVertices.contains(e.getSource())) {
 				return false;
@@ -178,8 +175,8 @@ public class Schedule {
 	 */
 	private List<Vertex> getDependentVertices(Vertex v){
 		List<Vertex> dependentVertices = new ArrayList<Vertex>();
-		List<Vertex> ver = new ArrayList<Vertex>(_graph.getVertices());
-		List<Edge> edge = new ArrayList<Edge>(_graph.getEdges());
+		List<Vertex> ver = new ArrayList<Vertex>(Graph.getInstance().getVertices());
+		List<Edge> edge = new ArrayList<Edge>(Graph.getInstance().getEdges());
 		
 		for(Edge e : edge) {
 			if(e.getDestination().equals(v)) {
@@ -199,7 +196,7 @@ public class Schedule {
 	 * @return
 	 */
 	private int switchProcessorCost(Vertex fromVertex, Vertex toVertex) {
-		List<Edge> allEdges = new ArrayList<Edge>(_graph.getEdges());
+		List<Edge> allEdges = new ArrayList<Edge>(Graph.getInstance().getEdges());
 		int weight = -9000;		
 		for(Edge e : allEdges) {
 			if(e.getDestination().equals(toVertex) && e.getSource().equals(fromVertex)) {
@@ -235,9 +232,6 @@ public class Schedule {
 	public List<Vertex> getAllUsedVertices(){
 		return _usedVertices;
 	}
-	private Graph getGraph() {
-		return  _graph;
-	}
 	public Vertex getLastUsedVertex() {
 		return _lastUsedVertex;
 	}
@@ -258,6 +252,7 @@ public class Schedule {
 		int finishTime = _processors.get(index).getTime(v);
 		return finishTime - v.getWeight();
 	}
+
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

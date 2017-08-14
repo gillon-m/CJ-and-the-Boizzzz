@@ -1,4 +1,4 @@
-package SearchSpace;
+package Scheduler;
 
 import java.util.List;
 

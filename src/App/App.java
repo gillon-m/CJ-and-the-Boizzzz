@@ -3,8 +3,8 @@ package App;
 import java.io.*;
 
 import FileManager.*;
-import SearchSpace.Schedule;
-import SearchSpace.SearchSpace;
+import Scheduler.Schedule;
+import Scheduler.Scheduler;
 /**
  * The main class of the program. Takes input arguments from user input, reads the input file 
  * and creates a graph, then uses it to create a correct schedule which is written as an output file.
@@ -31,30 +31,38 @@ public class App {
 	/**
 	 * Main program. It takes arguments from the user input and pass them to other methods to process. 
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		new App(args);
 	}
 	
-	public App(String[] args){
+	public App(String[] args) throws Exception{
 		parseArguments(args);
+		//startExecution();
 		confirmOptionsAndExecute();
+		
 	}
 	/**
 	 * Runs scheduler once user confirms the options selected. 
 	 * Firstly program reads the input file using input reader and creates the graph.
 	 * Using the graph, the program creates a correct schedule with the shortest time.
 	 * And it generates an output file for the created schedule. 
+	 * @throws Exception 
 	 */
-	private void startExecution() {
+	private void startExecution() throws Exception {
 		InputReader ir = new InputReader(DIRECTORY + _inputFileName);
 		Graph graph = ir.readFile();
-		SearchSpace searchSpace = new SearchSpace(graph, _noOfProcessors);	
-		searchSpace.makeSearchSpace();
+		graph.setUpForMakingSchedules();
+		Scheduler scheduler = new Scheduler(_noOfProcessors);	
+		Schedule s =  scheduler.getOptimalSchedule();
+		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
+		ow.writeToFile();
 		
-//		Schedule s = null;
-//		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
-//		ow.writeToFile();
+		//Temporary check for the output
+		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
+							+"\n"+ s.toString();
+		System.out.println(output);
 	}
 	
 	/**
@@ -142,8 +150,9 @@ public class App {
 	 * Prints off the selected options before the scheduler starts executing.
 	 * User confirms by pressing y which then allows the scheduler to start execution.
 	 * If user does not press y, the program is halt and has to be re-executed.
+	 * @throws Exception 
 	 */
-	private void confirmOptionsAndExecute() {
+	private void confirmOptionsAndExecute() throws Exception {
 		System.out.println("*********************************************************************");
 		System.out.println("The Input Graph to be scheduled is: " + _inputFileName);
 		System.out.println("The Number of Processors to be used is: " + _noOfProcessors);

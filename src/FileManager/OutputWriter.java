@@ -8,7 +8,7 @@ import java.io.IOException;
 import App.Edge;
 import App.Graph;
 import App.Vertex;
-import SearchSpace.Schedule;
+import Scheduler.Schedule;
 
 public class OutputWriter {
 	String OUTPUT_DIRECTORY = "./output/";
