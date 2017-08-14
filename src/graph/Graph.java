@@ -3,6 +3,10 @@ package graph;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton class that represents the graph data structure used to store the input acyclic graph
+ *
+ */
 public class Graph {
 	
 	private List<Vertex> _vertices;
@@ -23,10 +27,18 @@ public class Graph {
 		instance = this;
 	}
 	
+	/**
+	 * 
+	 * @return List of Vertices
+	 */
 	public List<Vertex> getVertices() {
 		return _vertices;
 	}
 	
+	/**
+	 * 
+	 * @return List of Edges
+	 */
 	public List<Edge> getEdges() {
 		return _edges;
 	}

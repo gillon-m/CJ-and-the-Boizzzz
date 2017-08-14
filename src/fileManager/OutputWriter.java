@@ -10,6 +10,10 @@ import graph.Graph;
 import graph.Vertex;
 import scheduler.Schedule;
 
+/**
+ * OutputWriter is responsible for displaying and storing the output task schedule.
+ *
+ */
 public class OutputWriter {
 	String OUTPUT_DIRECTORY = "./output/";
 	String _outputFileName;
@@ -20,6 +24,9 @@ public class OutputWriter {
 		_graph = g;
 		_schedule = s;
 	}
+	/**
+	 * Outputs the constructed schedule to and "output" 
+	 */
 	public void writeToFile() {
 		File folder = new File("output");
 		if (!folder.exists()) {

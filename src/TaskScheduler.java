@@ -12,7 +12,7 @@ import scheduler.Scheduler;
  *
  */
 public class TaskScheduler {
-	final String DIRECTORY = "./input/";
+	//final String DIRECTORY = "./input/";
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
 	final String PROCESSOR_NUMBER_NOT_GIVEN = "Number of Processors is not given. Please indicate the number of processors to schedule the input graph on.";
@@ -52,7 +52,8 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	private void startExecution() throws Exception {
-		InputReader ir = new InputReader(DIRECTORY + _inputFileName);
+		//InputReader ir = new InputReader(DIRECTORY + _inputFileName);
+		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
@@ -76,7 +77,8 @@ public class TaskScheduler {
 		try {
 			_inputFileName = args[0];
 			_outputFileName = _inputFileName.substring(0, _inputFileName.length()-4) + "-output.dot";
-			FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
+			//FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
+			FileReader fr = new FileReader(new File(_inputFileName)); //input file must be in same directory as jar file
 		} catch (ArrayIndexOutOfBoundsException e){
 			System.out.println(FILENAME_NOT_GIVEN);
 			System.exit(0);
