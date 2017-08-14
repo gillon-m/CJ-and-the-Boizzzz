@@ -1,6 +1,7 @@
 import java.io.*;
 
 import fileManager.*;
+import fileManager.OutputWriter;
 import graph.Graph;
 import scheduler.Schedule;
 import scheduler.Scheduler;
