@@ -2,6 +2,7 @@ package components;
 
 import java.util.List;
 
+import graph.Graph;
 import graph.Vertex;
 import scheduler.Processor;
 import scheduler.Schedule;
@@ -32,6 +33,11 @@ public class CostFunctionCalculator {
 	 * @return 
 	 */
 	public int getTotalCostFunction() {
+		/*System.out.println("Max:===== " + Math.max(Math.max(this.maxStartTimeAndBtmLvlNode(), this.idleAndComputationTime()), this.minimalDataReadyTime()));
+		System.out.println("maxStart:  "+this.maxStartTimeAndBtmLvlNode());
+		System.out.println("idle: "+this.idleAndComputationTime());
+		System.out.println("minimal: "+this.minimalDataReadyTime());
+		System.out.println();*/
 		return Math.max(Math.max(this.maxStartTimeAndBtmLvlNode(), this.idleAndComputationTime()), this.minimalDataReadyTime());
 	}
 	/**
@@ -66,7 +72,17 @@ public class CostFunctionCalculator {
 	 */
 	private int minimalDataReadyTime() {
 		int costFunction = 0;
-		costFunction = this.getEarliestTimeNodeCanStart(_currentSchedule.getLastUsedVertex().getChildren());
+		
+		Vertex v = null;
+		for(Vertex everyVertex : Graph.getInstance().getVertices()) {
+			if(everyVertex.getName().equals(_currentSchedule.getLastUsedVertex().getName())) {
+				v = everyVertex;
+				break;
+			}
+		}
+		
+		costFunction = this.getEarliestTimeNodeCanStart(v.getChildren());
+
 		return costFunction;
 	}
 	
@@ -77,7 +93,15 @@ public class CostFunctionCalculator {
 	 */
 	private int getBtmLvl(Vertex vertex) {
 		int largestBtmLvlWeight = 0;
-		largestBtmLvlWeight = this.getLargestWeightPathToLeaf(vertex.getChildren(), 0);
+		Vertex v = null;
+		for(Vertex everyVertex : Graph.getInstance().getVertices()) {
+			if(everyVertex.getName().equals(vertex.getName())) {
+				v = everyVertex;
+				break;
+			}
+		}
+		//System.out.println("vertex used: "+v.getName());
+		largestBtmLvlWeight = this.getLargestWeightPathToLeaf(v.getChildren(), 0);
 		return largestBtmLvlWeight;
 	}
 	/**
@@ -117,15 +141,19 @@ public class CostFunctionCalculator {
 	 */
 	private int getLargestWeightPathToLeaf(List<Vertex> childVertices, int weightSoFar) {
 		int largestVertexWeight = 0;
+		String name = "";
 		for(Vertex v : childVertices) {
+			//System.out.println(v.getName() +  " " + weightSoFar);
+			int currentWeight = weightSoFar+v.getWeight();
 			if(!v.getChildren().isEmpty()) {
-				weightSoFar = this.getLargestWeightPathToLeaf(v.getChildren(), weightSoFar+v.getWeight());
-			} else {
-				if(weightSoFar+v.getWeight() > largestVertexWeight) {
-					largestVertexWeight = weightSoFar+v.getWeight();
-				}
+				currentWeight = this.getLargestWeightPathToLeaf(v.getChildren(), currentWeight);
+			}
+			if(currentWeight > largestVertexWeight) {
+				largestVertexWeight = weightSoFar+v.getWeight();
+				name = v.getName();
 			}
 		}
+		//System.out.println("btm: "+name + ":"+largestVertexWeight);
 		return largestVertexWeight;
 	}
 	/**
