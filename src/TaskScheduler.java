@@ -11,9 +11,7 @@ import scheduler.Scheduler;
  * @author CJ Bang
  *
  */
-public class TaskScheduler {
-	//final String DIRECTORY = "./input/";
-	
+public class TaskScheduler {	
 	// strings for error messages
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
@@ -37,10 +35,6 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		// ex1_in	ex2_in	ex3_in	Nodes_10_Random 50	Nodes_11_OutTree 350	Nodes_7_OutTree 28	Nodes_8_Random 581	Nodes_9_SeriesParallel 55	simple1_in	simple2_in
-		// Nodes_10_Random 50	Nodes_11_OutTree 227	Nodes_7_OutTree 22	Nodes_8_Random 581	Nodes_9_SeriesParallel 55
-		//String[] temp = new String[]{"C:\\Users\\syu680\\workspace\\306\\CJ-and-the-Boizzzz\\input\\Nodes_8_Random.dot","2"};//
-		//new TaskScheduler(temp);//
 		new TaskScheduler(args);
 	}
 	
@@ -58,8 +52,14 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	private void startExecution() throws Exception {
-		//InputReader ir = new InputReader(DIRECTORY + _inputFileName);
-		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
+		//InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
+
+		Path currentRelativePath = Paths.get("");
+		Path currentDir = currentRelativePath.toAbsolutePath(); // <-- Get the Path and use resolve on it.		
+		String filename = "input" + File.separatorChar + _inputFileName;
+		_filepath = currentDir.resolve(filename);
+		InputReader ir = new InputReader(_filepath.toString());
+
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
@@ -83,8 +83,13 @@ public class TaskScheduler {
 		try { // first argument is the file name. The output file name is determined by the input file name.
 			_inputFileName = args[0];
 			_outputFileName = _inputFileName.substring(0, _inputFileName.length()-4) + "-output.dot";
-			//FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
-			FileReader fr = new FileReader(new File(_inputFileName)); // try to read input file to see if it exists
+			//FileReader fr = new FileReader(new File(_inputFileName)); // try to read input file to see if it exists
+			
+			Path currentRelativePath = Paths.get("");
+			Path currentDir = currentRelativePath.toAbsolutePath(); // <-- Get the Path and use resolve on it.		
+			String filename = "input" + File.separatorChar + _inputFileName;
+			_filepath = currentDir.resolve(filename);
+			FileReader fr = new FileReader(new File(_filepath.toString()));
 		} catch (ArrayIndexOutOfBoundsException e){ // when the argument is not given
 			System.out.println(FILENAME_NOT_GIVEN);
 			System.exit(0);
