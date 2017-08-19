@@ -253,6 +253,16 @@ public class Schedule {
 		return finishTime - v.getWeight();
 	}
 
+	public List<Vertex> getAllUsedVerticesWithoutEmpty() {
+		List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
+		for (Vertex v: _usedVertices) {
+			if (v.getName() != "-") {
+				verticesWithoutEmpty.add(v);
+			}
+		}
+		return verticesWithoutEmpty;
+	}
+	
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

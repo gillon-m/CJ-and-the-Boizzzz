@@ -1,7 +1,5 @@
-/app/
-/components/
+/Test.class
+/TestScheduler.class
 /fileManager/
-/scheduler/
 /graph/
-/App.class
-/TaskScheduler.class
+/scheduler/

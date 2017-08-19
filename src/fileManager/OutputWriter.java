@@ -15,6 +15,7 @@ public class OutputWriter {
 	String _outputFileName;
 	Graph _graph;
 	Schedule _schedule;
+	String name;
 	public OutputWriter(String outputFileName, Graph g, Schedule s) {
 		_outputFileName = outputFileName;
 		_graph = g;
@@ -35,10 +36,14 @@ public class OutputWriter {
 			}
 			fw.write("digraph \"output" + name + "\" {\n");
 			for (Vertex v: _graph.getVertices()) {
-				fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getStartTime(v) + ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");
+				if (v.getName() != "-") {
+					fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getStartTime(v) + ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");					
+				}
 			}
-			for (Edge e: _graph.getEdges()) {				
-				fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");
+			for (Edge e: _graph.getEdges()) {	
+				if (e.getSource().getName()!= "-") {
+					fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");
+				}
 			}
 			fw.write("}");
 			fw.close();
