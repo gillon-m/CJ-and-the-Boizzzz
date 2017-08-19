@@ -29,7 +29,7 @@ public class TaskScheduler {
 	String _inputFileName, _outputFileName; 
 	int _noOfProcessors;
 	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
-	boolean _visualisationOn = false; // by default visualisation is off 
+	boolean _visualisation = false; // by default visualisation is off 
 
 	/**
 	 * Main program. It takes arguments from the user input and pass them to other methods to process. 
@@ -59,7 +59,7 @@ public class TaskScheduler {
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
-		Schedule s =  scheduler.getOptimalSchedule();
+		Schedule s =  scheduler.getOptimalSchedule(_visualisation);
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
@@ -124,6 +124,7 @@ public class TaskScheduler {
 				}
 				indexOfArguments += 2; // move to the next set of arguments if there are more
 			} else if (args[indexOfArguments].equals("-v")) { // option is visualisation
+				_visualisation = true;
 				indexOfArguments += 1; // doesnt require another value to follow
 			} else { // the argument was not an option selector therefore invalid argument
 				System.out.println(INVALID_OPTION);
@@ -167,7 +168,7 @@ public class TaskScheduler {
 		} else {
 			System.out.println("No of Cores for execution in parallel is: " + _noOfCores);
 		}
-		if (_visualisationOn) {
+		if (_visualisation) {
 			System.out.println("Visualisation Effect is: On");
 		} else {
 			System.out.println("Visualisation Effect is: Off");

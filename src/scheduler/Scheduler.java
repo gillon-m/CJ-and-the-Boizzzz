@@ -38,10 +38,10 @@ public class Scheduler {
 	 * @return optimal schedule
 	 * @throws Exception
 	 */
-	public Schedule getOptimalSchedule() throws Exception {
+	public Schedule getOptimalSchedule(boolean visualisation) throws Exception {
 		this.addRootVerticesSchedulesToOpenSchedule();
 		
-		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm(visualisation);
 		
 		return optimalSchedule;
 	}
@@ -53,12 +53,15 @@ public class Scheduler {
 	 * @return optimal schedule
 	 * @throws Exception
 	 */
-	private Schedule makeSchedulesUsingAlgorithm() throws Exception {
+	private Schedule makeSchedulesUsingAlgorithm(boolean visualisation) throws Exception {
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 			
 			//System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
 			//		+"\n"+ currentSchedule.toString());
+			if (visualisation) {
+				//TODO visualisation stuff here
+			}
 			
 			_openSchedules.remove(currentSchedule);
 			_closedSchedules.add(currentSchedule);
