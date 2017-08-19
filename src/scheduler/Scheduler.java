@@ -9,6 +9,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import javafx.fxml.Initializable;
 import visualisation.Visualiser;
 import components.ScheduleComparator;
 /**
@@ -23,7 +24,7 @@ import components.ScheduleComparator;
  * @author Alex Yoo
  *
  */
-public class Scheduler {
+public class Scheduler implements Initializable{
 	private int _numberOfProcessors;
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private List<Schedule> _closedSchedules;
@@ -58,6 +59,8 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 	private Schedule makeSchedulesUsingAlgorithm() throws Exception {
+		
+		
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 

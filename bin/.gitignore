@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-/TaskScheduler.class
-/components/
-/fileManager/
-/graph/
->>>>>>> 0649a3878eefb9e85c34c5fd0b7a6ed604ffab73
 /scheduler/
 /visualisation/
+/View.fxml
