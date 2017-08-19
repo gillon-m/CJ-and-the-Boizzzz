@@ -259,6 +259,15 @@ public class Schedule {
 		int finishTime = _processors.get(index).getTime(v);
 		return finishTime;
 	}
+    public List<Vertex> getAllUsedVerticesWithoutEmpty() {
+        List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
+        for (Vertex v: _usedVertices) {
+            if (v.getName() != "-") {
+                verticesWithoutEmpty.add(v);
+            }
+        }
+        return verticesWithoutEmpty;
+    }
 
 	private boolean checkVertexInScheduleOfProcessor(Vertex v, Processor scheduleOfProcessor){
 		for(Vertex usedVertexInThisProcessor : scheduleOfProcessor.getScheduleOfProcessor()){

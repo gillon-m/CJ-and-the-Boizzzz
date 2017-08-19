@@ -47,11 +47,15 @@ public class OutputWriter {
 			}
 			fw.write("digraph \"output" + name + "\" {\n"); //the name has prefix of "output" now.
 			for (Vertex v: _graph.getVertices()) {
-				fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getVertexStartTime(v) //vertices have two additional arguments 
-				+ ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");									// start time and processor number.
+				if (v.getName() != "-") {
+					fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getVertexStartTime(v) //vertices have two additional arguments 
+					+ ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");									// start time and processor number.					
+				}
 			}
-			for (Edge e: _graph.getEdges()) { //lines for edge look identical. 			
-				fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");
+			for (Edge e: _graph.getEdges()) { //lines for edge look identical. 		
+				if (e.getSource().getName()!= "-") {
+					fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");					
+				}
 			}
 			fw.write("}");
 			fw.close();

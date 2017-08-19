@@ -1,4 +1,16 @@
 digraph "outputRandom_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random" {
+<<<<<<< HEAD
+	0	 [Weight=6,Start=58,Processor=2];
+	1	 [Weight=5,Start=0,Processor=1];
+	2	 [Weight=5,Start=53,Processor=2];
+	3	 [Weight=10,Start=94,Processor=2];
+	4	 [Weight=3,Start=64,Processor=2];
+	5	 [Weight=7,Start=24,Processor=2];
+	6	 [Weight=8,Start=67,Processor=2];
+	7	 [Weight=3,Start=75,Processor=2];
+	8	 [Weight=8,Start=78,Processor=2];
+	9	 [Weight=8,Start=86,Processor=2];
+=======
 	-	 [Weight=0,Start=0,Processor=1];
 	0	 [Weight=6,Start=0,Processor=1];
 	1	 [Weight=5,Start=9,Processor=1];
@@ -12,6 +24,7 @@ digraph "outputRandom_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random" {
 	9	 [Weight=8,Start=38,Processor=1];
 	- -> 1	 [Weight=0];
 	- -> 0	 [Weight=0];
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847
 	0 -> 3	 [Weight=34];
 	0 -> 4	 [Weight=24];
 	0 -> 9	 [Weight=44];
