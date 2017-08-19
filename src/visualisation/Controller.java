@@ -20,7 +20,8 @@ public class Controller implements Initializable {
 	}
 
 	public void click(){
-		backgroundThread =new Service<Void>(){			//perform calculations in background thread
+		backgroundThread =new Service<Void>(){
+
 			@Override
 			protected Task<Void> createTask() {
 				return new Task<Void>(){
@@ -44,6 +45,8 @@ public class Controller implements Initializable {
 
 		lbl.textProperty().bind(backgroundThread.messageProperty());
 		backgroundThread.restart();
+
+		System.out.println("hey");
 	}
 
 

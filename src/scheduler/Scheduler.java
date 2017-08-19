@@ -9,6 +9,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import javafx.concurrent.Task;
 import javafx.fxml.Initializable;
 import visualisation.Visualiser;
 import components.ScheduleComparator;
@@ -24,10 +25,11 @@ import components.ScheduleComparator;
  * @author Alex Yoo
  *
  */
-public class Scheduler implements Initializable{
+public class Scheduler extends Task<Schedule>{
 	private int _numberOfProcessors;
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private List<Schedule> _closedSchedules;
+	private Schedule _optimalSchedule;
 
 	public Scheduler(int numberOfProcessors) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -35,18 +37,23 @@ public class Scheduler implements Initializable{
 		_numberOfProcessors = numberOfProcessors;
 	}
 
+
 	/**
 	 * This method returns the optimal schedule
 	 * @return optimal schedule
 	 * @throws Exception
 	 */
-	public Schedule getOptimalSchedule(boolean visualisation) throws Exception {
-		if (visualisation) {
-			Visualiser.launch(Visualiser.class, new String[0]); //This should only be called once throughout the duration of the application
-		}
+	public Schedule getOptimalSchedule() throws Exception {
+		//if (visualisation) {
+		//	javafx.application.Application.launch(Visualiser.class); //This should only be called once throughout the duration of the application
+		//}
+
 		this.addRootVerticesSchedulesToOpenSchedule();
 
-		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+		Scheduler task = new Scheduler(_numberOfProcessors);
+		new Thread(task).start();
+
+		Schedule _optimalSchedule = this.makeSchedulesUsingAlgorithm();
 
 		return optimalSchedule;
 	}
@@ -59,8 +66,8 @@ public class Scheduler implements Initializable{
 	 * @throws Exception
 	 */
 	private Schedule makeSchedulesUsingAlgorithm() throws Exception {
-		
-		
+
+
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 
@@ -183,5 +190,10 @@ public class Scheduler implements Initializable{
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected Schedule call() throws Exception {
+		return getOptimalSchedule();
 	}
 }
