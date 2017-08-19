@@ -3,6 +3,13 @@ package graph;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton class that represents the graph data structure used to store the 
+ * input acyclic graph.
+ * Graph has a name, list of vertices, and list of edges. 
+ *
+ * @author Brad Miller, Andon Xia
+ */
 public class Graph {
 	
 	private List<Vertex> _vertices;
@@ -23,10 +30,18 @@ public class Graph {
 		instance = this;
 	}
 	
+	/**
+	 * 
+	 * @return List of Vertices
+	 */
 	public List<Vertex> getVertices() {
 		return _vertices;
 	}
 	
+	/**
+	 * 
+	 * @return List of Edges
+	 */
 	public List<Edge> getEdges() {
 		return _edges;
 	}
@@ -38,11 +53,18 @@ public class Graph {
 		return _name;
 	}
 
+	/**
+	 * public method that set up for making schedules.
+	 */
 	public void setUpForMakingSchedules() {
 		setUpChildrenParents();
 		setUpLevelsOfNodes();
 		setUpRootNodes();
 	}
+	
+	/**
+	 * Set up the children - parents relationship between vertices. 
+	 */
 	private void setUpChildrenParents() {
 		for (Vertex v : this.getVertices()) {
 			for (Edge e : this.getEdges()) {
@@ -57,6 +79,10 @@ public class Graph {
 		}
 	}
 	
+	/**
+	 * Set up levels for vertices in graph. 
+	 * The root has a level of 0 and the children of root has 1 etc.
+	 */
 	private void setUpLevelsOfNodes() {
 		_rootVertices = new ArrayList<Vertex>();
 		for (Vertex v : this.getVertices()) {
@@ -69,6 +95,13 @@ public class Graph {
 			}
 		}
 	}
+	/**
+	 * Set up imaginary root vertex if there are more than one root vertices.
+	 * Technically root needs to be one - hence make an imaginary root vertex.
+	 * This has 0 weight and the edges off it have 0 weight as well. 
+	 * Once a new root has been established, set up children parents relationship and 
+	 * set the level of each vertex again.
+	 */
 	private void setUpRootNodes() {
 		if (_rootVertices.size() >1) {
 			Vertex emptyVertex = new Vertex("-", 0);

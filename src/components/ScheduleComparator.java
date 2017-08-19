@@ -4,25 +4,28 @@ import java.util.Comparator;
 
 import scheduler.Schedule;
 
+/**
+ * Class that compares two different schedule objects by using properties
+ * of Schedules. The good combination of properties will give the best cost function 
+ * that leads to the right optimal schedule when using the a* algorithm. PriorityQueue 
+ * used to store the open schedules requires this class to prioritise schedules.
+ * 
+ * @author CJ Bang, Alex Yoo
+ *
+ */
 public class ScheduleComparator implements Comparator<Schedule> {
+	/**
+	 * Compares two different schedules. If the first schedule is closer to 
+	 * the optimal schedule than the second, returns positive integer,
+	 * if same, returns 0
+	 * if worse (or further) then returns negative integer.
+	 * @return int
+	 */
 
 	@Override
 	public int compare(Schedule o1, Schedule o2) {
-		/*Returns schedules based on h(n) value only. 
-		 *Does not return optimal schedule,
-		but returns an arbitrary valid schedule.
-		Used for MileStone 1 Demo purposes only.*/
-		
-		return (int) (o1.getAllUsedVertices().size()*0.1-o2.getAllUsedVertices().size()*0.1);
-		
-		
-		/*Return based on g(n) value only.
-		 *Returns an optimal schedule,
-		 *however does not work for Nodes_11_OutTree due to memory error. 
-		 *Heuristic function will be added to this return statement (todo).
-		*/
-		
-//		return o1.getTimeOfSchedule()-o2.getTimeOfSchedule();
+		CostFunctionCalculator c1 = new CostFunctionCalculator(o1);
+		CostFunctionCalculator c2 = new CostFunctionCalculator(o2);
+		return c1.getTotalCostFunction() - c2.getTotalCostFunction();
 	}
-
 }

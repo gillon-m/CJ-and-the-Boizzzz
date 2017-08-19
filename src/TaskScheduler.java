@@ -1,9 +1,15 @@
+<<<<<<< HEAD:src/TaskScheduler.java
 
+=======
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 import java.io.*;
 
 import fileManager.*;
 import graph.Graph;
+<<<<<<< HEAD:src/TaskScheduler.java
 import graph.Vertex;
+=======
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
@@ -14,7 +20,13 @@ import scheduler.Scheduler;
  *
  */
 public class TaskScheduler {
+<<<<<<< HEAD:src/TaskScheduler.java
 	final String DIRECTORY = "./input/";
+=======
+	//final String DIRECTORY = "./input/";
+	
+	// strings for error messages
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
 	final String PROCESSOR_NUMBER_NOT_GIVEN = "Number of Processors is not given. Please indicate the number of processors to schedule the input graph on.";
@@ -23,10 +35,12 @@ public class TaskScheduler {
 	final String INVALID_OPTION = "Invalid option: \"-p\", \"-v\", or \"-o\" was not located correctly.";
 	final String CORE_NUMBER_NOT_GIVEN = "Number of Cores for execution needs to be given as a digit. ie. 5 instead of five";
 	final String CONFIRMATION_MESSAGE = "If options are correctly set, Press \"y\" for yes. The program will start executing automatically.\nIf you want to make changes, press any other key to exit and re-execute the file.";
-	int indexOfArguments = 2;
+
+	
+	int indexOfArguments = 2; //0 is always the file name, 1 is the number of processor
 	String _inputFileName, _outputFileName; 
 	int _noOfProcessors;
-	int _noOfCores = -1;
+	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
 	boolean _visualisationOn = false; // by default visualisation is off 
 
 	/**
@@ -52,7 +66,8 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	private void startExecution() throws Exception {
-		InputReader ir = new InputReader(DIRECTORY + _inputFileName);
+		//InputReader ir = new InputReader(DIRECTORY + _inputFileName);
+		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		for (Vertex v: graph.getVertices()) {
@@ -70,29 +85,30 @@ public class TaskScheduler {
 	}
 	
 	/**
-	 * Parses the given arguments and stores them as variables. Invalid argument 
+	 * Parses given arguments and stores them as variables. Invalid argument 
 	 * throws an appropriate exceptions. When an exception gets thrown,
 	 * an appropriate error message is provided and the program is halted.
 	 * @param args
 	 */
 	private void parseArguments(String[] args) {
-		try {
+		try { // first argument is the file name. The output file name is determined by the input file name.
 			_inputFileName = args[0];
 			_outputFileName = _inputFileName.substring(0, _inputFileName.length()-4) + "-output.dot";
-			FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
-		} catch (ArrayIndexOutOfBoundsException e){
+			//FileReader fr = new FileReader(new File(DIRECTORY + _inputFileName));
+			FileReader fr = new FileReader(new File(_inputFileName)); // try to read input file to see if it exists
+		} catch (ArrayIndexOutOfBoundsException e){ // when the argument is not given
 			System.out.println(FILENAME_NOT_GIVEN);
 			System.exit(0);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) { // when the file cannot be located 
 			System.out.println(INVALID_FILENAME);
 			System.exit(0);
 		}
-		try {
+		try { // second argument is the number of processors that user wants to execute the program with.
 			_noOfProcessors = Integer.parseInt(args[1]);
-		} catch (ArrayIndexOutOfBoundsException e1) {
+		} catch (ArrayIndexOutOfBoundsException e1) { // when the argument is not given
 			System.out.println(PROCESSOR_NUMBER_NOT_GIVEN);
 			System.exit(0);
-		} catch (NumberFormatException e2) {
+		} catch (NumberFormatException e2) { // when the given argument is not a number
 			System.out.println(INVALID_PROCESSOR);
 			System.exit(0);
 		}
@@ -110,21 +126,21 @@ public class TaskScheduler {
 	 * @param args
 	 */
 	private void checkAdditionalOptions(String[] args) {
-		while (indexOfArguments < args.length) {
+		while (indexOfArguments < args.length) { //checks the additional options - length could vary therefore using while loop
 			if (args[indexOfArguments].equals("-p") || args[indexOfArguments].equals("-o")) { //options are correctly given but its not visualisation
 				try {
-					checkAdditionalOptionValue(args[indexOfArguments], args[indexOfArguments+1]);
-				} catch (ArrayIndexOutOfBoundsException e1) {
+					checkAdditionalOptionValue(args[indexOfArguments], args[indexOfArguments+1]); // then there has to be one following argument
+				} catch (ArrayIndexOutOfBoundsException e1) { // when the value was not given
 					System.out.println(INVALID_OPTION_VALUE);
 					System.exit(0);
-				} catch (NumberFormatException e2) {
+				} catch (NumberFormatException e2) { // for -p option, if the number of cores is not a number
 					System.out.println(CORE_NUMBER_NOT_GIVEN);
 					System.exit(0);
 				}
-				indexOfArguments += 2;
+				indexOfArguments += 2; // move to the next set of arguments if there are more
 			} else if (args[indexOfArguments].equals("-v")) { // option is visualisation
-				indexOfArguments += 1;
-			} else {
+				indexOfArguments += 1; // doesnt require another value to follow
+			} else { // the argument was not an option selector therefore invalid argument
 				System.out.println(INVALID_OPTION);
 				System.exit(0);
 			}				
@@ -142,10 +158,10 @@ public class TaskScheduler {
 	 * @throws NumberFormatException
 	 */
 	private void checkAdditionalOptionValue(String option, String value) throws ArrayIndexOutOfBoundsException, NumberFormatException {
-		if (option.equals("-p")) {
+		if (option.equals("-p")) { //if -p is selected, then it is followed by a number
 			_noOfCores = Integer.parseInt(value);
 		}
-		if (option.equals("-o")) {
+		if (option.equals("-o")) { //if -o is selected, then it is followed by a string
 			_outputFileName = value + ".dot";
 		}
 	}
@@ -156,7 +172,8 @@ public class TaskScheduler {
 	 * If user does not press y, the program is halt and has to be re-executed.
 	 * @throws Exception 
 	 */
-	private void confirmOptionsAndExecute() throws Exception {
+	private void confirmOptionsAndExecute() throws Exception { 
+		// let user to review what options have been chosen and confirm
 		System.out.println("*********************************************************************");
 		System.out.println("The Input Graph to be scheduled is: " + _inputFileName);
 		System.out.println("The Number of Processors to be used is: " + _noOfProcessors);
@@ -173,12 +190,13 @@ public class TaskScheduler {
 		System.out.println("The Name of Output File is to be: " + _outputFileName);
 		System.out.println("*********************************************************************");
 		System.out.println(CONFIRMATION_MESSAGE);		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // get user confirmation 
 		String line;
 		try {
-			if ((line = br.readLine()).equals("y")) {
+			if ((line = br.readLine()).equals("y")) { // user confirms the options by pressing "y"
 				startExecution();
-			} else {
+			} else { // if other key was entered, then the program stops
 				System.out.println("exiting...");
 				System.exit(0);
 			}

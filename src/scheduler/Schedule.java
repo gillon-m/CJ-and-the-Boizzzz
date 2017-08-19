@@ -61,7 +61,7 @@ public class Schedule {
 	}
 	
 	private void updateUsedVertices(Vertex v) {
-		_lastUsedVertex = new Vertex(v.getName(),v.getWeight());
+		_lastUsedVertex = v;
 		_usedVertices.add(v);
 	}
 	/**
@@ -238,6 +238,10 @@ public class Schedule {
 	public List<Vertex> getChildVertices(){
 		return _childVertices;
 	}
+
+	/**
+	 * Finds which processor this vertex is running at and returns the index
+	 */
 	public int getProcessorIndex(Vertex v) {
 		int index = -1;
 		for (int i = 0; i < _processors.size(); i++) {
@@ -247,12 +251,16 @@ public class Schedule {
 		}
 		return index;
 	}
-	public int getStartTime(Vertex v) {
+	public int getVertexStartTime(Vertex v) {
+		return getVertexFinishTime(v) - v.getWeight();
+	}
+	public int getVertexFinishTime(Vertex v) {
 		int index = getProcessorIndex(v);
 		int finishTime = _processors.get(index).getTime(v);
-		return finishTime - v.getWeight();
+		return finishTime;
 	}
 
+<<<<<<< HEAD
 	public List<Vertex> getAllUsedVerticesWithoutEmpty() {
 		List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
 		for (Vertex v: _usedVertices) {
@@ -263,6 +271,9 @@ public class Schedule {
 		return verticesWithoutEmpty;
 	}
 	
+=======
+
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

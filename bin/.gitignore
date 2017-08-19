@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 /Test.class
 /TestScheduler.class
+=======
+/TaskScheduler.class
+/components/
+>>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847
 /fileManager/
 /graph/
 /scheduler/
