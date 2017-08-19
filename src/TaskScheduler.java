@@ -39,7 +39,8 @@ public class TaskScheduler {
 	public static void main(String[] args) throws Exception {
 		// ex1_in	ex2_in	ex3_in	Nodes_10_Random 50	Nodes_11_OutTree 350	Nodes_7_OutTree 28	Nodes_8_Random 581	Nodes_9_SeriesParallel 55	simple1_in	simple2_in
 		// Nodes_10_Random 50	Nodes_11_OutTree 227	Nodes_7_OutTree 22	Nodes_8_Random 581	Nodes_9_SeriesParallel 55
-		//String[] temp = new String[]{"C:\\Users\\syu680\\workspace\\306\\CJ-and-the-Boizzzz\\input\\Nodes_8_Random.dot","2"};
+		//String[] temp = new String[]{"C:\\Users\\syu680\\workspace\\306\\CJ-and-the-Boizzzz\\input\\Nodes_8_Random.dot","2"};//
+		//new TaskScheduler(temp);//
 		new TaskScheduler(args);
 	}
 	

@@ -9,6 +9,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import components.Pruning;
 import components.ScheduleComparator;
 /**
  * This Class uses the Schedule Class and Processor Class 
@@ -94,6 +95,11 @@ public class Scheduler {
 			currentChildVertexSchedules = currentScheduleCopy.generateAllPossibleScheduleForSpecifiedVertex(childVertex);
 			
 			for(int i = 0; i < _numberOfProcessors; i++ ) {
+				/*
+				Pruning pruning = new Pruning();
+				if(pruning.checkUsingPruning(_openSchedules, _closedSchedules, currentChildVertexSchedules[i])){
+					_openSchedules.add(currentChildVertexSchedules[i]);
+				}*/
 				if(this.checkScheduleOnOpenSchedule(currentChildVertexSchedules[i])) {
 					_openSchedules.add(currentChildVertexSchedules[i]);
 				}
@@ -113,7 +119,7 @@ public class Scheduler {
 	 * @return
 	 */
 	private boolean checkScheduleOnOpenSchedule(Schedule childSchedule) {
-		boolean passesCondition = true;/*
+		boolean passesCondition = true;
 		for(Schedule schedule : _closedSchedules) {
 			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
 				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
@@ -129,7 +135,7 @@ public class Scheduler {
 					break;
 				}
 			}
-		}*/
+		}
 		return passesCondition;
 	}
 	/**

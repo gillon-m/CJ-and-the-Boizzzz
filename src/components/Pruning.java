@@ -13,9 +13,8 @@ public class Pruning {
 	
 	public boolean checkUsingPruning(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
 		
-		if(this.isThereDuplicates(openSchedules, closedSchedules, currentSchedule) 
-				&& this.isThereEquivalentNodes(openSchedules, closedSchedules, currentSchedule) 
-				&& this.checkNormalisation(openSchedules, closedSchedules, currentSchedule))
+		if(!this.isThereDuplicates(openSchedules, closedSchedules, currentSchedule) 
+				&& !this.isThereNodesToNormalise(openSchedules, closedSchedules, currentSchedule))
 			return true;
 		return false;
 	}
@@ -24,21 +23,21 @@ public class Pruning {
 		for(Schedule schedule : openSchedules){
 			for(int i = 0; i < schedule.getNumberOfProcessors(); i++){
 				if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(i))){
-					return false;
+					return true;
 				}
 			}
 		}
 		for(Schedule schedule : closedSchedules){
 			for(int i = 0; i < schedule.getNumberOfProcessors(); i++){
 				if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(i))){
-					return false;
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 	
-	private boolean isThereEquivalentNodes(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
+	private boolean isThereNodesToNormalise(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
 		int numberOfProcessor = currentSchedule.getNumberOfProcessors();
 		for(Schedule schedule : openSchedules){
 			for(int i = 0; i < numberOfProcessor; i++){
@@ -69,7 +68,7 @@ public class Pruning {
 		return true;
 	}
 	
-	private boolean checkNormalisation(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
+	private boolean isThereEquivalentNodes(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
 		
 		return true;
 	}

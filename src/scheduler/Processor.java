@@ -94,8 +94,8 @@ public class Processor {
 		return time;
 	}
 	
-	@Override
-	public boolean equals(Object obj){
+	
+	public boolean equalCheck(Object obj){
 		if (obj == null || !(obj.getClass() == this.getClass())) {
 	        return false;
 	    }
