@@ -256,6 +256,6 @@ public class TestScheduler {
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(11, s.getAllUsedVerticesWithoutEmpty().size());
-		assertEquals(350, s.getTimeOfSchedule());
+		assertEquals(227, s.getTimeOfSchedule());
     }
 }
