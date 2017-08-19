@@ -11,6 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import graph.Graph;
@@ -38,7 +39,7 @@ public class Scheduler extends JFrame {
 	private List<Schedule> _closedSchedules;
 	private Schedule _optimalSchedule;
 
-	private JLabel countLabel1 = new JLabel("0");
+	private JTextArea countLabel1 = new JTextArea("0");
 
 	public Scheduler(int numberOfProcessors) {
 		super("Optimal Task Schedule Generator");
@@ -53,16 +54,10 @@ public class Scheduler extends JFrame {
 		  gc.weighty = 1;
 		  add(countLabel1, gc);
 
-		  setSize(200, 400);
-		  setDefaultCloseOperation(EXIT_ON_CLOSE);
-		  setVisible(true);
-
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 	}
-
-
 
 	/**
 	 * This method returns the optimal schedule
@@ -71,13 +66,15 @@ public class Scheduler extends JFrame {
 	 */
 	public Schedule getOptimalSchedule(boolean visualisation) throws Exception {
 		if (visualisation) {
-
+			setSize(200, 400);
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+			setVisible(true);
 		}
 		this.addRootVerticesSchedulesToOpenSchedule();
 
 		AlgorithmWorker worker = new AlgorithmWorker();
 		worker.execute();
-		while (worker.getState() != SwingWorker.StateValue.DONE) {
+		while (!worker.isDone()) {
 			//Wait for worker to finish
 		}
 		return _optimalSchedule;
