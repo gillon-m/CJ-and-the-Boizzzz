@@ -48,15 +48,21 @@ public class Pruning {
 						break;
 					}
 					if(j == numberOfProcessor-1){
-						return true;
+						return false;
 					}
 				}
 			}
 		}
 		for(Schedule schedule : closedSchedules){
-			for(int i = 0; i < schedule.getNumberOfProcessors(); i++){
-				if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(i))){
-					return false;
+			for(int i = 0; i < numberOfProcessor; i++){
+				boolean foundSameProcessor = false;
+				for(int j = 0; j < numberOfProcessor; j++){
+					if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(j))){
+						break;
+					}
+					if(j == numberOfProcessor-1){
+						return false;
+					}
 				}
 			}
 		}
