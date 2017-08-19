@@ -24,7 +24,6 @@ public class OutputWriter {
 	String _outputFileName;
 	Graph _graph;
 	Schedule _schedule;
-	String name;
 	public OutputWriter(String outputFileName, Graph g, Schedule s) {
 		_outputFileName = outputFileName;
 		_graph = g;
@@ -48,22 +47,15 @@ public class OutputWriter {
 			}
 			fw.write("digraph \"output" + name + "\" {\n"); //the name has prefix of "output" now.
 			for (Vertex v: _graph.getVertices()) {
-<<<<<<< HEAD
 				if (v.getName() != "-") {
-					fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getStartTime(v) + ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");					
+					fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getVertexStartTime(v) //vertices have two additional arguments 
+					+ ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");									// start time and processor number.					
 				}
 			}
-			for (Edge e: _graph.getEdges()) {	
+			for (Edge e: _graph.getEdges()) { //lines for edge look identical. 		
 				if (e.getSource().getName()!= "-") {
-					fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");
+					fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");					
 				}
-=======
-				fw.write("\t"+v.getName()+"\t [Weight=" + v.getWeight() + ",Start=" + _schedule.getVertexStartTime(v) //vertices have two additional arguments 
-				+ ",Processor="+ (_schedule.getProcessorIndex(v)+1) + "];\n");									// start time and processor number.
-			}
-			for (Edge e: _graph.getEdges()) { //lines for edge look identical. 			
-				fw.write("\t"+e.getSource().getName() + " -> " + e.getDestination().getName() + "\t [Weight=" + e.getWeight() + "];\n");
->>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847
 			}
 			fw.write("}");
 			fw.close();

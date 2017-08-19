@@ -259,21 +259,17 @@ public class Schedule {
 		int finishTime = _processors.get(index).getTime(v);
 		return finishTime;
 	}
+    public List<Vertex> getAllUsedVerticesWithoutEmpty() {
+        List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
+        for (Vertex v: _usedVertices) {
+            if (v.getName() != "-") {
+                verticesWithoutEmpty.add(v);
+            }
+        }
+        return verticesWithoutEmpty;
+    }
 
-<<<<<<< HEAD
-	public List<Vertex> getAllUsedVerticesWithoutEmpty() {
-		List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
-		for (Vertex v: _usedVertices) {
-			if (v.getName() != "-") {
-				verticesWithoutEmpty.add(v);
-			}
-		}
-		return verticesWithoutEmpty;
-	}
-	
-=======
 
->>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

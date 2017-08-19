@@ -1,15 +1,7 @@
-<<<<<<< HEAD:src/TaskScheduler.java
-
-=======
->>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 import java.io.*;
 
 import fileManager.*;
 import graph.Graph;
-<<<<<<< HEAD:src/TaskScheduler.java
-import graph.Vertex;
-=======
->>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
@@ -20,13 +12,9 @@ import scheduler.Scheduler;
  *
  */
 public class TaskScheduler {
-<<<<<<< HEAD:src/TaskScheduler.java
-	final String DIRECTORY = "./input/";
-=======
 	//final String DIRECTORY = "./input/";
 	
 	// strings for error messages
->>>>>>> 126dfcac7bca065d8067090c19d4c3ae238a6847:src/TaskScheduler.java
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
 	final String PROCESSOR_NUMBER_NOT_GIVEN = "Number of Processors is not given. Please indicate the number of processors to schedule the input graph on.";
@@ -70,9 +58,6 @@ public class TaskScheduler {
 		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		for (Vertex v: graph.getVertices()) {
-			System.out.println(v.getName());
-		}
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
