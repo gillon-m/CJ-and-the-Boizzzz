@@ -1,8 +1,9 @@
-package app;
 
 import java.io.*;
 
 import fileManager.*;
+import graph.Graph;
+import graph.Vertex;
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
@@ -12,7 +13,7 @@ import scheduler.Scheduler;
  * @author CJ Bang
  *
  */
-public class App {
+public class TaskScheduler {
 	final String DIRECTORY = "./input/";
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
@@ -34,10 +35,10 @@ public class App {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		new App(args);
+		new TaskScheduler(args);
 	}
 	
-	public App(String[] args) throws Exception{
+	public TaskScheduler(String[] args) throws Exception{
 		parseArguments(args);
 		//startExecution();
 		confirmOptionsAndExecute();
@@ -54,6 +55,9 @@ public class App {
 		InputReader ir = new InputReader(DIRECTORY + _inputFileName);
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
+		for (Vertex v: graph.getVertices()) {
+			System.out.println(v.getName());
+		}
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
