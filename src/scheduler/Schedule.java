@@ -245,7 +245,7 @@ public class Schedule {
 	public int getProcessorIndex(Vertex v) {
 		int index = -1;
 		for (int i = 0; i < _processors.size(); i++) {
-			if (_processors.get(i).getScheduleOfProcessor().contains(v)) {
+			if (checkVertexInScheduleOfProcessor(v, _processors.get(i))) {
 				index = i;
 			}
 		}
@@ -260,7 +260,14 @@ public class Schedule {
 		return finishTime;
 	}
 
-
+	private boolean checkVertexInScheduleOfProcessor(Vertex v, Processor scheduleOfProcessor){
+		for(Vertex usedVertexInThisProcessor : scheduleOfProcessor.getScheduleOfProcessor()){
+			if(usedVertexInThisProcessor.getName().equals(v.getName())){
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

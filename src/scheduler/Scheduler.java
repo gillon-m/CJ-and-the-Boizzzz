@@ -57,12 +57,14 @@ public class Scheduler {
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 			
-			//System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
-			//		+"\n"+ currentSchedule.toString());
+			
+			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
+					+"\n"+ currentSchedule.toString());
+			System.out.println("Size: "+_openSchedules.size());
+			
 			
 			_openSchedules.remove(currentSchedule);
 			_closedSchedules.add(currentSchedule);
-			//System.out.println("Size: "+_openSchedules.size());
 			
 			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 				return currentSchedule;
@@ -111,7 +113,7 @@ public class Scheduler {
 	 * @return
 	 */
 	private boolean checkScheduleOnOpenSchedule(Schedule childSchedule) {
-		boolean passesCondition = true;
+		boolean passesCondition = true;/*
 		for(Schedule schedule : _closedSchedules) {
 			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
 				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
@@ -127,7 +129,7 @@ public class Scheduler {
 					break;
 				}
 			}
-		}
+		}*/
 		return passesCondition;
 	}
 	/**

@@ -94,6 +94,20 @@ public class Processor {
 		return time;
 	}
 	
+	@Override
+	public boolean equals(Object obj){
+		if (obj == null || !(obj.getClass() == this.getClass())) {
+	        return false;
+	    }
+		
+		for(int i = 0; i < _scheduleOfProcessor.size(); i++){
+			if(!_scheduleOfProcessor.get(i).getName().equals(((Processor) obj)._scheduleOfProcessor.get(i).getName())){
+				return false;
+			}	
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * To adjust the format and the data that should be returned

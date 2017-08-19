@@ -33,55 +33,72 @@ public class CostFunctionCalculator {
 	 * @return 
 	 */
 	public int getTotalCostFunction() {
-		/*System.out.println("Max:===== " + Math.max(Math.max(this.maxStartTimeAndBtmLvlNode(), this.idleAndComputationTime()), this.minimalDataReadyTime()));
+		/*
+		System.out.println("COMPARING: Vertex = " + _currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+_currentSchedule.getTimeOfSchedule()
+				+"\n"+ _currentSchedule.toString());
+		System.out.println("Max:===== " + Math.max(Math.max(this.maxStartTimeAndBtmLvlNode(), this.idleAndComputationTime()), this.minimalDataReadyTime()));
 		System.out.println("maxStart:  "+this.maxStartTimeAndBtmLvlNode());
 		System.out.println("idle: "+this.idleAndComputationTime());
 		System.out.println("minimal: "+this.minimalDataReadyTime());
-		System.out.println();*/
+		System.out.println();
+		*/
 		return Math.max(Math.max(this.maxStartTimeAndBtmLvlNode(), this.idleAndComputationTime()), this.minimalDataReadyTime());
 	}
 	/**
-	 * Cost Function = Cost of Schedule + Bottom Level 
+	 * Cost Function = Cost of Schedule + Bottom Level of any node
 	 * @return
 	 */
 	private int maxStartTimeAndBtmLvlNode() {
-		int costFunction = _cost + this.getBtmLvl(_currentSchedule.getLastUsedVertex());
+		int costFunction = 0;
+		for(Vertex usedVertex: _currentSchedule.getAllUsedVertices()){
+			int tempCost = _currentSchedule.getVertexStartTime(usedVertex) + this.getBtmLvl(usedVertex);
+			if(tempCost > costFunction){
+				costFunction = tempCost;
+			}
+		}
 		return costFunction;
 	}
 	/**
-	 * Cost Function = (Total Idle time in schedule + Weight of all used vertices) divided by number of processor
+	 * Cost Function = (Total Idle time in schedule + Weight of all used vertices) divided by number of processors
 	 * @return
 	 */
 	private int idleAndComputationTime() {
 		int costFunction = 0;
-		int totalIdleTime = 0;
+		//int totalIdleTime = 0;
+		int totalCostOfAllProcessors = 0;
 		int numberOfProcessors = _currentSchedule.getNumberOfProcessors();
 		
-		for(Processor p : _currentSchedule.getAllProcessors()) {
+		/*for(Processor p : _currentSchedule.getAllProcessors()) {
 			totalIdleTime += this.getIdleTimeOfProcessor(p);
 		}
 		costFunction += totalIdleTime;
 		costFunction += this.getWeightOfAllUsedVertices();
-		costFunction = costFunction/numberOfProcessors;
+		costFunction = costFunction/numberOfProcessors;*/
+		
+		for(Processor p : _currentSchedule.getAllProcessors()) {
+			totalCostOfAllProcessors += p.getLatestTime();
+		}
+		costFunction = totalCostOfAllProcessors/numberOfProcessors;
 		
 		return costFunction;
 	}
 	/**
-	 * Cost Function = highest cost out of the list of child vertices schedules (least cost schedule + bottom level) 
+	 * Cost Function = highest cost out of the list of child vertices schedules (which is the least cost schedule + bottom level possible for that child vertex) 
 	 * @return
 	 */
 	private int minimalDataReadyTime() {
 		int costFunction = 0;
 		
-		Vertex v = null;
+		/*Vertex v = null;
 		for(Vertex everyVertex : Graph.getInstance().getVertices()) {
-			if(everyVertex.getName().equals(_currentSchedule.getLastUsedVertex().getName())) {
+			if(everyVertex.getName().equals(_currentSchedule.getLastUse
+			dVertex().getName())) {
 				v = everyVertex;
 				break;
 			}
-		}
+		}*/
 		
-		costFunction = this.getEarliestTimeNodeCanStart(v.getChildren());
+		costFunction = this.getEarliestTimeNodeCanStart(_currentSchedule.getChildVertices());
 
 		return costFunction;
 	}
@@ -92,16 +109,16 @@ public class CostFunctionCalculator {
 	 * @return
 	 */
 	private int getBtmLvl(Vertex vertex) {
-		int largestBtmLvlWeight = 0;
+		int largestBtmLvlWeight = 0;/*
 		Vertex v = null;
 		for(Vertex everyVertex : Graph.getInstance().getVertices()) {
 			if(everyVertex.getName().equals(vertex.getName())) {
 				v = everyVertex;
 				break;
 			}
-		}
+		}*/
 		//System.out.println("vertex used: "+v.getName());
-		largestBtmLvlWeight = this.getLargestWeightPathToLeaf(v.getChildren(), 0);
+		largestBtmLvlWeight = this.getLargestWeightPathToLeaf(vertex.getChildren(), vertex.getWeight());
 		return largestBtmLvlWeight;
 	}
 	/**
@@ -140,20 +157,16 @@ public class CostFunctionCalculator {
 	 * @return
 	 */
 	private int getLargestWeightPathToLeaf(List<Vertex> childVertices, int weightSoFar) {
-		int largestVertexWeight = 0;
-		String name = "";
+		int largestVertexWeight = weightSoFar;
 		for(Vertex v : childVertices) {
-			//System.out.println(v.getName() +  " " + weightSoFar);
 			int currentWeight = weightSoFar+v.getWeight();
 			if(!v.getChildren().isEmpty()) {
 				currentWeight = this.getLargestWeightPathToLeaf(v.getChildren(), currentWeight);
 			}
 			if(currentWeight > largestVertexWeight) {
 				largestVertexWeight = weightSoFar+v.getWeight();
-				name = v.getName();
 			}
 		}
-		//System.out.println("btm: "+name + ":"+largestVertexWeight);
 		return largestVertexWeight;
 	}
 	/**
@@ -175,10 +188,10 @@ public class CostFunctionCalculator {
 			Schedule[] childSchedules = s.generateAllPossibleScheduleForSpecifiedVertex(v);
 			for(int i = 0 ; i < childSchedules.length; i++) {
 				if(firstTime) {
-					smallestTimeForThisVertex = childSchedules[i].getVertexFinishTime(v);
+					smallestTimeForThisVertex = childSchedules[i].getVertexStartTime(v);
 					firstTime = false;
-				} else if(smallestTimeForThisVertex > childSchedules[i].getVertexFinishTime(v)) {
-					smallestTimeForThisVertex = childSchedules[i].getVertexFinishTime(v);
+				} else if(smallestTimeForThisVertex > childSchedules[i].getVertexStartTime(v)) {
+					smallestTimeForThisVertex = childSchedules[i].getVertexStartTime(v);
 				}
 			}
 			int thisVertexMinimalReadyTimeCost = smallestTimeForThisVertex + this.getBtmLvl(v);
