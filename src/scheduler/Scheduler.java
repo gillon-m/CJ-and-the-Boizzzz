@@ -17,6 +17,7 @@ import javax.swing.SwingWorker;
 import graph.Graph;
 import graph.Vertex;
 import components.ScheduleComparator;
+import fileManager.OutputWriter;
 /**
  * This Class uses the Schedule Class and Processor Class
  * to make schedules using the information from the Graph Variable which
@@ -37,7 +38,8 @@ public class Scheduler extends JFrame {
 	private int _numberOfProcessors;
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private List<Schedule> _closedSchedules;
-	private Schedule _optimalSchedule;
+	private Graph _graph;
+	private String _outputFileName;
 
 	private JTextArea countLabel1 = new JTextArea("0");
 
@@ -61,10 +63,12 @@ public class Scheduler extends JFrame {
 
 	/**
 	 * This method returns the optimal schedule
-	 * @return optimal schedule
+	 * @return void
 	 * @throws Exception
 	 */
-	public Schedule getOptimalSchedule(boolean visualisation) throws Exception {
+	public void getOptimalSchedule(boolean visualisation, Graph graph, String outputFileName) throws Exception {
+		_graph = graph;
+		_outputFileName = outputFileName;
 		if (visualisation) {
 			setSize(200, 400);
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -77,7 +81,7 @@ public class Scheduler extends JFrame {
 		while (!worker.isDone()) {
 			//Wait for worker to finish
 		}
-		return _optimalSchedule;
+		
 	}
 
 	public class AlgorithmWorker extends SwingWorker<Schedule, Schedule> {
@@ -111,8 +115,14 @@ public class Scheduler extends JFrame {
 
 		protected void done() {
 			try {
-				Schedule optimalSchedule = get();
-				_optimalSchedule = optimalSchedule;
+				Schedule s = get(); //The optimal schedule
+				OutputWriter ow = new OutputWriter(_outputFileName, _graph, s);
+				ow.writeToFile();
+
+				//Temporary check for the output
+				String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
+									+"\n"+ s.toString();
+				System.out.println(output);
 			} catch (InterruptedException | ExecutionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

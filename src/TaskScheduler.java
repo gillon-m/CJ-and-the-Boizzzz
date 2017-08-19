@@ -59,14 +59,7 @@ public class TaskScheduler {
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);
-		Schedule s =  scheduler.getOptimalSchedule(_visualisation);
-		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
-		ow.writeToFile();
-
-		//Temporary check for the output
-		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
-							+"\n"+ s.toString();
-		System.out.println(output);
+		scheduler.getOptimalSchedule(_visualisation, graph, _outputFileName);
 	}
 
 	/**
