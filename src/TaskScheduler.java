@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import fileManager.*;
 import graph.Graph;
@@ -28,7 +30,7 @@ public class TaskScheduler {
 	int _noOfProcessors;
 	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
 	boolean _visualisationOn = false; // by default visualisation is off 
-
+	Path _filepath;
 	/**
 	 * Main program. It takes arguments from the user input and pass them to other methods to process. 
 	 * @param args
