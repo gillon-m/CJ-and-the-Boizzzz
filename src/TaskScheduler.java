@@ -7,13 +7,15 @@ import graph.Graph;
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
- * The main class of the program. Takes input arguments from user input, reads the input file 
+ * The main class of the program. Takes input arguments from user input, reads the input file
  * and creates a graph, then uses it to create a correct schedule which is written as an output file.
- * 
+ *
  * @author CJ Bang
  *
  */
-public class TaskScheduler {	
+public class TaskScheduler {
+	//final String DIRECTORY = "./input/";
+
 	// strings for error messages
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
@@ -24,27 +26,28 @@ public class TaskScheduler {
 	final String CORE_NUMBER_NOT_GIVEN = "Number of Cores for execution needs to be given as a digit. ie. 5 instead of five";
 	final String CONFIRMATION_MESSAGE = "If options are correctly set, Press \"y\" for yes. The program will start executing automatically.\nIf you want to make changes, press any other key to exit and re-execute the file.";
 
-	
+
 	int indexOfArguments = 2; //0 is always the file name, 1 is the number of processor
-	String _inputFileName, _outputFileName; 
+	String _inputFileName, _outputFileName;
 	int _noOfProcessors;
 	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
-	boolean _visualisationOn = false; // by default visualisation is off 
-	Path _filepath;
+	boolean _visualisation = false; // by default visualisation is off
+	Path _filepath = null; 
+	
 	/**
-	 * Main program. It takes arguments from the user input and pass them to other methods to process. 
+	 * Main program. It takes arguments from the user input and pass them to other methods to process.
 	 * @param args
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
 		new TaskScheduler(args);
 	}
-	
+
 	public TaskScheduler(String[] args) throws Exception{
 		parseArguments(args);
 		//startExecution();
 		confirmOptionsAndExecute();
-		
+
 	}
 	/**
 	 * Runs scheduler once user confirms the options selected. 
@@ -65,14 +68,14 @@ public class TaskScheduler {
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		Scheduler scheduler = new Scheduler(_noOfProcessors);	
-		Schedule s =  scheduler.getOptimalSchedule();
-		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
+		scheduler.getOptimalSchedule(_visualisation, graph, _outputFileName);
+		/*OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
 		//Temporary check for the output
 		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
 							+"\n"+ s.toString();
-		System.out.println(output);
+		System.out.println(output);*/
 	}
 	
 	/**
@@ -112,13 +115,12 @@ public class TaskScheduler {
 			checkAdditionalOptions(args);
 		}
 	}
-	
 	/**
-	 * Checks the additional option arguments. 
-	 * Depending on the option type, user may or may not need to pass an additional 
-	 * argument to specify option value. Therefore this method selectively checks for 
-	 * each option type and the required arguments.If any part of the arguments is 
-	 * incorrect, an appropriate error message is provided and the program is halted. 
+	 * Checks the additional option arguments.
+	 * Depending on the option type, user may or may not need to pass an additional
+	 * argument to specify option value. Therefore this method selectively checks for
+	 * each option type and the required arguments.If any part of the arguments is
+	 * incorrect, an appropriate error message is provided and the program is halted.
 	 * @param args
 	 */
 	private void checkAdditionalOptions(String[] args) {
@@ -135,18 +137,19 @@ public class TaskScheduler {
 				}
 				indexOfArguments += 2; // move to the next set of arguments if there are more
 			} else if (args[indexOfArguments].equals("-v")) { // option is visualisation
+				_visualisation = true;
 				indexOfArguments += 1; // doesnt require another value to follow
 			} else { // the argument was not an option selector therefore invalid argument
 				System.out.println(INVALID_OPTION);
 				System.exit(0);
-			}				
+			}
 		}
 	}
-	
+
 	/**
 	 * Checks if the correct value was given for the option chosen by user.
 	 * -p should be followed by an integer value.
-	 * -o should be followed by a filename. 
+	 * -o should be followed by a filename.
 	 * if values are not given correctly, an appropriate exception gets thrown.
 	 * @param option
 	 * @param value
@@ -161,14 +164,14 @@ public class TaskScheduler {
 			_outputFileName = value + ".dot";
 		}
 	}
-	
+
 	/**
 	 * Prints off the selected options before the scheduler starts executing.
 	 * User confirms by pressing y which then allows the scheduler to start execution.
 	 * If user does not press y, the program is halt and has to be re-executed.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void confirmOptionsAndExecute() throws Exception { 
+	private void confirmOptionsAndExecute() throws Exception {
 		// let user to review what options have been chosen and confirm
 		System.out.println("*********************************************************************");
 		System.out.println("The Input Graph to be scheduled is: " + _inputFileName);
@@ -178,16 +181,16 @@ public class TaskScheduler {
 		} else {
 			System.out.println("No of Cores for execution in parallel is: " + _noOfCores);
 		}
-		if (_visualisationOn) {
+		if (_visualisation) {
 			System.out.println("Visualisation Effect is: On");
 		} else {
 			System.out.println("Visualisation Effect is: Off");
 		}
 		System.out.println("The Name of Output File is to be: " + _outputFileName);
 		System.out.println("*********************************************************************");
-		System.out.println(CONFIRMATION_MESSAGE);		
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // get user confirmation 
+		System.out.println(CONFIRMATION_MESSAGE);
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // get user confirmation
 		String line;
 		try {
 			if ((line = br.readLine()).equals("y")) { // user confirms the options by pressing "y"
@@ -197,6 +200,6 @@ public class TaskScheduler {
 				System.exit(0);
 			}
 		} catch (IOException e) {
-		}		
+		}
 	}
 }
