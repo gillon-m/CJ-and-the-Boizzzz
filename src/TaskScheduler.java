@@ -9,7 +9,7 @@ import scheduler.Scheduler;
 /**
  * The main class of the program. Takes input arguments from user input, reads the input file
  * and creates a graph, then uses it to create a correct schedule which is written as an output file.
- *
+ *Hi
  * @author CJ Bang
  *
  */
