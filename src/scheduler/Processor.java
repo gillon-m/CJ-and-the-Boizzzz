@@ -100,6 +100,10 @@ public class Processor {
 	        return false;
 	    }
 		
+		if(this._scheduleOfProcessor.size() != ((Processor)obj)._scheduleOfProcessor.size()) {
+			return false;
+		}
+		
 		for(int i = 0; i < _scheduleOfProcessor.size(); i++){
 			if(!_scheduleOfProcessor.get(i).getName().equals(((Processor) obj)._scheduleOfProcessor.get(i).getName())){
 				return false;

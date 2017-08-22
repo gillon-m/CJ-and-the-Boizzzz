@@ -2,6 +2,7 @@ package components;
 
 import java.util.Comparator;
 
+import heuristics.CostFunctionCalculator;
 import scheduler.Schedule;
 
 /**
@@ -21,11 +22,9 @@ public class ScheduleComparator implements Comparator<Schedule> {
 	 * if worse (or further) then returns negative integer.
 	 * @return int
 	 */
-
 	@Override
 	public int compare(Schedule o1, Schedule o2) {
-		CostFunctionCalculator c1 = new CostFunctionCalculator(o1);
-		CostFunctionCalculator c2 = new CostFunctionCalculator(o2);
-		return c1.getTotalCostFunction() - c2.getTotalCostFunction();
+		CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
+		return costFunctionCalculator.getTotalCostFunction(o1) - costFunctionCalculator.getTotalCostFunction(o2);
 	}
 }

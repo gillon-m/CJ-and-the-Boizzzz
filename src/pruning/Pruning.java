@@ -1,93 +1,42 @@
-package components;
+package pruning;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import scheduler.Processor;
 import scheduler.Schedule;
-
+/**
+ * Pruning Techniques to optimize new schedules being put into the openschedule
+ * 
+ * Goes through both open and closed schedules to see if it can be optimized
+ * 
+ * @author SuhoN
+ *
+ */
 public class Pruning {
 	
-	public Pruning(){
-	}
-	
-	public boolean checkUsingPruning(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
+	public boolean isCurrentScheduleNeeded(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
+		List<IPruning> p = new ArrayList<IPruning>();
+		IPruning p1 = new CheckDuplicates();
+		IPruning p2 = new CheckNormalisation();
+		p.add(p1);
+		//p.add(p2);
 		
-		if(!this.isThereDuplicates(openSchedules, closedSchedules, currentSchedule) 
-				&& !this.isThereNodesToNormalise(openSchedules, closedSchedules, currentSchedule))
-			return true;
-		return false;
-	}
-	
-	private boolean isThereDuplicates(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
-		for(Schedule schedule : openSchedules){
-			for(int i = 0; i < schedule.getNumberOfProcessors(); i++){
-				if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(i))){
-					return true;
-				}
-			}
-		}
 		for(Schedule schedule : closedSchedules){
-			for(int i = 0; i < schedule.getNumberOfProcessors(); i++){
-				if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(i))){
-					return true;
+			for(IPruning pruning : p) {
+				if(!pruning.isScheduleNeeded(currentSchedule, schedule)) {
+					return false;
 				}
 			}
 		}
-		return false;
-	}
-	
-	private boolean isThereNodesToNormalise(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
-		int numberOfProcessor = currentSchedule.getNumberOfProcessors();
 		for(Schedule schedule : openSchedules){
-			for(int i = 0; i < numberOfProcessor; i++){
-				boolean foundSameProcessor = false;
-				for(int j = 0; j < numberOfProcessor; j++){
-					if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(j))){
-						break;
-					}
-					if(j == numberOfProcessor-1){
-						return false;
-					}
+			for(IPruning pruning : p) {
+				if(!pruning.isScheduleNeeded(currentSchedule, schedule)) {
+					return false;
 				}
 			}
 		}
-		for(Schedule schedule : closedSchedules){
-			for(int i = 0; i < numberOfProcessor; i++){
-				boolean foundSameProcessor = false;
-				for(int j = 0; j < numberOfProcessor; j++){
-					if(isProcessorSame(schedule.getProcessor(i), currentSchedule.getProcessor(j))){
-						break;
-					}
-					if(j == numberOfProcessor-1){
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-	
-	private boolean isThereEquivalentNodes(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
-		
-		return true;
-	}
-
-	
-	private boolean isProcessorSame(Processor p1, Processor p2){
-		if(p1.equals(p2)){
-			return true;
-		}
-		return false;
-	}
-	
-	
-	// May do if enough time
-	private boolean checkUsingUpperBound(){
-		return true;
-	}
-	// May do if enough time
-	private boolean checkPartialExpansion(){
 		return true;
 	}
 }

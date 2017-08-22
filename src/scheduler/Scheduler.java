@@ -11,7 +11,9 @@ import graph.Vertex;
 import gui.ScheduleListener;
 import gui.Visualiser;
 import gui.VisualiserController;
-import components.Pruning;
+import heuristics.CostFunctionCalculator;
+import pruning.ListScheduling;
+import pruning.Pruning;
 import components.ScheduleComparator;
 /**
  * This Class uses the Schedule Class and Processor Class
@@ -31,11 +33,14 @@ public class Scheduler {
 	private List<Schedule> _closedSchedules;
 	private List<ScheduleListener> _listeners;
 	private boolean _visualisation;
+	private int _upperBoundCost;
 
 	public Scheduler(int numberOfProcessors, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
+		ListScheduling ls = new ListScheduling(_numberOfProcessors);
+		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
 		if (_visualisation) {
 			Visualiser visualiser = new Visualiser();
@@ -91,7 +96,7 @@ public class Scheduler {
 	 * For the current schedule we are processing,
 	 * it tries to find successor schedules that are available
 	 * Those successors schedules are then added to the open schedule if it
-	 * passes the conditions required in checkScheduleOnOpenSchedule method
+	 * passes the conditions required 
 	 *
 	 * @param currentSchedule
 	 */
@@ -103,20 +108,31 @@ public class Scheduler {
 			Schedule[] currentChildVertexSchedules = new Schedule[_numberOfProcessors];
 			// all possible schedules of child vertex on the current schedule
 			currentChildVertexSchedules = currentScheduleCopy.generateAllPossibleScheduleForSpecifiedVertex(childVertex);
-
+			
+			CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
+			int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
+			
 			for(int i = 0; i < _numberOfProcessors; i++ ) {
-				if(this.checkScheduleOnOpenSchedule(currentChildVertexSchedules[i])) {
-					_openSchedules.add(currentChildVertexSchedules[i]);
+				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+				// Check Upper Bound
+				if(childScheduleCost <= _upperBoundCost) {
+					// Check Partial Expansion
+					if(parentScheduleCost == costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) {
+						_openSchedules.add(currentChildVertexSchedules[i]);
+						break;
+					}
+					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+						_openSchedules.add(currentChildVertexSchedules[i]);
+					}
 				}
 			}
 		}
 	}
-
 	/**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.
-	 * It also checks inside the openschedule if there are any schedules that can be taken out
-	 * that was made redundant by successor schedule
+	 * It also checks inside the openschedule and closedschedule if there are any schedules that can be taken out
+	 * that was made redundant by predecessor schedules
 	 *
 	 * returns true if it passes
 	 * otherwise returns false
@@ -124,41 +140,14 @@ public class Scheduler {
 	 * @param childSchedule
 	 * @return
 	 */
-	private boolean checkScheduleOnOpenSchedule(Schedule childSchedule) {
-		boolean passesCondition = true;
-		for(Schedule schedule : _closedSchedules) {
-			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
-				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
-					passesCondition = false;
-					break;
-				}
-			}
+	private boolean checkScheduleThroughPruning(Schedule childSchedule) {
+		Pruning pruning = new Pruning();
+		if(pruning.isCurrentScheduleNeeded(_openSchedules, _closedSchedules, childSchedule)){
+			return true;
 		}
-		for(Schedule schedule : _openSchedules) {
-			if(childSchedule.getTimeOfSchedule() == schedule.getTimeOfSchedule()) {
-				if(this.isList1EqualToList2InNoOrder(childSchedule.getAllUsedVertices(), schedule.getAllUsedVertices())) {
-					passesCondition = false;
-					break;
-				}
-			}
-		}
-		return passesCondition;
+		return false;
+
 	}
-
-	/**
-	 * Checks if the list is the same, does not have to be in order
-	 *
-	 * @param l1
-	 * @param l2
-	 * @return
-	 */
-	public <T> boolean isList1EqualToList2InNoOrder(List<T> l1, List<T> l2) {
-	    final Set<T> s1 = new HashSet<>(l1);
-	    final Set<T> s2 = new HashSet<>(l2);
-
-	    return s1.equals(s2);
-	}
-
 	/**
 	 * This method checks if the current schedule is a finished schedule
 	 *
