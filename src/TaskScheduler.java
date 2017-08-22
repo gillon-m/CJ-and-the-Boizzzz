@@ -65,8 +65,8 @@ public class TaskScheduler {
 
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
-		//Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
+		Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
 		Schedule s = scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
