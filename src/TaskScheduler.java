@@ -14,8 +14,6 @@ import scheduler.Scheduler;
  *
  */
 public class TaskScheduler {
-	//final String DIRECTORY = "./input/";
-
 	// strings for error messages
 	final String FILENAME_NOT_GIVEN = "Please enter the filename and number of processors as per instruction.";
 	final String INVALID_FILENAME = "File can't be found. The input dot file should be in the same directory as the jar file. Please try again.";
@@ -25,7 +23,6 @@ public class TaskScheduler {
 	final String INVALID_OPTION = "Invalid option: \"-p\", \"-v\", or \"-o\" was not located correctly.";
 	final String CORE_NUMBER_NOT_GIVEN = "Number of Cores for execution needs to be given as a digit. ie. 5 instead of five";
 	final String CONFIRMATION_MESSAGE = "If options are correctly set, Press \"y\" for yes. The program will start executing automatically.\nIf you want to make changes, press any other key to exit and re-execute the file.";
-
 
 	int indexOfArguments = 2; //0 is always the file name, 1 is the number of processor
 	String _inputFileName, _outputFileName;
@@ -67,15 +64,15 @@ public class TaskScheduler {
 
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(_noOfProcessors);	
-		scheduler.getOptimalSchedule(_visualisation, graph, _outputFileName);
-		/*OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
+		Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
+		Schedule s = scheduler.getOptimalSchedule();
+		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
 		//Temporary check for the output
 		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
 							+"\n"+ s.toString();
-		System.out.println(output);*/
+		System.out.println(output);
 	}
 	
 	/**

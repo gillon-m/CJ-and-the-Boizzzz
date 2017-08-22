@@ -30,7 +30,7 @@ public class TestScheduler {
 		assertEquals("example", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(4, s.getAllUsedVerticesWithoutEmpty().size());
@@ -51,7 +51,7 @@ public class TestScheduler {
 		assertEquals("example2", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -72,7 +72,7 @@ public class TestScheduler {
 		assertEquals("OutTree-Balanced-MaxBf-3_Nodes_7_CCR_2.0_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -92,7 +92,7 @@ public class TestScheduler {
 		assertEquals("OutTree-Balanced-MaxBf-3_Nodes_7_CCR_2.0_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(4);	
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -112,7 +112,7 @@ public class TestScheduler {
 		assertEquals("Random_Nodes_8_Density_2.0_CCR_0.1_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(8, s.getAllUsedVerticesWithoutEmpty().size());
@@ -132,7 +132,7 @@ public class TestScheduler {
 		assertEquals("Random_Nodes_8_Density_2.0_CCR_0.1_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(4);	
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(8, s.getAllUsedVerticesWithoutEmpty().size());
@@ -152,7 +152,7 @@ public class TestScheduler {
 		assertEquals("SeriesParallel-MaxBf-3_Nodes_9_CCR_10.0_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(9, s.getAllUsedVerticesWithoutEmpty().size());
@@ -172,7 +172,7 @@ public class TestScheduler {
 		assertEquals("SeriesParallel-MaxBf-3_Nodes_9_CCR_10.0_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(4);	
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(9, s.getAllUsedVerticesWithoutEmpty().size());
@@ -192,7 +192,7 @@ public class TestScheduler {
 		assertEquals("Random_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(10, s.getAllUsedVerticesWithoutEmpty().size());
@@ -212,7 +212,7 @@ public class TestScheduler {
 		assertEquals("Random_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(4);	
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(10, s.getAllUsedVerticesWithoutEmpty().size());
@@ -232,7 +232,7 @@ public class TestScheduler {
 		assertEquals("OutTree-Balanced-MaxBf-3_Nodes_11_CCR_0.1_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(2);	
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(11, s.getAllUsedVerticesWithoutEmpty().size());
@@ -252,7 +252,7 @@ public class TestScheduler {
 		assertEquals("OutTree-Balanced-MaxBf-3_Nodes_11_CCR_0.1_WeightType_Random", graph.getName());
 
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(4);	
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(11, s.getAllUsedVerticesWithoutEmpty().size());
