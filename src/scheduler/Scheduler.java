@@ -10,6 +10,7 @@ import graph.Graph;
 import graph.Vertex;
 import gui.ScheduleListener;
 import gui.Visualiser;
+import gui.VisualiserController;
 import components.Pruning;
 import components.ScheduleComparator;
 /**
@@ -37,8 +38,10 @@ public class Scheduler {
 		_numberOfProcessors = numberOfProcessors;
 		_visualisation = visualisation;
 		if (_visualisation) {
+			Visualiser visualiser = new Visualiser();
+			VisualiserController visualiserController = new VisualiserController(visualiser);
 			_listeners = new ArrayList<ScheduleListener>();
-			_listeners.add(new Visualiser());
+			_listeners.add(visualiserController);
 		}
 	}
 

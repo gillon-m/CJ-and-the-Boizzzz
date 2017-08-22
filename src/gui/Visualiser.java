@@ -4,32 +4,34 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import scheduler.Schedule;
+import java.awt.FlowLayout;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
-public class Visualiser extends JFrame implements ScheduleListener {
-	private JTextArea countLabel1 = new JTextArea("0");
+public class Visualiser extends JFrame {
+	private JTextArea _countLabel1 = new JTextArea("0");
+
 	public Visualiser() {
 		super("Optimal Task Schedule Generator");
-		setLayout(new GridBagLayout());
-		GridBagConstraints gc = new GridBagConstraints();
+		getContentPane().setLayout(null);
 		
-		gc.fill = GridBagConstraints.NONE;
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0), 5));
+		panel.setBounds(10, 11, 464, 200);
+		getContentPane().add(panel);
+		panel.add(_countLabel1);
 		
-		gc.gridx = 0;
-		gc.gridy = 0;
-		gc.weightx = 1;
-		gc.weighty = 1;
-		add(countLabel1, gc);
-		
-		setSize(200,400);
+		setSize(500,400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		
 	}
-	@Override
-	public void update(Schedule schedule) {
-		countLabel1.setText("Vertex = " + schedule.getLastUsedVertex().getName() + 
-				"\t|Time Taken = " + schedule.getTimeOfSchedule() + "\n" + schedule.toString());
+	
+	public JTextArea getJTextArea() {
+		return _countLabel1;
 	}
 }
