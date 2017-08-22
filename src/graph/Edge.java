@@ -1,4 +1,4 @@
-package App;
+package graph;
 /**
  * Simple class to represent an edge in a class.
  * Edges have a source vertex, destination vertex, and a weight

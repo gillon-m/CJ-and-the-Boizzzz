@@ -1,11 +1,11 @@
-package Scheduler;
+package scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 /**
  * 
  * Class to represent Schedule of tasks
@@ -61,7 +61,7 @@ public class Schedule {
 	}
 	
 	private void updateUsedVertices(Vertex v) {
-		_lastUsedVertex = new Vertex(v.getName(),v.getWeight());
+		_lastUsedVertex = v;
 		_usedVertices.add(v);
 	}
 	/**
@@ -238,7 +238,45 @@ public class Schedule {
 	public List<Vertex> getChildVertices(){
 		return _childVertices;
 	}
-	
+
+	/**
+	 * Finds which processor this vertex is running at and returns the index
+	 */
+	public int getProcessorIndex(Vertex v) {
+		int index = -1;
+		for (int i = 0; i < _processors.size(); i++) {
+			if (checkVertexInScheduleOfProcessor(v, _processors.get(i))) {
+				index = i;
+			}
+		}
+		return index;
+	}
+	public int getVertexStartTime(Vertex v) {
+		return getVertexFinishTime(v) - v.getWeight();
+	}
+	public int getVertexFinishTime(Vertex v) {
+		int index = getProcessorIndex(v);
+		int finishTime = _processors.get(index).getTime(v);
+		return finishTime;
+	}
+    public List<Vertex> getAllUsedVerticesWithoutEmpty() {
+        List<Vertex> verticesWithoutEmpty = new ArrayList<Vertex>();
+        for (Vertex v: _usedVertices) {
+            if (v.getName() != "-") {
+                verticesWithoutEmpty.add(v);
+            }
+        }
+        return verticesWithoutEmpty;
+    }
+
+	private boolean checkVertexInScheduleOfProcessor(Vertex v, Processor scheduleOfProcessor){
+		for(Vertex usedVertexInThisProcessor : scheduleOfProcessor.getScheduleOfProcessor()){
+			if(usedVertexInThisProcessor.getName().equals(v.getName())){
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * To adjust the format and the data that should be returned
 	 */

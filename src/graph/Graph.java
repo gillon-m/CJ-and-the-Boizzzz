@@ -1,30 +1,47 @@
-package App;
+package graph;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton class that represents the graph data structure used to store the 
+ * input acyclic graph.
+ * Graph has a name, list of vertices, and list of edges. 
+ *
+ * @author Brad Miller, Andon Xia
+ */
 public class Graph {
 	
 	private List<Vertex> _vertices;
 	private List<Edge> _edges;
 	private List<Vertex> _rootVertices;
-	
+	private String _name;
+
 	private static Graph instance = null;
 	
 	public static Graph getInstance() {
 		return instance;
 	}
 	
-	public Graph(List<Vertex> vertices, List<Edge> edges) {
+	public Graph(String name, List<Vertex> vertices, List<Edge> edges) {
+		_name = name;
 		_vertices = vertices;
 		_edges = edges;
 		instance = this;
 	}
 	
+	/**
+	 * 
+	 * @return List of Vertices
+	 */
 	public List<Vertex> getVertices() {
 		return _vertices;
 	}
 	
+	/**
+	 * 
+	 * @return List of Edges
+	 */
 	public List<Edge> getEdges() {
 		return _edges;
 	}
@@ -32,12 +49,22 @@ public class Graph {
 	public List<Vertex> getRootVertices() {
 		return _rootVertices;
 	}
-	
+	public String getName() {
+		return _name;
+	}
+
+	/**
+	 * public method that set up for making schedules.
+	 */
 	public void setUpForMakingSchedules() {
 		setUpChildrenParents();
 		setUpLevelsOfNodes();
 		setUpRootNodes();
 	}
+	
+	/**
+	 * Set up the children - parents relationship between vertices. 
+	 */
 	private void setUpChildrenParents() {
 		for (Vertex v : this.getVertices()) {
 			for (Edge e : this.getEdges()) {
@@ -52,6 +79,10 @@ public class Graph {
 		}
 	}
 	
+	/**
+	 * Set up levels for vertices in graph. 
+	 * The root has a level of 0 and the children of root has 1 etc.
+	 */
 	private void setUpLevelsOfNodes() {
 		_rootVertices = new ArrayList<Vertex>();
 		for (Vertex v : this.getVertices()) {
@@ -64,6 +95,13 @@ public class Graph {
 			}
 		}
 	}
+	/**
+	 * Set up imaginary root vertex if there are more than one root vertices.
+	 * Technically root needs to be one - hence make an imaginary root vertex.
+	 * This has 0 weight and the edges off it have 0 weight as well. 
+	 * Once a new root has been established, set up children parents relationship and 
+	 * set the level of each vertex again.
+	 */
 	private void setUpRootNodes() {
 		if (_rootVertices.size() >1) {
 			Vertex emptyVertex = new Vertex("-", 0);
@@ -80,7 +118,7 @@ public class Graph {
 	}
 	/**
 	 * This helper method topologically sorts a given di-graph.
-	 * As of right now, I(Andon)'m not sure as to whether this method will actually be helpful. But it has been implemented
+	 * As of right now, I'm not sure as to whether this method will actually be helpful. But it has been implemented
 	 * as by meeting discussion. Open to any other ideas for generating schedules. 
 	 * @param root : the start node at which to begin tree traversal.
 	 * @param target : the target node that we want to find the height of.

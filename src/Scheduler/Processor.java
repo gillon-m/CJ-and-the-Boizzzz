@@ -1,12 +1,12 @@
-package Scheduler;
+package scheduler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import App.Edge;
-import App.Graph;
-import App.Vertex;
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
 
 /**
  * Processor class represents the individual processor in a schedule
@@ -74,7 +74,7 @@ public class Processor {
 	public int getLatestTime() {
 		return _latestTime;
 	}
-	private ArrayList<Vertex> getScheduleOfProcessor(){
+	public ArrayList<Vertex> getScheduleOfProcessor(){
 		return _scheduleOfProcessor;
 	}
 	/**
@@ -94,6 +94,24 @@ public class Processor {
 		return time;
 	}
 	
+	
+	public boolean equalCheck(Object obj){
+		if (obj == null || !(obj.getClass() == this.getClass())) {
+	        return false;
+	    }
+		
+		if(this._scheduleOfProcessor.size() != ((Processor)obj)._scheduleOfProcessor.size()) {
+			return false;
+		}
+		
+		for(int i = 0; i < _scheduleOfProcessor.size(); i++){
+			if(!_scheduleOfProcessor.get(i).getName().equals(((Processor) obj)._scheduleOfProcessor.get(i).getName())){
+				return false;
+			}	
+		}
+		
+		return true;
+	}
 	
 	/**
 	 * To adjust the format and the data that should be returned
