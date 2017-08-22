@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 
 import fileManager.*;
 import graph.Graph;
+import scheduler.ParallelisedScheduler;
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
@@ -64,7 +65,8 @@ public class TaskScheduler {
 
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
+		ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
+		//Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
 		Schedule s = scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
@@ -155,7 +157,12 @@ public class TaskScheduler {
 	 */
 	private void checkAdditionalOptionValue(String option, String value) throws ArrayIndexOutOfBoundsException, NumberFormatException {
 		if (option.equals("-p")) { //if -p is selected, then it is followed by a number
-			_noOfCores = Integer.parseInt(value);
+			int intValue = Integer.parseInt(value);
+			if (intValue <= 0) {
+				throw new NumberFormatException();
+			} else {
+				_noOfCores = intValue;
+			}
 		}
 		if (option.equals("-o")) { //if -o is selected, then it is followed by a string
 			_outputFileName = value + ".dot";
@@ -177,6 +184,7 @@ public class TaskScheduler {
 			System.out.println("No of Cores for execution in parallel is: sequential");
 		} else {
 			System.out.println("No of Cores for execution in parallel is: " + _noOfCores);
+			System.out.println("Note: If the specified number of cores is greater than the system specification, \nthe program will run with the maximum number of cores available.");
 		}
 		if (_visualisation) {
 			System.out.println("Visualisation Effect is: On");
