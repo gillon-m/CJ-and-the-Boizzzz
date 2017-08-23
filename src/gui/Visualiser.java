@@ -21,14 +21,13 @@ public class Visualiser extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 5));
-		panel.setBounds(10, 11, 464, 200);
+		panel.setBounds(10, 11, 464, 237);
 		getContentPane().add(panel);
 		panel.add(_countLabel1);
 		
 		setSize(500,400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-		
 	}
 	
 	public JTextArea getJTextArea() {

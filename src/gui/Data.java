@@ -8,12 +8,13 @@ import scheduler.Schedule;
  *
  */
 public class Data {
-	private Schedule _schedule=null;
+	private Schedule _currentSchedule=null;
 	private int _numberOfSchedulesCreated=0;
 	private boolean _isFinished=false;
+	private int _totalNumberOfCreatedSchedules=0;
 	
 	public void updateCurrentSchedule(Schedule currentSchedule) {
-		_schedule=currentSchedule;
+		_currentSchedule=currentSchedule;
 	}
 	public void isFinished(boolean b) {
 		_isFinished=b;
@@ -22,6 +23,12 @@ public class Data {
 		return _isFinished;
 	}
 	public Schedule getCurrentSchedule() {
-		return _schedule;
+		return _currentSchedule;
+	}
+	public void updateTotalNumberOfCreatedSchedules(int i) {
+		_totalNumberOfCreatedSchedules=i;
+	}
+	public int getTotalNumberOfCreatedSchedules(){
+		return _totalNumberOfCreatedSchedules;
 	}
 }
