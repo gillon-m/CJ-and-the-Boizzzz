@@ -1,5 +1,6 @@
 package scheduler;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +23,15 @@ public class Schedule {
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
 	private boolean _costSet = false;
 	private int _cost;
+	private long _timeStamp;
 	
 	public Schedule(int n) {
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
 		_childVertices = new ArrayList<Vertex>();
 		_processors = new ArrayList<Processor>();
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		_timeStamp = timestamp.getTime();
 		for(int i = 0; i < n; i++) {
 			_processors.add(new Processor());
 		}
@@ -301,5 +305,11 @@ public class Schedule {
 	
 	public boolean hasSetCost() {
 		return _costSet;
+	}
+	public void setTimeStamp(long time) {
+		_timeStamp = time;
+	}
+	public long getTimeStamp() {
+		return _timeStamp;
 	}
 }

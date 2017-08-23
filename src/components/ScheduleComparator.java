@@ -25,6 +25,10 @@ public class ScheduleComparator implements Comparator<Schedule> {
 	@Override
 	public int compare(Schedule o1, Schedule o2) {
 		CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
+		if(costFunctionCalculator.getTotalCostFunction(o1) == costFunctionCalculator.getTotalCostFunction(o2)) {
+			return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+		}
+		
 		if (o1.hasSetCost() && o2.hasSetCost()) {
 			return o1.getCost() - o2.getCost();
 		} else if (o1.hasSetCost() && !o2.hasSetCost()) {
