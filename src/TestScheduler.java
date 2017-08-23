@@ -218,7 +218,7 @@ public class TestScheduler {
 		assertEquals(10, s.getAllUsedVerticesWithoutEmpty().size());
 		assertEquals(50, s.getTimeOfSchedule());
     }
-    //@Test
+    @Test
     public void testNodes11Processor2() throws Exception {
 		Path currentRelativePath = Paths.get("");
 		Path currentDir = currentRelativePath.toAbsolutePath(); // <-- Get the Path and use resolve on it.		

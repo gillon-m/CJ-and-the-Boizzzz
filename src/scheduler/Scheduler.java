@@ -78,12 +78,12 @@ public class Scheduler {
 			if (_visualisation) {
 				fireScheduleChangeEvent(currentSchedule);
 			}
-			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
-					+"\n"+ currentSchedule.toString());
+//			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
+//					+"\n"+ currentSchedule.toString());
 
 			_openSchedules.remove(currentSchedule);
 			_closedSchedules.add(currentSchedule);
-			System.out.println("Size: "+_openSchedules.size());
+//			System.out.println("Size: "+_openSchedules.size());
 
 			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 				return currentSchedule;
@@ -114,74 +114,93 @@ public class Scheduler {
 			currentChildVertexSchedules = currentScheduleCopy.generateAllPossibleScheduleForSpecifiedVertex(childVertex);
 			int parentScheduleCost;
 			CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
+
 			if (currentSchedule.hasSetCost()) {
 				parentScheduleCost = currentSchedule.getCost();
 			} else {
 				parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
 			}
 			
-			for (int i = 0; i < _numberOfProcessors;i++) {
-				if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-				
-				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-				if (parentScheduleCost == childScheduleCost) {
-					_openSchedules.add(currentChildVertexSchedules[i]);
-				} else {
-					intList.add(childScheduleCost);
-				}
-				
-				System.out.println(childScheduleCost + " " + parentScheduleCost);
-			}
-			}
-			
-//			if(_partialExpanded.contains(currentSchedule)) {
-//				for(int i = 0; i < _numberOfProcessors; i++ ) {
-//					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-//					System.out.println(childScheduleCost + " " + parentScheduleCost);
-//					// Check Upper Bound
-//					if(childScheduleCost <= _upperBoundCost) {
-//						if(parentScheduleCost > costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) {
-//							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-//								_openSchedules.add(currentChildVertexSchedules[i]);
-//							}
-//						}
-//					}
-//				}
-//			} else {
-//				boolean partialExpanded = false;
-//				for(int i = 0; i < _numberOfProcessors; i++ ) {
-//					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-//					System.out.println(childScheduleCost + " " + parentScheduleCost);
-//					if(parentScheduleCost >= childScheduleCost) {
-//						if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+//			for (int i = 0; i < _numberOfProcessors;i++) {
+//				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+//				if (_upperBoundCost > childScheduleCost) {
+//					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+//						
+//						if (parentScheduleCost == childScheduleCost) {
 //							_openSchedules.add(currentChildVertexSchedules[i]);
-//							partialExpanded = true;
+//						} else {
+//							intList.add(childScheduleCost);
 //						}
+//						
+//						System.out.println(childScheduleCost + " " + parentScheduleCost);
 //					}
 //				}
-//				if(!partialExpanded) {
-//					for(int i = 0; i < _numberOfProcessors; i++ ) {
-//						int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-//						// Check Upper Bound
-//						if(childScheduleCost <= _upperBoundCost) {
-//							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-//								_openSchedules.add(currentChildVertexSchedules[i]);
-//							}
-//						}
-//					}
-//				} else {
-//					_openSchedules.add(currentSchedule);
-//					_closedSchedules.remove(currentSchedule);
-//					_partialExpanded.add(currentSchedule);
-//				}
+//
 //			}
+			
+			if(_partialExpanded.contains(currentSchedule)) {
+				for(int i = 0; i < _numberOfProcessors; i++ ) {
+					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+//					System.out.println(childScheduleCost + " " + parentScheduleCost);
+					// Check Upper Bound
+					if(childScheduleCost == _upperBoundCost) {
+						if(parentScheduleCost > costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) {
+							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+								_openSchedules.add(currentChildVertexSchedules[i]);
+							} 
+						}
+					} else {
+//						System.out.println("DOHERE");
+//						intList.add(childScheduleCost);
+					}
+				}
+			} else {
+				boolean partialExpanded = false;
+				for(int i = 0; i < _numberOfProcessors; i++ ) {
+					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+//					System.out.println(childScheduleCost + " " + parentScheduleCost);
+					if(parentScheduleCost >= childScheduleCost) {
+						if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+							_openSchedules.add(currentChildVertexSchedules[i]);
+							partialExpanded = true;
+						}
+					} else {
+						intList.add(childScheduleCost);
+					}
+				}
+				if(!partialExpanded) {
+					for(int i = 0; i < _numberOfProcessors; i++ ) {
+						int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+						// Check Upper Bound
+						if(childScheduleCost <= _upperBoundCost) {
+							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+								_openSchedules.add(currentChildVertexSchedules[i]);
+							} else {
+								intList.add(childScheduleCost);
+							}
+						}
+					}
+				} else {
+					
+					_closedSchedules.remove(currentSchedule);
+					if (intList.size() != 0) {
+							currentSchedule.setCost(Collections.min(intList));
+							_openSchedules.add(currentSchedule);
+					}
+
+					_partialExpanded.add(currentSchedule);
+				}
+			}
+
 		}
-		System.out.println(intList);
-		if (intList.size() != 0) {
-			currentSchedule.setCost(Collections.min(intList));
-			_openSchedules.add(currentSchedule);
-		
-		}
+
+//		System.out.println(intList);
+//		System.out.println(_upperBoundCost);
+//		if (intList.size() != 0) {
+//			currentSchedule.setCost(Collections.min(intList));
+//			_openSchedules.add(currentSchedule);
+//		
+//		}
 	}
 	/**
 	 * This method checks if the successor schedules have the conditions required to
