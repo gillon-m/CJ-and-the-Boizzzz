@@ -1,11 +1,12 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import graph.Graph;
 import graph.Vertex;
@@ -28,23 +29,27 @@ import components.ScheduleComparator;
  * @author Alex Yoo
  *
  */
-public class Scheduler {
+public class ParallelisedScheduler {
 	private int _numberOfProcessors;
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private ConcurrentLinkedQueue<Schedule> _closedSchedules;
+	private List<Schedule> _finalSchedule;
 	private List<Schedule> _partialExpanded;
 	private List<ScheduleListener> _listeners;
 	private boolean _visualisation;
 	private int _upperBoundCost;
+	private int _numberOfCores;
 
-	public Scheduler(int numberOfProcessors, boolean visualisation) {
+	public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
+		_finalSchedule = new ArrayList<Schedule>();
 		_partialExpanded = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
+		_numberOfCores = numberOfCores;
 		if (_visualisation) {
 			Visualiser visualiser = new Visualiser();
 			VisualiserController visualiserController = new VisualiserController(visualiser);
@@ -70,31 +75,47 @@ public class Scheduler {
 	 * It throws an exception if the openschedule queue is empty because that is not suppose to happen
 	 * 
 	 * @return optimal schedule
-	 * @throws Exception
 	 */
-	private Schedule makeSchedulesUsingAlgorithm() throws Exception {
-		while(!_openSchedules.isEmpty()) {
-			Schedule currentSchedule = _openSchedules.peek();
-			if (_visualisation) {
-				fireScheduleChangeEvent(currentSchedule);
+	private Schedule makeSchedulesUsingAlgorithm() {
+		if (_numberOfCores == -1) { // if parallelisation is off 
+			while (_finalSchedule.isEmpty()) {
+				searchAndExpand();
 			}
-//			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
-//					+"\n"+ currentSchedule.toString());
-
-			_openSchedules.remove(currentSchedule);
-			_closedSchedules.add(currentSchedule);
-//			System.out.println("Size: "+_openSchedules.size());
-
-			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
-				return currentSchedule;
+			return _finalSchedule.get(0);
+		} else { 
+			while(_finalSchedule.isEmpty() && (_openSchedules.size() < _numberOfCores)) {
+				searchAndExpand();
 			}
-
-			this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);
-
+			if (_finalSchedule.isEmpty()) {
+				TaskIDGroup g = paralleliseSearch(_openSchedules);
+		        try {
+					g.waitTillFinished();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}			
+			}
+	        return _finalSchedule.get(0);			
 		}
-		throw new Exception("Tried to access empty openschedules :(");
-		
 	}
+	TASK(_numberOfCores) private void paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {
+		while (_finalSchedule.isEmpty()) {
+			searchAndExpand();
+		}
+	}
+	private void searchAndExpand() {
+		Schedule currentSchedule = _openSchedules.poll();
+		if (_visualisation) {
+			fireScheduleChangeEvent(currentSchedule);
+		}
+		_closedSchedules.add(currentSchedule);
+		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
+			_finalSchedule.add(currentSchedule);
+		}
+		this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);		
+	}
+	
 	/**
 	 * For the current schedule we are processing,
 	 * it tries to find successor schedules that are available
@@ -155,6 +176,7 @@ public class Scheduler {
 			}
 		}
 	}
+	
 	/**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.

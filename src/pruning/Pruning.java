@@ -2,6 +2,7 @@ package pruning;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import scheduler.Processor;
@@ -16,7 +17,7 @@ import scheduler.Schedule;
  */
 public class Pruning {
 	
-	public boolean isCurrentScheduleNeeded(PriorityBlockingQueue<Schedule> openSchedules, List<Schedule> closedSchedules, Schedule currentSchedule){
+	public boolean isCurrentScheduleNeeded(PriorityBlockingQueue<Schedule> openSchedules, ConcurrentLinkedQueue<Schedule> closedSchedules, Schedule currentSchedule){
 		List<IPruning> p = new ArrayList<IPruning>();
 		IPruning p1 = new CheckDuplicates();
 		IPruning p2 = new CheckNormalisation();
