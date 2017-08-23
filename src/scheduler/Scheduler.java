@@ -8,6 +8,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import gui.Data;
 import gui.ScheduleListener;
 import gui.Visualiser;
 import gui.VisualiserController;
@@ -34,6 +35,7 @@ public class Scheduler {
 	private List<ScheduleListener> _listeners;
 	private boolean _visualisation;
 	private int _upperBoundCost;
+	private Data _data;
 
 	public Scheduler(int numberOfProcessors, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -42,9 +44,10 @@ public class Scheduler {
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
+		_data = new Data();
 		if (_visualisation) {
 			Visualiser visualiser = new Visualiser();
-			VisualiserController visualiserController = new VisualiserController(visualiser);
+			VisualiserController visualiserController = new VisualiserController(visualiser, _data);
 			_listeners = new ArrayList<ScheduleListener>();
 			_listeners.add(visualiserController);
 		}
@@ -58,6 +61,8 @@ public class Scheduler {
 	public Schedule getOptimalSchedule() throws Exception {
 		this.addRootVerticesSchedulesToOpenSchedule();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+		_data.isFinished(true);
+		fireScheduleChangeEvent();
 		return optimalSchedule;
 	}
 
@@ -73,7 +78,8 @@ public class Scheduler {
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 			if (_visualisation) {
-				fireScheduleChangeEvent(currentSchedule);
+				_data.updateCurrentSchedule(currentSchedule);
+				fireScheduleChangeEvent();
 			}
 			//System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
 			//		+"\n"+ currentSchedule.toString());
@@ -170,7 +176,7 @@ public class Scheduler {
 
 	/**
 	 * This method adds root schedules to openschedules
-	 * since at the start of schedule the first task is the same no matter which processor
+	 * since at the start of schedule the first _timerTask is the same no matter which processor
 	 * it is put on so only one variation of root schedule is added.
 	 *
 	 */
@@ -184,9 +190,9 @@ public class Scheduler {
 			_openSchedules.add(rootSchedules[0]);
 		}
 	}
-	private void fireScheduleChangeEvent(Schedule currentSchedule) {
+	private void fireScheduleChangeEvent() {
 		for (ScheduleListener listener : _listeners) {
-			listener.update(currentSchedule);
+			listener.update();
 		}
 	}
 }

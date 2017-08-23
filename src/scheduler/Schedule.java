@@ -102,7 +102,7 @@ public class Schedule {
 	 * 	creating child Vertex's schedules
 	 * 	
 	 *  It checks the Dependencies of the vertex to see the most efficient
-	 *  place to place the input Vertex's task in the specified processor
+	 *  place to place the input Vertex's _timerTask in the specified processor
 	 *  
 	 *  If there are dependencies that must be settled checkIfEmptyTimeSlotsAreNeededFromDepenedencies
 	 *  method will handle it
@@ -118,7 +118,7 @@ public class Schedule {
 		return s;
 	}
 	/**
-	 * Hands over the task of adding the task into the processor
+	 * Hands over the _timerTask of adding the _timerTask into the processor
 	 * to the Processor class
 	 * 
 	 * @param processor
@@ -130,7 +130,7 @@ public class Schedule {
 	
 	/**
 	 * Checks dependencies of the vertex and determine the best place to 
-	 * place the task in the specified processor.
+	 * place the _timerTask in the specified processor.
 	 * If required it will generate empty spaces so that tasks can be 
 	 * placed in easily
 	 * 
@@ -188,7 +188,7 @@ public class Schedule {
 	
 	/**
 	 * This method returns back the cost of switching processors
-	 * for a given source and destination task
+	 * for a given source and destination _timerTask
 	 * 
 	 * 
 	 * @param fromVertex

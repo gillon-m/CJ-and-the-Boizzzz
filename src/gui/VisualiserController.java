@@ -1,17 +1,64 @@
 package gui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.SwingUtilities;
+
 import scheduler.Schedule;
 
 public class VisualiserController implements ScheduleListener{
 	Visualiser _visualiser;
+	Schedule _schedule;
+	Calendar _calendar = Calendar.getInstance();
+	Data _data;
+	Timer _timer = new Timer();
+
+	// Timer for elapsed time 
+	TimerTask _timerTask = new TimerTask() {
+		@Override
+		public void run() {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						if(!_data.isFinished()){ //check is the scheduler has finished
+							DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+							_calendar.add(Calendar.MILLISECOND, 1);
+							String time = timeFormat.format(_calendar.getTimeInMillis());
+							System.out.println(timeFormat.format(_calendar.getTimeInMillis()));
+						}
+						else{
+							_timer.cancel();
+							_timer.purge();
+						}
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
-	public VisualiserController(Visualiser visualiser){
+	public VisualiserController(Visualiser visualiser, Data data){
+		_data=data;
 		_visualiser = visualiser;
+		
+		//set timer to 0;
+		_calendar.set(Calendar.MILLISECOND, 0);
+		_calendar.set(Calendar.SECOND, 0);
+		_calendar.set(Calendar.MINUTE, 0);
+		_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
 	}
-	
+
 	@Override
-	public void update(Schedule schedule) {
-		_visualiser.getJTextArea().setText("Vertex = " + schedule.getLastUsedVertex().getName() + 
-				"\t|Time Taken = " + schedule.getTimeOfSchedule() + "\n" + schedule.toString());
+	public void update() {
+		_visualiser.getJTextArea().setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
+				"\t|Time Taken = " + _data.getCurrentSchedule().getTimeOfSchedule() + "\n" + _data.getCurrentSchedule().toString());
 	}
 }

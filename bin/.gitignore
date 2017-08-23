@@ -4,4 +4,6 @@
 /fileManager/
 /graph/
 /gui/
+/heuristics/
+/pruning/
 /scheduler/
