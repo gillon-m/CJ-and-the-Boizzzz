@@ -50,6 +50,7 @@ public class VisualiserController implements ScheduleListener{
 							_calendar.add(Calendar.MILLISECOND, 1);
 							String time = timeFormat.format(_calendar.getTimeInMillis());
 							_visualiser.setTimeElapsed(timeFormat.format(_calendar.getTimeInMillis()));
+							System.out.println(timeFormat.format(_calendar.getTimeInMillis()));
 						}
 						else{
 							_timer.cancel();

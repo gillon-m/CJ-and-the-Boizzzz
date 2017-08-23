@@ -25,6 +25,8 @@ public class Visualiser extends JFrame {
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 5));
 		panel.setBounds(10, 11, 464, 237);
 		getContentPane().add(panel);
+		panel.setLayout(null);
+		_schedulerText.setBounds(10, 10, 444, 216);
 		panel.add(_schedulerText);
 		
 		
