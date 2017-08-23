@@ -23,7 +23,7 @@ public class Visualiser extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 5));
-		panel.setBounds(10, 11, 464, 237);
+		panel.setBounds(10, 11, 464, 200);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		_schedulerText.setBounds(10, 10, 444, 216);
@@ -40,6 +40,7 @@ public class Visualiser extends JFrame {
 		setSize(500,400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		
 	}
 	
 	public JTextArea getJTextArea() {

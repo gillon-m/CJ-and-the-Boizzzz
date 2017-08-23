@@ -62,6 +62,7 @@ public class Scheduler {
 		this.addRootVerticesSchedulesToOpenSchedule();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		_data.isFinished(true);
+		fireScheduleChangeEvent();
 		return optimalSchedule;
 	}
 
@@ -77,7 +78,6 @@ public class Scheduler {
 		while(!_openSchedules.isEmpty()) {
 			Schedule currentSchedule = _openSchedules.peek();
 			if (_visualisation) {
-				_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
 				_data.updateCurrentSchedule(currentSchedule);
 				fireScheduleChangeEvent();
 			}
