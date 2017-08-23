@@ -46,8 +46,7 @@ public class Scheduler {
 		_visualisation = visualisation;
 		_data = new Data();
 		if (_visualisation) {
-			Visualiser visualiser = new Visualiser();
-			VisualiserController visualiserController = new VisualiserController(visualiser, _data);
+			VisualiserController visualiserController = new VisualiserController(_data);
 			_listeners = new ArrayList<ScheduleListener>();
 			_listeners.add(visualiserController);
 		}

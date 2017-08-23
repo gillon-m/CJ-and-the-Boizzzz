@@ -17,6 +17,7 @@ public class Visualiser extends JFrame {
 	private JTextArea _schedulerText = new JTextArea("0");
 	private JLabel _timeLabel = new JLabel("New label");
 	private JLabel _countLabel = new JLabel("New label");
+	
 	public Visualiser() {
 		super("Optimal Task Schedule Generator");
 		getContentPane().setLayout(null);

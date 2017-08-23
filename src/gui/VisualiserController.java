@@ -20,22 +20,10 @@ import scheduler.Schedule;
 public class VisualiserController implements ScheduleListener{
 	Visualiser _visualiser;
 	Schedule _schedule;
-	Calendar _calendar = Calendar.getInstance();
-	DateFormat _timeFormat = new SimpleDateFormat("mm:ss.SSS");
+	Calendar _calendar;
+	DateFormat _timeFormat;
 	Data _data;
-	Timer _timer = new Timer();
-
-	public VisualiserController(Visualiser visualiser, Data data){
-		_data=data;
-		_visualiser = visualiser;
-		
-		//set timer to 0;
-		_calendar.set(Calendar.MILLISECOND, 0);
-		_calendar.set(Calendar.SECOND, 0);
-		_calendar.set(Calendar.MINUTE, 0);
-		_calendar.set(Calendar.HOUR_OF_DAY, 10);
-		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
-	}
+	Timer _timer;
 	
 	/**
 	 * Timer task object used to track the total elapsed time
@@ -48,9 +36,9 @@ public class VisualiserController implements ScheduleListener{
 					@Override
 					public void run() {
 						if(!_data.isFinished()){ //check is the scheduler has finished
-							_data.setCurrentTime();
-							System.out.println(_data.getElapsedTime());						}
-						else{
+							_data.setCurrentTime();					
+						}
+						else{ //stop timer when scheduler has finished
 							_timer.cancel();
 							_timer.purge();
 						}
@@ -62,6 +50,21 @@ public class VisualiserController implements ScheduleListener{
 		}
 	};
 
+	public VisualiserController(Data data){
+		_data=data;
+		_visualiser = new Visualiser();
+		_calendar = Calendar.getInstance();
+		_timeFormat = new SimpleDateFormat("mm:ss.SSS");
+		_timer = new Timer();
+		
+		//set timer to 0;
+		_calendar.set(Calendar.MILLISECOND, 0);
+		_calendar.set(Calendar.SECOND, 0);
+		_calendar.set(Calendar.MINUTE, 0);
+		_calendar.set(Calendar.HOUR_OF_DAY, 10);
+		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
+	}
+	
 	@Override
 	public void update() {
 		_visualiser.getJTextArea().setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
@@ -69,6 +72,5 @@ public class VisualiserController implements ScheduleListener{
 		_visualiser.setScheduleCount(_data.getTotalNumberOfCreatedSchedules());
 		_calendar.setTimeInMillis(_data.getElapsedTime());
 		_visualiser.setTimeElapsed(_timeFormat.format(_calendar.getTimeInMillis()));
-		//System.out.println(_timeFormat.format(_calendar.getTimeInMillis()));
 	}
 }
