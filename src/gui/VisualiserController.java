@@ -49,7 +49,7 @@ public class VisualiserController implements ScheduleListener{
 							DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 							_calendar.add(Calendar.MILLISECOND, 1);
 							String time = timeFormat.format(_calendar.getTimeInMillis());
-							//System.out.println(timeFormat.format(_calendar.getTimeInMillis()));
+							_visualiser.setTimeElapsed(timeFormat.format(_calendar.getTimeInMillis()));
 						}
 						else{
 							_timer.cancel();
@@ -67,6 +67,6 @@ public class VisualiserController implements ScheduleListener{
 	public void update() {
 		_visualiser.getJTextArea().setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
 				"\t|Time Taken = " + _data.getCurrentSchedule().getTimeOfSchedule() + "\n" + _data.getCurrentSchedule().toString());
-		//System.out.println(_data.getTotalNumberOfCreatedSchedules());
+		_visualiser.setScheduleCount(_data.getTotalNumberOfCreatedSchedules());
 	}
 }
