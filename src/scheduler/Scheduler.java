@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 import graph.Graph;
 import graph.Vertex;
@@ -38,6 +39,7 @@ public class Scheduler {
 	private boolean _visualisation;
 	private int _upperBoundCost;
 	private Timestamp _timestampper;
+	final static AtomicLong seq = new AtomicLong();
 
 	public Scheduler(int numberOfProcessors, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -81,8 +83,8 @@ public class Scheduler {
 			if (_visualisation) {
 				fireScheduleChangeEvent(currentSchedule);
 			}
-//			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
-//					+"\n"+ currentSchedule.toString());
+			System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
+					+"\n"+ currentSchedule.toString());
 
 			_openSchedules.remove(currentSchedule);
 			_closedSchedules.add(currentSchedule);
@@ -128,15 +130,21 @@ public class Scheduler {
 				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
 				if (_upperBoundCost > childScheduleCost) {
 					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-						
 						if (parentScheduleCost == childScheduleCost) {
-							currentChildVertexSchedules[i].setTimeStamp(_timestampper.getTime());
+							System.out.println(childScheduleCost + " " + parentScheduleCost);
+							System.out.println("ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
+							+"\n"+ currentChildVertexSchedules[i].toString());
+//							currentChildVertexSchedules[i].setTimeStamp(_timestampper.getTime());
+							currentChildVertexSchedules[i].setTimeStamp(seq.getAndIncrement());
 							_openSchedules.add(currentChildVertexSchedules[i]);
 						} else {
+							System.out.println(childScheduleCost + " " + parentScheduleCost);
+							System.out.println("NOT ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
+							+"\n"+ currentChildVertexSchedules[i].toString());
 							intList.add(childScheduleCost);
 						}
 						
-						System.out.println(childScheduleCost + " " + parentScheduleCost);
+//						System.out.println(childScheduleCost + " " + parentScheduleCost);
 					}
 				}
 
@@ -203,13 +211,15 @@ public class Scheduler {
 		}
 
 		System.out.println(intList);
-		System.out.println(_upperBoundCost);
 		if (intList.size() != 0) {
 			currentSchedule.setCost(Collections.min(intList));
-			currentSchedule.setTimeStamp(_timestampper.getTime());
+			System.out.println("New minimum is: " + Collections.min(intList));
+//			currentSchedule.setTimeStamp(_timestampper.getTime());
+			currentSchedule.setTimeStamp(seq.getAndIncrement());
 			_openSchedules.add(currentSchedule);
 		
 		}
+		System.out.println("================================");
 	}
 	/**
 	 * This method checks if the successor schedules have the conditions required to

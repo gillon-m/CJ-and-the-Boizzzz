@@ -25,17 +25,37 @@ public class ScheduleComparator implements Comparator<Schedule> {
 	@Override
 	public int compare(Schedule o1, Schedule o2) {
 		CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
-		if(costFunctionCalculator.getTotalCostFunction(o1) == costFunctionCalculator.getTotalCostFunction(o2)) {
-			return (int) (o2.getTimeStamp() - o1.getTimeStamp());
-		}
 		
 		if (o1.hasSetCost() && o2.hasSetCost()) {
-			return o1.getCost() - o2.getCost();
-		} else if (o1.hasSetCost() && !o2.hasSetCost()) {
-			return o1.getCost() - costFunctionCalculator.getTotalCostFunction(o2);
-		} else if (o2.hasSetCost() && !o1.hasSetCost()) {
-			return costFunctionCalculator.getTotalCostFunction(o1) - o2.getCost();
+			if(o1.getCost() == o2.getCost()) {
+				return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+			} else {
+				return o1.getCost() - o2.getCost();
+			}
+			
+		} 
+		else if (o1.hasSetCost()) {
+			if(costFunctionCalculator.getTotalCostFunction(o1) == costFunctionCalculator.getTotalCostFunction(o2)) {
+				return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+			} else {
+				return o1.getCost() - costFunctionCalculator.getTotalCostFunction(o2);
+			}
+			
+		} 
+		else if (o2.hasSetCost()) {
+			if(costFunctionCalculator.getTotalCostFunction(o1) == o2.getCost()) {
+				return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+			} else {
+				return costFunctionCalculator.getTotalCostFunction(o1) - o2.getCost();
+			}
+			
+		} 
+		
+		if (costFunctionCalculator.getTotalCostFunction(o1) == costFunctionCalculator.getTotalCostFunction(o2)) {
+			return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+		} else {
+			return costFunctionCalculator.getTotalCostFunction(o1) - costFunctionCalculator.getTotalCostFunction(o2);
 		}
-		return costFunctionCalculator.getTotalCostFunction(o1) - costFunctionCalculator.getTotalCostFunction(o2);
+		
 	}
 }
