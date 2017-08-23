@@ -59,6 +59,7 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 	public Schedule getOptimalSchedule() throws Exception {
+		_data.setStartTime();
 		this.addRootVerticesSchedulesToOpenSchedule();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		_data.isFinished(true);
@@ -91,8 +92,9 @@ public class Scheduler {
 			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 				return currentSchedule;
 			}
-
+			
 			this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);
+			
 
 		}
 		throw new Exception("Tried to access empty openschedules :(");

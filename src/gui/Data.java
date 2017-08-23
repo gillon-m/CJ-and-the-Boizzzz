@@ -3,7 +3,7 @@ package gui;
 import scheduler.Schedule;
 
 /**
- * Data objects are used to store information regarding the current scheduler. 
+ * Data objects are used to store information regarding the current state of the scheduler. 
  * @author Gillon Manalastas
  *
  */
@@ -12,7 +12,9 @@ public class Data {
 	private int _numberOfSchedulesCreated=0;
 	private boolean _isFinished=false;
 	private int _totalNumberOfCreatedSchedules=0;
-	
+	long _startTime;
+	long _endTime;
+	long _elapsed;
 	public void updateCurrentSchedule(Schedule currentSchedule) {
 		_currentSchedule=currentSchedule;
 	}
@@ -30,5 +32,15 @@ public class Data {
 	}
 	public int getTotalNumberOfCreatedSchedules(){
 		return _totalNumberOfCreatedSchedules;
+	}
+	public void setStartTime() {
+		_startTime = System.currentTimeMillis();
+	}
+	public void setCurrentTime() {
+		_endTime = System.currentTimeMillis();
+	}
+	public long getElapsedTime(){
+		long elapsedTime=_endTime-_startTime;
+		return elapsedTime;
 	}
 }
