@@ -17,6 +17,7 @@ public class VisualiserController implements ScheduleListener{
 	Calendar _calendar = Calendar.getInstance();
 	Data _data;
 	Timer _timer = new Timer();
+	String _time;
 
 	// Timer for elapsed time 
 	TimerTask _timerTask = new TimerTask() {
@@ -31,6 +32,7 @@ public class VisualiserController implements ScheduleListener{
 							_calendar.add(Calendar.MILLISECOND, 1);
 							String time = timeFormat.format(_calendar.getTimeInMillis());
 							System.out.println(timeFormat.format(_calendar.getTimeInMillis()));
+							_time=timeFormat.format(_calendar.getTimeInMillis());
 						}
 						else{
 							_timer.cancel();
@@ -60,5 +62,6 @@ public class VisualiserController implements ScheduleListener{
 	public void update() {
 		_visualiser.getJTextArea().setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
 				"\t|Time Taken = " + _data.getCurrentSchedule().getTimeOfSchedule() + "\n" + _data.getCurrentSchedule().toString());
+		_visualiser.setTimeElapsed(_time);
 	}
 }
