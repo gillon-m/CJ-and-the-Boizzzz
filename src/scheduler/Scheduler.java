@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class Scheduler {
 	private int _numberOfProcessors;
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private ConcurrentLinkedQueue<Schedule> _closedSchedules;
+	private List<Schedule> _partialExpanded;
 	private List<ScheduleListener> _listeners;
 	private boolean _visualisation;
 	private int _upperBoundCost;
@@ -39,6 +41,7 @@ public class Scheduler {
 	public Scheduler(int numberOfProcessors, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
+		_partialExpanded = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
@@ -112,24 +115,48 @@ public class Scheduler {
 			
 			CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
 			int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
-			
-			for(int i = 0; i < _numberOfProcessors; i++ ) {
-				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-				// Check Upper Bound
-				if(childScheduleCost <= _upperBoundCost) {
-					// Check Partial Expansion
-					if(parentScheduleCost == costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) {
-						_openSchedules.add(currentChildVertexSchedules[i]);
-						break;
+			if(_partialExpanded.contains(currentSchedule)) {
+				for(int i = 0; i < _numberOfProcessors; i++ ) {
+					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+					// Check Upper Bound
+					if(childScheduleCost <= _upperBoundCost) {
+						if(parentScheduleCost > costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) {
+							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+								_openSchedules.add(currentChildVertexSchedules[i]);
+							}
+						}
 					}
-					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-						_openSchedules.add(currentChildVertexSchedules[i]);
+				}
+			} else {
+				boolean partialExpanded = false;
+				for(int i = 0; i < _numberOfProcessors; i++ ) {
+					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+					if(parentScheduleCost >= childScheduleCost) {
+						if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+							_openSchedules.add(currentChildVertexSchedules[i]);
+							partialExpanded = true;
+						}
 					}
+				}
+				if(!partialExpanded) {
+					for(int i = 0; i < _numberOfProcessors; i++ ) {
+						int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+						// Check Upper Bound
+						if(childScheduleCost <= _upperBoundCost) {
+							if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+								_openSchedules.add(currentChildVertexSchedules[i]);
+							}
+						}
+					}
+				} else {
+					_openSchedules.add(currentSchedule);
+					_closedSchedules.remove(currentSchedule);
+					_partialExpanded.add(currentSchedule);
 				}
 			}
 		}
 	}
-	/**
+    /**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.
 	 * It also checks inside the openschedule and closedschedule if there are any schedules that can be taken out

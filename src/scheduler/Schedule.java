@@ -20,7 +20,9 @@ public class Schedule {
 	private List<Vertex> _usedVertices;		// stores the used Vertices for this schedule
 	private Vertex _lastUsedVertex;			// the last Vertex that was added onto this Schedule
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
-	
+	private boolean _costSet = false;
+	private int _cost;
+
 	public Schedule(int n) {
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
@@ -288,4 +290,17 @@ public class Schedule {
 		}
 		return schedule;
 	}
+	public void setCost(Integer cost) {
+		_costSet = true;
+		_cost = cost;
+		
+	}
+	public int getCost() {
+		return _cost;
+	}
+	
+	public boolean hasSetCost() {
+		return _costSet;
+	}
+
 }

@@ -32,8 +32,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(4, s.getAllUsedVerticesWithoutEmpty().size());
@@ -55,8 +55,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -78,8 +78,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -100,8 +100,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
-//		Scheduler scheduler = new Scheduler(4, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(7, s.getAllUsedVerticesWithoutEmpty().size());
@@ -122,8 +122,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(8, s.getAllUsedVerticesWithoutEmpty().size());
@@ -144,8 +144,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
-//		Scheduler scheduler = new Scheduler(4, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(8, s.getAllUsedVerticesWithoutEmpty().size());
@@ -166,8 +166,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(9, s.getAllUsedVerticesWithoutEmpty().size());
@@ -188,8 +188,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
-//		Scheduler scheduler = new Scheduler(4, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(9, s.getAllUsedVerticesWithoutEmpty().size());
@@ -210,8 +210,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(10, s.getAllUsedVerticesWithoutEmpty().size());
@@ -232,8 +232,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
-//		Scheduler scheduler = new Scheduler(4, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(10, s.getAllUsedVerticesWithoutEmpty().size());
@@ -254,8 +254,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
-//		Scheduler scheduler = new Scheduler(2, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(2, -1, false);
+		Scheduler scheduler = new Scheduler(2, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 
 		assertEquals(11, s.getAllUsedVerticesWithoutEmpty().size());
@@ -276,8 +276,8 @@ public class TestScheduler {
 
 		graph.setUpForMakingSchedules();
 		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, 4, false);
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
-//		Scheduler scheduler = new Scheduler(4, false);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(4, -1, false);
+		Scheduler scheduler = new Scheduler(4, false);	
 		Schedule s =  scheduler.getOptimalSchedule();
 		
 		assertEquals(11, s.getAllUsedVerticesWithoutEmpty().size());
