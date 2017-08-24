@@ -85,7 +85,7 @@ public class VisualiserController implements ScheduleListener{
 		_taskGraph = new SingleGraph("Task Graph");
 		Viewer viewer = new Viewer(_taskGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		ViewPanel view = viewer.addDefaultView(false);
-		 viewer.enableAutoLayout();
+		viewer.enableAutoLayout();
 		//_taskGraph.display();
 		_visualiser.taskGraphPanel.add(view, BorderLayout.CENTER);
 		graph.Graph inputGraph = graph.Graph.getInstance();
@@ -114,11 +114,13 @@ public class VisualiserController implements ScheduleListener{
 		for( Node n : _taskGraph.getEachNode() ){
 			n.addAttribute("ui.style", "fill-color: grey; size: 20px, 20px;");
 		}
-		
+
 		List<Vertex> allUsedVertices = _data.getCurrentSchedule().getAllUsedVertices();
 		for(Vertex v: allUsedVertices){
-			Node node = _taskGraph.getNode(v.getName());
-			node.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
+			if(!v.getName().equals("-")){
+				Node node = _taskGraph.getNode(v.getName());
+				node.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
+			}
 		}
 
 		String lastUsedVertexName = _data.getCurrentSchedule().getLastUsedVertex().getName();
