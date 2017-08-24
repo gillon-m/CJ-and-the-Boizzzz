@@ -20,9 +20,7 @@ public class Schedule {
 	private List<Vertex> _usedVertices;		// stores the used Vertices for this schedule
 	private Vertex _lastUsedVertex;			// the last Vertex that was added onto this Schedule
 	private List<Vertex> _childVertices;	// List of children vertices to the last used Vertex 
-	private boolean _costSet = false;
-	private int _cost;
-
+	
 	public Schedule(int n) {
 		_numberOfProcessors = n;
 		_usedVertices = new ArrayList<Vertex>();
@@ -104,7 +102,7 @@ public class Schedule {
 	 * 	creating child Vertex's schedules
 	 * 	
 	 *  It checks the Dependencies of the vertex to see the most efficient
-	 *  place to place the input Vertex's task in the specified processor
+	 *  place to place the input Vertex's _timerTask in the specified processor
 	 *  
 	 *  If there are dependencies that must be settled checkIfEmptyTimeSlotsAreNeededFromDepenedencies
 	 *  method will handle it
@@ -120,7 +118,7 @@ public class Schedule {
 		return s;
 	}
 	/**
-	 * Hands over the task of adding the task into the processor
+	 * Hands over the _timerTask of adding the _timerTask into the processor
 	 * to the Processor class
 	 * 
 	 * @param processor
@@ -132,7 +130,7 @@ public class Schedule {
 	
 	/**
 	 * Checks dependencies of the vertex and determine the best place to 
-	 * place the task in the specified processor.
+	 * place the _timerTask in the specified processor.
 	 * If required it will generate empty spaces so that tasks can be 
 	 * placed in easily
 	 * 
@@ -141,8 +139,6 @@ public class Schedule {
 	private void checkIfEmptyTimeSlotsAreNeededFromDepenedencies(Schedule s, Vertex v, int processor) {
 		List<Vertex> dependentVertices = new ArrayList<Vertex>(getDependentVertices(v));
 		int maxTime = 0;
-		int maxTimeProcessor = -1;
-		Vertex maxTimeVertex = null; 
 		
 		for(Vertex vertex : dependentVertices) {
 			for(Processor p : new ArrayList<Processor>(s.getAllProcessors())) {
@@ -152,14 +148,10 @@ public class Schedule {
 					// check switch cost from dependent vertex is bigger than the largest time in the processor
 					if(timeTakenToThisVertex+this.switchProcessorCost(vertex, v) > maxTime) {
 						maxTime = timeTakenToThisVertex +this.switchProcessorCost(vertex, v);
-						maxTimeProcessor = s.getAllProcessors().indexOf(p);
-						maxTimeVertex = vertex;
 					}
 				} else {
 					if(timeTakenToThisVertex > maxTime) {
 						maxTime = timeTakenToThisVertex;
-						maxTimeProcessor = s.getAllProcessors().indexOf(p);
-						maxTimeVertex = vertex;
 					}
 				}
 			}
@@ -177,7 +169,6 @@ public class Schedule {
 	 */
 	private List<Vertex> getDependentVertices(Vertex v){
 		List<Vertex> dependentVertices = new ArrayList<Vertex>();
-		List<Vertex> ver = new ArrayList<Vertex>(Graph.getInstance().getVertices());
 		List<Edge> edge = new ArrayList<Edge>(Graph.getInstance().getEdges());
 		
 		for(Edge e : edge) {
@@ -190,7 +181,7 @@ public class Schedule {
 	
 	/**
 	 * This method returns back the cost of switching processors
-	 * for a given source and destination task
+	 * for a given source and destination _timerTask
 	 * 
 	 * 
 	 * @param fromVertex
@@ -290,17 +281,4 @@ public class Schedule {
 		}
 		return schedule;
 	}
-	public void setCost(Integer cost) {
-		_costSet = true;
-		_cost = cost;
-		
-	}
-	public int getCost() {
-		return _cost;
-	}
-	
-	public boolean hasSetCost() {
-		return _costSet;
-	}
-
 }

@@ -43,8 +43,8 @@ public class TaskScheduler {
 
 	public TaskScheduler(String[] args) throws Exception{
 		parseArguments(args);
-		startExecution();
-		//confirmOptionsAndExecute();
+		//startExecution();
+		confirmOptionsAndExecute();
 
 	}
 	/**
@@ -65,8 +65,8 @@ public class TaskScheduler {
 
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
-		ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
-		//Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
+		//ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
+		Scheduler scheduler = new Scheduler(_noOfProcessors, _noOfCores, _visualisation);	
 		Schedule s = scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
@@ -184,7 +184,8 @@ public class TaskScheduler {
 			System.out.println("No of Cores for execution in parallel is: sequential");
 		} else {
 			System.out.println("No of Cores for execution in parallel is: " + _noOfCores);
-			System.out.println("Note: If the specified number of cores is greater than the system specification, \nthe program will run with the maximum number of cores available.");
+			System.out.println("Note: If the specified number of cores is greater than the system specification, "
+			+"\nthe program will run with the maximum number of cores available.");
 		}
 		if (_visualisation) {
 			System.out.println("Visualisation Effect is: On");

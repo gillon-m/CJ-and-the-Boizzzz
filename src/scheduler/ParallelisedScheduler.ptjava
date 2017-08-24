@@ -1,17 +1,14 @@
 package scheduler;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import gui.Data;
 import gui.ScheduleListener;
-import gui.Visualiser;
 import gui.VisualiserController;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
@@ -35,10 +32,11 @@ public class ParallelisedScheduler {
 	private ConcurrentLinkedQueue<Schedule> _closedSchedules;
 	private List<Schedule> _partialExpanded;
 	private List<Schedule> _finalSchedule;
-	private List<ScheduleListener> _listeners;
-	private boolean _visualisation;
 	private int _upperBoundCost;
 	private int _numberOfCores;
+	private boolean _visualisation;
+	private List<ScheduleListener> _listeners;
+	private Data _data;
 
 	public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -46,13 +44,13 @@ public class ParallelisedScheduler {
 		_partialExpanded = new ArrayList<Schedule>();
 		_finalSchedule = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
+		_numberOfCores = numberOfCores;
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
-		_numberOfCores = numberOfCores;
 		if (_visualisation) {
-			Visualiser visualiser = new Visualiser();
-			VisualiserController visualiserController = new VisualiserController(visualiser);
+			_data = new Data();
+			VisualiserController visualiserController = new VisualiserController(_data);
 			_listeners = new ArrayList<ScheduleListener>();
 			_listeners.add(visualiserController);
 		}
@@ -63,10 +61,19 @@ public class ParallelisedScheduler {
 	 * @return void
 	 * @throws Exception
 	 */
-	public Schedule getOptimalSchedule() throws Exception {
-		this.addRootVerticesSchedulesToOpenSchedule();
-		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
-		return optimalSchedule;
+	public Schedule getOptimalSchedule() {
+		if (_visualisation) {
+			_data.setStartTime();
+			this.addRootVerticesSchedulesToOpenSchedule();
+			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+			_data.isFinished(true);
+			fireScheduleChangeEvent();
+			return optimalSchedule;			
+		} else {
+			this.addRootVerticesSchedulesToOpenSchedule();
+			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+			return optimalSchedule;						
+		}
 	}
 
 	/**
@@ -99,15 +106,12 @@ public class ParallelisedScheduler {
 	        return _finalSchedule.get(0);			
 		}
 	}
-	TASK(_numberOfCores) private void paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {
-		while (_finalSchedule.isEmpty()) {
-			searchAndExpand();
-		}
-	}
 	private void searchAndExpand() {
 		Schedule currentSchedule = _openSchedules.poll();
 		if (_visualisation) {
-			fireScheduleChangeEvent(currentSchedule);
+			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
+			_data.updateCurrentSchedule(currentSchedule);
+			fireScheduleChangeEvent();
 		}
 		_closedSchedules.add(currentSchedule);
 		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
@@ -115,7 +119,12 @@ public class ParallelisedScheduler {
 		}
 		this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);		
 	}
-	
+	TASK(_numberOfCores) private void paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {
+		while (_finalSchedule.isEmpty()) {
+			searchAndExpand();
+		}
+	}
+
 	/**
 	 * For the current schedule we are processing,
 	 * it tries to find successor schedules that are available
@@ -135,6 +144,7 @@ public class ParallelisedScheduler {
 			
 			CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
 			int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
+			
 			if(_partialExpanded.contains(currentSchedule)) {
 				for(int i = 0; i < _numberOfProcessors; i++ ) {
 					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
@@ -176,7 +186,7 @@ public class ParallelisedScheduler {
 			}
 		}
 	}
-		
+	
 	/**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.
@@ -219,7 +229,7 @@ public class ParallelisedScheduler {
 
 	/**
 	 * This method adds root schedules to openschedules
-	 * since at the start of schedule the first task is the same no matter which processor
+	 * since at the start of schedule the first _timerTask is the same no matter which processor
 	 * it is put on so only one variation of root schedule is added.
 	 *
 	 */
@@ -233,9 +243,9 @@ public class ParallelisedScheduler {
 			_openSchedules.add(rootSchedules[0]);
 		}
 	}
-	private void fireScheduleChangeEvent(Schedule currentSchedule) {
+	private void fireScheduleChangeEvent() {
 		for (ScheduleListener listener : _listeners) {
-			listener.update(currentSchedule);
+			listener.update();
 		}
 	}
 }

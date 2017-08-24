@@ -1,17 +1,14 @@
 package scheduler;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
+import gui.Data;
 import gui.ScheduleListener;
-import gui.Visualiser;
 import gui.VisualiserController;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
@@ -34,21 +31,26 @@ public class Scheduler {
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private ConcurrentLinkedQueue<Schedule> _closedSchedules;
 	private List<Schedule> _partialExpanded;
-	private List<ScheduleListener> _listeners;
-	private boolean _visualisation;
+	private List<Schedule> _finalSchedule;
 	private int _upperBoundCost;
+	private int _numberOfCores;
+	private boolean _visualisation;
+	private List<ScheduleListener> _listeners;
+	private Data _data;
 
-	public Scheduler(int numberOfProcessors, boolean visualisation) {
+	public Scheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
 		_partialExpanded = new ArrayList<Schedule>();
+		_finalSchedule = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
+		_numberOfCores = numberOfCores;
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
 		if (_visualisation) {
-			Visualiser visualiser = new Visualiser();
-			VisualiserController visualiserController = new VisualiserController(visualiser);
+			_data = new Data();
+			VisualiserController visualiserController = new VisualiserController(_data);
 			_listeners = new ArrayList<ScheduleListener>();
 			_listeners.add(visualiserController);
 		}
@@ -59,10 +61,19 @@ public class Scheduler {
 	 * @return void
 	 * @throws Exception
 	 */
-	public Schedule getOptimalSchedule() throws Exception {
-		this.addRootVerticesSchedulesToOpenSchedule();
-		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
-		return optimalSchedule;
+	public Schedule getOptimalSchedule() {
+		if (_visualisation) {
+			_data.setStartTime();
+			this.addRootVerticesSchedulesToOpenSchedule();
+			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+			_data.isFinished(true);
+			fireScheduleChangeEvent();
+			return optimalSchedule;			
+		} else {
+			this.addRootVerticesSchedulesToOpenSchedule();
+			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
+			return optimalSchedule;						
+		}
 	}
 
 	/**
@@ -71,30 +82,25 @@ public class Scheduler {
 	 * It throws an exception if the openschedule queue is empty because that is not suppose to happen
 	 * 
 	 * @return optimal schedule
-	 * @throws Exception
 	 */
-	private Schedule makeSchedulesUsingAlgorithm() throws Exception {
-		while(!_openSchedules.isEmpty()) {
-			Schedule currentSchedule = _openSchedules.peek();
-			if (_visualisation) {
-				fireScheduleChangeEvent(currentSchedule);
-			}
-			//System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
-			//		+"\n"+ currentSchedule.toString());
-
-			_openSchedules.remove(currentSchedule);
-			_closedSchedules.add(currentSchedule);
-			//System.out.println("Size: "+_openSchedules.size());
-
-			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
-				return currentSchedule;
-			}
-
-			this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);
-
+	private Schedule makeSchedulesUsingAlgorithm() {
+		while (_finalSchedule.isEmpty()) {
+			searchAndExpand();
 		}
-		throw new Exception("Tried to access empty openschedules :(");
-		
+		return _finalSchedule.get(0);			
+	}
+	private void searchAndExpand() {
+		Schedule currentSchedule = _openSchedules.poll();
+		if (_visualisation) {
+			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
+			_data.updateCurrentSchedule(currentSchedule);
+			fireScheduleChangeEvent();
+		}
+		_closedSchedules.add(currentSchedule);
+		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
+			_finalSchedule.add(currentSchedule);
+		}
+		this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);		
 	}
 	/**
 	 * For the current schedule we are processing,
@@ -115,6 +121,7 @@ public class Scheduler {
 			
 			CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();
 			int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
+			
 			if(_partialExpanded.contains(currentSchedule)) {
 				for(int i = 0; i < _numberOfProcessors; i++ ) {
 					int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
@@ -156,7 +163,8 @@ public class Scheduler {
 			}
 		}
 	}
-    /**
+	
+	/**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.
 	 * It also checks inside the openschedule and closedschedule if there are any schedules that can be taken out
@@ -198,7 +206,7 @@ public class Scheduler {
 
 	/**
 	 * This method adds root schedules to openschedules
-	 * since at the start of schedule the first task is the same no matter which processor
+	 * since at the start of schedule the first _timerTask is the same no matter which processor
 	 * it is put on so only one variation of root schedule is added.
 	 *
 	 */
@@ -212,9 +220,9 @@ public class Scheduler {
 			_openSchedules.add(rootSchedules[0]);
 		}
 	}
-	private void fireScheduleChangeEvent(Schedule currentSchedule) {
+	private void fireScheduleChangeEvent() {
 		for (ScheduleListener listener : _listeners) {
-			listener.update(currentSchedule);
+			listener.update();
 		}
 	}
 }

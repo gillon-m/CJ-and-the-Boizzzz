@@ -1,7 +1,5 @@
 package heuristics;
 
-import java.util.List;
-
 import components.CalculateBottomLevel;
 import graph.Vertex;
 import scheduler.Schedule;

@@ -2,10 +2,9 @@ package pruning;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import scheduler.Processor;
 import scheduler.Schedule;
 /**
  * Pruning Techniques to optimize new schedules being put into the openschedule
@@ -20,7 +19,7 @@ public class Pruning {
 	public boolean isCurrentScheduleNeeded(PriorityBlockingQueue<Schedule> openSchedules, ConcurrentLinkedQueue<Schedule> closedSchedules, Schedule currentSchedule){
 		List<IPruning> p = new ArrayList<IPruning>();
 		IPruning p1 = new CheckDuplicates();
-		IPruning p2 = new CheckNormalisation();
+		//IPruning p2 = new CheckNormalisation();
 		p.add(p1);
 		//p.add(p2);
 		
