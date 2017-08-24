@@ -1,6 +1,9 @@
 package gui;
 
+import java.util.List;
+
 import graph.Graph;
+import graph.Vertex;
 import scheduler.Schedule;
 
 /**
@@ -16,10 +19,13 @@ public class Data {
 	private long _endTime;
 	private long _elapsed;
 	private Graph _graph;
+	private Vertex _lastUsedVertex;
+	private List<Vertex> _lastUsedVertexChildren;
+	private List<Vertex> _allUsedVertices;
 	
 	/**
 	 * Updates which schedule is currently being check at the head
-	 * @param currentSchedule
+	 * @param the current schedule
 	 */
 	public void updateCurrentSchedule(Schedule currentSchedule) {
 		_currentSchedule=currentSchedule;
@@ -27,7 +33,7 @@ public class Data {
 	
 	/**
 	 * Set whether of not the scheduler has finished
-	 * @param b
+	 * @param true if finished, false if not
 	 */
 	public void isFinished(boolean b) {
 		_isFinished=b;
@@ -35,7 +41,7 @@ public class Data {
 	
 	/**
 	 * Return whether or not the scheduler has finished
-	 * @return
+	 * @return true if scheduler has finished, false if not
 	 */
 	public boolean isFinished(){
 		return _isFinished;
@@ -51,7 +57,7 @@ public class Data {
 	
 	/**
 	 * Updates the total number of schedules created
-	 * @param i
+	 * @param total number of schedules created 
 	 */
 	public void updateTotalNumberOfCreatedSchedules(int i) {
 		_totalNumberOfCreatedSchedules=i;
@@ -90,7 +96,7 @@ public class Data {
 	
 	/**
 	 * Sets the graph representation of the task graph
-	 * @param Graph
+	 * @param graph 
 	 */
 	public void setGraph(Graph g){
 		_graph = g;
@@ -102,6 +108,53 @@ public class Data {
 	 */
 	public Graph getGraph(){
 		return _graph;
+	}
+	
+	/**
+	 * Sets the last used vertex used to create a schedule
+	 * @param last used vertex
+	 */
+	public void setLastUsedVertex(Vertex v){
+		_lastUsedVertex=v;
+	}
+	
+	/**
+	 * Gets the last used vertex used to create a schedule
+	 * @return last used vertex
+	 */
+	public Vertex getLastUsedVertex(){
+		return _lastUsedVertex;
+	}
+	
+	/**
+	 * Sets the children of the last use vertex used to create a schedule
+	 * @param children of last used vertex
+	 */
+	public void setLastUsedVertexChildren(List<Vertex> v){
+		_lastUsedVertexChildren=v;
+	}
+	
+	/**
+	 * Sets the children of the last use vertex used to create a schedule
+	 * @param children of last used objects
+	 */
+	public List<Vertex> getLastUsedVertexChildren(){
+		return _lastUsedVertexChildren;
+	}
+
+	/**
+	 * Sets the list of used vertices in a schedule
+	 * @param All the used vertices in a schedule
+	 */
+	public void setAllUsedVertices(List<Vertex> v) {
+		_allUsedVertices = v;
+	}
+	/**
+	 * Gets the list of used vertices in a schedule
+	 * @param All the used vertices in a schedule
+	 */
+	public List<Vertex> getAllUsedVertices() {
+		return _allUsedVertices;
 	}
 	
 }

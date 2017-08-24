@@ -6,11 +6,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
 
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.layout.HierarchicalLayout;
 import org.graphstream.ui.view.View;
@@ -30,7 +32,8 @@ public class VisualiserController implements ScheduleListener{
 	private Data _data;
 	private Timer _timer;
 	private org.graphstream.graph.Graph _taskGraph;
-	
+	private int _usedVerticesListSize=0; //used to minimize checking and speed up visualization
+
 	/**
 	 * Timer task object used to track the total elapsed time
 	 */
@@ -62,7 +65,7 @@ public class VisualiserController implements ScheduleListener{
 		initialiseTimer();
 		createGraphVisual();
 	}
-	
+
 	/**
 	 * Initialises the timer
 	 */
@@ -77,7 +80,7 @@ public class VisualiserController implements ScheduleListener{
 		_calendar.set(Calendar.HOUR_OF_DAY, 10);
 		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
 	}
-	
+
 	/**
 	 * Creates a graphstream Graph and converts the graph.Graph data structure into org.graphstream.graph.Graph
 	 */
@@ -93,7 +96,7 @@ public class VisualiserController implements ScheduleListener{
 			for(Vertex v: inputGraph.getVertices()){
 				String vertex = v.getName();
 				if(!vertex.equals("-")){
-					_taskGraph.addNode(vertex);
+					_taskGraph.addNode(vertex).addAttribute("ui.label", vertex);
 				}
 			}
 			for(graph.Edge e: inputGraph.getEdges()){
@@ -104,16 +107,41 @@ public class VisualiserController implements ScheduleListener{
 				}
 			}
 		}
-		
+
 	}
-	
+
+	/**
+	 * Updates the colour of the nodes in the graph based on their status
+	 */
+	public void updateNodeColour(){
+		for( Node n : _taskGraph.getEachNode() ){
+			n.addAttribute("ui.style", "fill-color: grey; size: 40px, 40px;");
+		}
+		
+		
+		List<Vertex> allUsedVertices = _data.getAllUsedVertices();
+		_usedVerticesListSize=_data.getAllUsedVertices().size();
+		for(Vertex v: allUsedVertices){
+			Node node = _taskGraph.getNode(v.getName());
+			node.addAttribute("ui.style", "fill-color: green; size: 40px, 40px;");
+		}
+
+		String lastUsedVertexName = _data.getLastUsedVertex().getName();
+		if(!lastUsedVertexName.equals("-")){
+			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
+			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 40px, 40px;");
+		}
+	}
 	@Override
 	public void update() {
 		_visualiser.schedulerText.setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
 				"\t|Time Taken = " + _data.getCurrentSchedule().getTimeOfSchedule() + "\n" + _data.getCurrentSchedule().toString());
-		
+		//update count
 		_visualiser.scheduleCountLabel.setText("Schedules created: "+_data.getTotalNumberOfCreatedSchedules());
+		//update time
 		_calendar.setTimeInMillis(_data.getElapsedTime());
 		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_timeFormat.format(_calendar.getTimeInMillis()));
+		//update node checked
+		updateNodeColour();
 	}
 }

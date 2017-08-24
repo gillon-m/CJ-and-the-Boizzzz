@@ -34,6 +34,7 @@ public class GraphVisualiser {
 		graph.addNode("A");
 		graph.getNode("A").addAttribute("ui.style", "fill-color: rgb(0,100,255);");
 		graph.getNode("A").addAttribute("ui.style", "size: 100,100,100;");
+		graph.getNode("A").addAttribute("ui.label", "size: 100,100,100;");
 		graph.addNode("B");
 		graph.addNode("C");
 		graph.addEdge("AB", "A", "B");

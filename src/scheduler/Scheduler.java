@@ -79,6 +79,9 @@ public class Scheduler {
 			if (_visualisation) {
 				_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
 				_data.updateCurrentSchedule(currentSchedule);
+				_data.setLastUsedVertex(currentSchedule.getLastUsedVertex());
+				_data.setLastUsedVertexChildren(currentSchedule.getChildVertices());
+				_data.setAllUsedVertices(currentSchedule.getAllUsedVerticesWithoutEmpty());
 				fireScheduleChangeEvent();
 			}
 			//System.out.println("Vertex = " + currentSchedule.getLastUsedVertex().getName() +"\t|Time Taken = "+currentSchedule.getTimeOfSchedule()
@@ -87,7 +90,6 @@ public class Scheduler {
 			_openSchedules.remove(currentSchedule);
 			_closedSchedules.add(currentSchedule);
 			//System.out.println("Size: "+_openSchedules.size());
-
 			if(this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 				return currentSchedule;
 			}
