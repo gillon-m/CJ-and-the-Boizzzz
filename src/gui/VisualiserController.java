@@ -78,7 +78,6 @@ public class VisualiserController implements ScheduleListener{
 		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
 	}
 	
-	
 	/**
 	 * Creates a graphstream Graph and converts the graph.Graph data structure into org.graphstream.graph.Graph
 	 */
@@ -87,7 +86,8 @@ public class VisualiserController implements ScheduleListener{
 		_taskGraph = new SingleGraph("Task Graph");
 		Viewer viewer = new Viewer(_taskGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		View view = viewer.addDefaultView(false);
-		
+		_taskGraph.display();
+		_visualiser.taskGraphPanel.add((Component) view);
 		graph.Graph inputGraph = graph.Graph.getInstance();
 		if(inputGraph!=null){
 			for(Vertex v: inputGraph.getVertices()){
@@ -101,13 +101,11 @@ public class VisualiserController implements ScheduleListener{
 				String destination = e.getDestination().getName();
 				if(!source.equals("-")&&!destination.equals("-")){
 					_taskGraph.addEdge(source+destination, source, destination, true);
-
 				}
 			}
 		}
-		_visualiser.taskGraphPanel.add((Component) view);
+		
 	}
-	
 	
 	@Override
 	public void update() {
