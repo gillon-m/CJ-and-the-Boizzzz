@@ -1,9 +1,0 @@
-digraph simple1 {
-	a [weight=1];
-	b [weight=1];
-	c [weight=1];
-	d [weight=1];
-	a -> b [weight=1];
-	a -> c [weight=2];
-	a -> d [weight=3];
-}
