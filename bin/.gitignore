@@ -1,0 +1,10 @@
+/.DS_Store
+/TaskScheduler.class
+/TestScheduler.class
+/components/
+/fileManager/
+/graph/
+/gui/
+/heuristics/
+/pruning/
+/scheduler/
