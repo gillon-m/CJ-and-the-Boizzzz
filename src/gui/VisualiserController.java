@@ -34,7 +34,6 @@ public class VisualiserController implements ScheduleListener{
 	private Data _data;
 	private Timer _timer;
 	private org.graphstream.graph.Graph _taskGraph;
-	private int _usedVerticesListSize=0; //used to minimize checking and speed up visualization
 
 	/**
 	 * Timer task object used to track the total elapsed time
@@ -121,14 +120,13 @@ public class VisualiserController implements ScheduleListener{
 			n.addAttribute("ui.style", "fill-color: grey; size: 20px, 20px;");
 		}
 		
-		List<Vertex> allUsedVertices = _data.getAllUsedVertices();
-		_usedVerticesListSize=_data.getAllUsedVertices().size();
+		List<Vertex> allUsedVertices = _data.getCurrentSchedule().getAllUsedVertices();
 		for(Vertex v: allUsedVertices){
 			Node node = _taskGraph.getNode(v.getName());
 			node.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 		}
 
-		String lastUsedVertexName = _data.getLastUsedVertex().getName();
+		String lastUsedVertexName = _data.getCurrentSchedule().getLastUsedVertex().getName();
 		if(!lastUsedVertexName.equals("-")){
 			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
 			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 20px, 20px;");
