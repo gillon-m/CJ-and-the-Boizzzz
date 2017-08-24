@@ -126,29 +126,29 @@ public class Scheduler {
 				parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);
 			}
 			//
-			for (int i = 0; i < _numberOfProcessors;i++) {
-				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
-				if (_upperBoundCost > childScheduleCost) {
-					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
-						if (parentScheduleCost == childScheduleCost) {
-							System.out.println(childScheduleCost + " " + parentScheduleCost);
-							System.out.println("ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
-							+"\n"+ currentChildVertexSchedules[i].toString());
-//							currentChildVertexSchedules[i].setTimeStamp(_timestampper.getTime());
-							currentChildVertexSchedules[i].setTimeStamp(seq.getAndIncrement());
-							_openSchedules.add(currentChildVertexSchedules[i]);
-						} else {
-							System.out.println(childScheduleCost + " " + parentScheduleCost);
-							System.out.println("NOT ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
-							+"\n"+ currentChildVertexSchedules[i].toString());
-							intList.add(childScheduleCost);
-						}
-						
-//						System.out.println(childScheduleCost + " " + parentScheduleCost);
-					}
-				}
-
-			}/*
+//			for (int i = 0; i < _numberOfProcessors;i++) {
+//				int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);
+//				if (_upperBoundCost > childScheduleCost) {
+//					if(this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) {
+//						if (parentScheduleCost == childScheduleCost) {
+//							System.out.println(childScheduleCost + " " + parentScheduleCost);
+//							System.out.println("ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
+//							+"\n"+ currentChildVertexSchedules[i].toString());
+////							currentChildVertexSchedules[i].setTimeStamp(_timestampper.getTime());
+//							currentChildVertexSchedules[i].setTimeStamp(seq.getAndIncrement());
+//							_openSchedules.add(currentChildVertexSchedules[i]);
+//						} else {
+//							System.out.println(childScheduleCost + " " + parentScheduleCost);
+//							System.out.println("NOT ADDED" +"\t|Time Taken = "+currentChildVertexSchedules[i].getTimeOfSchedule()
+//							+"\n"+ currentChildVertexSchedules[i].toString());
+//							intList.add(childScheduleCost);
+//						}
+//						
+////						System.out.println(childScheduleCost + " " + parentScheduleCost);
+//					}
+//				}
+//
+//			}
 			//
 			if(_partialExpanded.contains(currentSchedule)) {
 				for(int i = 0; i < _numberOfProcessors; i++ ) {
@@ -206,20 +206,20 @@ public class Scheduler {
 
 					_partialExpanded.add(currentSchedule);
 				}
-			}*/
+			}
 
 		}
 
-		System.out.println(intList);
-		if (intList.size() != 0) {
-			currentSchedule.setCost(Collections.min(intList));
-			System.out.println("New minimum is: " + Collections.min(intList));
-//			currentSchedule.setTimeStamp(_timestampper.getTime());
-			currentSchedule.setTimeStamp(seq.getAndIncrement());
-			_openSchedules.add(currentSchedule);
-		
-		}
-		System.out.println("================================");
+//		System.out.println(intList);
+//		if (intList.size() != 0) {
+//			currentSchedule.setCost(Collections.min(intList));
+//			System.out.println("New minimum is: " + Collections.min(intList));
+////			currentSchedule.setTimeStamp(_timestampper.getTime());
+//			currentSchedule.setTimeStamp(seq.getAndIncrement());
+//			_openSchedules.add(currentSchedule);
+//		
+//		}
+//		System.out.println("================================");
 	}
 	/**
 	 * This method checks if the successor schedules have the conditions required to
