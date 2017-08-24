@@ -58,7 +58,7 @@ public class DynamicLineAndTimeSeriesChart extends ApplicationFrame implements A
         //Created Chartpanel for chart area
         final ChartPanel chartPanel = new ChartPanel(chart);
 
-        //Added chartpanel to main panel
+        //Added chartpanel to main schedulePanel
         content.add(chartPanel);
 
         //Sets the size of whole window (JPanel)

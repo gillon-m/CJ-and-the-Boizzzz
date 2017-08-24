@@ -10,50 +10,50 @@ import javax.swing.JTextArea;
 import scheduler.Schedule;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
+
+import org.graphstream.ui.view.View;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 
 public class Visualiser extends JFrame {
-	private JTextArea _schedulerText = new JTextArea("0");
-	private JLabel _timeLabel = new JLabel("New label");
-	private JLabel _countLabel = new JLabel("New label");
+	JTextArea schedulerText = new JTextArea("0");
+	JLabel timeElapsedLabel = new JLabel("New label");
+	JLabel scheduleCountLabel = new JLabel("New label");
+	JPanel schedulePanel = new JPanel();
+	JPanel taskGraphPanel = new JPanel();
+	JPanel lineChartPanel = new JPanel();
 	
 	public Visualiser() {
 		super("Optimal Task Schedule Generator");
 		getContentPane().setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0), 5));
-		panel.setBounds(10, 11, 464, 237);
-		getContentPane().add(panel);
-		panel.setLayout(null);
-		_schedulerText.setBounds(10, 10, 444, 216);
-		panel.add(_schedulerText);
+		
+		schedulePanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		schedulePanel.setBounds(290, 11, 284, 539);
+		getContentPane().add(schedulePanel);
+		schedulePanel.setLayout(null);
+		schedulerText.setBounds(10, 11, 264, 517);
+		schedulePanel.add(schedulerText);
+		
+		timeElapsedLabel.setBounds(10, 511, 226, 14);
+		getContentPane().add(timeElapsedLabel);
+		
+		scheduleCountLabel.setBounds(10, 536, 206, 14);
+		getContentPane().add(scheduleCountLabel);
+		
+		taskGraphPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		taskGraphPanel.setBounds(10, 11, 270, 239);
+		getContentPane().add(taskGraphPanel);
+		taskGraphPanel.setLayout(null);
 		
 		
-		_timeLabel.setBounds(20, 259, 454, 14);
-		getContentPane().add(_timeLabel);
+		lineChartPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		lineChartPanel.setBounds(10, 261, 270, 239);
+		getContentPane().add(lineChartPanel);
 		
-		
-		_countLabel.setBounds(20, 284, 454, 14);
-		getContentPane().add(_countLabel);
-		
-		setSize(500,400);
+		setSize(600,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-	}
-	
-	public JTextArea getJTextArea() {
-		return _schedulerText;
-	}
-	public JLabel getCountLabel(){
-		return _countLabel;
-	}
-
-	public void setTimeElapsed(String time) {
-		_timeLabel.setText("Time Elapsed: "+time);
-	}
-	public void setScheduleCount(int totalNumberOfCreatedSchedules) {
-		_countLabel.setText("Total schedules created: "+totalNumberOfCreatedSchedules);
 	}
 }

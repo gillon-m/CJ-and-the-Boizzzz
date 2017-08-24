@@ -16,6 +16,7 @@ public class Data {
 	private long _endTime;
 	private long _elapsed;
 	private Graph _graph;
+	
 	/**
 	 * Updates which schedule is currently being check at the head
 	 * @param currentSchedule
@@ -87,7 +88,20 @@ public class Data {
 		return elapsedTime;
 	}
 	
-	public void getGraph(Graph g){
+	/**
+	 * Sets the graph representation of the task graph
+	 * @param Graph
+	 */
+	public void setGraph(Graph g){
 		_graph = g;
 	}
+	
+	/**
+	 * Gets the graph representation of the task graph
+	 * @return Graph
+	 */
+	public Graph getGraph(){
+		return _graph;
+	}
+	
 }

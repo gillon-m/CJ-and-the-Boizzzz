@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 
 import fileManager.*;
 import graph.Graph;
+import gui.GraphVisualiser;
 import scheduler.Schedule;
 import scheduler.Scheduler;
 /**
@@ -64,6 +65,7 @@ public class TaskScheduler {
 
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
+		
 		Scheduler scheduler = new Scheduler(_noOfProcessors, _visualisation);	
 		Schedule s = scheduler.getOptimalSchedule();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
