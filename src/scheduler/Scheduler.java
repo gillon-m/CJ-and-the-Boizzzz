@@ -62,6 +62,7 @@ public class Scheduler {
 		this.addRootVerticesSchedulesToOpenSchedule();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		_data.isFinished(true);
+		fireScheduleChangeEvent();
 		return optimalSchedule;
 	}
 

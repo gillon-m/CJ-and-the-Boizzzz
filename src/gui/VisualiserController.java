@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
@@ -15,6 +16,7 @@ import javax.swing.SwingUtilities;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.layout.HierarchicalLayout;
+import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
@@ -88,9 +90,10 @@ public class VisualiserController implements ScheduleListener{
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		_taskGraph = new SingleGraph("Task Graph");
 		Viewer viewer = new Viewer(_taskGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-		View view = viewer.addDefaultView(false);
-		_taskGraph.display();
-		_visualiser.taskGraphPanel.add((Component) view);
+		ViewPanel view = viewer.addDefaultView(false);
+		 viewer.enableAutoLayout();
+		//_taskGraph.display();
+		_visualiser.taskGraphPanel.add(view, BorderLayout.CENTER);
 		graph.Graph inputGraph = graph.Graph.getInstance();
 		if(inputGraph!=null){
 			for(Vertex v: inputGraph.getVertices()){
@@ -115,21 +118,23 @@ public class VisualiserController implements ScheduleListener{
 	 */
 	public void updateNodeColour(){
 		for( Node n : _taskGraph.getEachNode() ){
-			n.addAttribute("ui.style", "fill-color: grey; size: 40px, 40px;");
+			n.addAttribute("ui.style", "fill-color: grey; size: 20px, 20px;");
 		}
-		
 		
 		List<Vertex> allUsedVertices = _data.getAllUsedVertices();
 		_usedVerticesListSize=_data.getAllUsedVertices().size();
 		for(Vertex v: allUsedVertices){
 			Node node = _taskGraph.getNode(v.getName());
-			node.addAttribute("ui.style", "fill-color: green; size: 40px, 40px;");
+			node.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 		}
 
 		String lastUsedVertexName = _data.getLastUsedVertex().getName();
 		if(!lastUsedVertexName.equals("-")){
 			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
-			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 40px, 40px;");
+			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 20px, 20px;");
+			if(_data.isFinished()){
+				lastUsedNode.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
+			}
 		}
 	}
 	@Override
