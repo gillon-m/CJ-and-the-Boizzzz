@@ -18,7 +18,7 @@ import scheduler.Schedule;
  * VisualiserController controls the information displayed on the GUI from the scheduling algorithm
  * @author Gillon Manalastas
  */
-public class VisualiserController implements ScheduleListener{
+public class VisualiserController{
 	private Visualiser _visualiser;
 	private org.graphstream.graph.Graph _taskGraph;
 	private int elapsedTime;
@@ -91,7 +91,6 @@ public class VisualiserController implements ScheduleListener{
 			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
 			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 20px, 20px;");
 		}
-
 	}
 
 	/**
@@ -108,7 +107,6 @@ public class VisualiserController implements ScheduleListener{
 		_visualiser.schedulerText.setText("Number of vertices used = " +_bestSchedule.getAllUsedVerticesWithoutEmpty().size() + 
 				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());				
 	}
-	@Override
 	public void update(boolean isOptimal) {
 		_currentSchedule=_data.getCurrentSchedule();
 		_bestSchedule=_data.getBestSchedule();
@@ -122,5 +120,7 @@ public class VisualiserController implements ScheduleListener{
 		}
 		//update count
 		_visualiser.scheduleCountLabel.setText("Schedules created: "+ _data.getTotalNumberOfCreatedSchedules());
+		//update line chart
+		_lineChart.actionPerformed();
 	}
 }

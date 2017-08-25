@@ -50,7 +50,7 @@ public class LineChart{// implements ActionListener {
 	 * @param title  the frame title.
 	 */
 	
-	 private TimerTask _timerTask = new TimerTask() {
+	/* private TimerTask _timerTask = new TimerTask() {
 		@Override
 		public void run() {
 			try {
@@ -64,20 +64,20 @@ public class LineChart{// implements ActionListener {
 				e.printStackTrace();
 			}
 		}
-	};
+	};*/
 	
 	public LineChart() {
 		_data=Data.getInstance();
 		_stopWatch=StopWatch.getInstance();
-		this.series = new TimeSeries("Total schedule", FixedMillisecond.class);
+		this.series = new TimeSeries("Total schedule");
 		final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
 		final JFreeChart chart = createChart(dataset);
 		//timer.setInitialDelay(1000);
 		chart.setBackgroundPaint(Color.LIGHT_GRAY);
 		chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(800, 500));
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(_timerTask, 1000, 1000);
+		//Timer timer = new Timer();
+		//timer.scheduleAtFixedRate(_timerTask, 1, 1);
 		//timer.start()
 	}
 	/**
@@ -120,8 +120,8 @@ public class LineChart{// implements ActionListener {
 	public void actionPerformed() {
 		String elapsedTime = _stopWatch.getElapsedTime();
 		int totalCreated = _data.getTotalNumberOfCreatedSchedules();
-		//this.series.add(new Millisecond(), totalCreated);
-		this.series.add(new FixedMillisecond(_stopWatch.getElapsedTimeDate()), totalCreated);
+		this.series.add(new Millisecond(), totalCreated);
+		//this.series.add(new FixedMillisecond(_stopWatch.getElapsedTimeDate()), totalCreated);
 		//System.out.println("Current Time in Milliseconds = " + elapsedTime+", Current Value : "+totalCreated);
 	}
 	

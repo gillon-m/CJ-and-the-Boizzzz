@@ -74,7 +74,7 @@ public class ParallelisedScheduler {//####[34]####
 //####[45]####
     private int timerCount;//####[45]####
 //####[46]####
-    private ScheduleListener _visualiserController;//####[46]####
+    private VisualiserController _visualiserController;//####[46]####
 //####[47]####
     private StopWatch _stopWatch;//####[47]####
 //####[48]####

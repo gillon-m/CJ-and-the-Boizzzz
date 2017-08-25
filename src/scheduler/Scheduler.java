@@ -44,7 +44,7 @@ public class Scheduler {
 	private Timer _timer;
 	private ActionListener action;
 	private int timerCount;
-	private ScheduleListener _visualiserController;
+	private VisualiserController _visualiserController;
 	private StopWatch _stopWatch;
 	private Schedule _bestSchedule;
 	private Data _data;
