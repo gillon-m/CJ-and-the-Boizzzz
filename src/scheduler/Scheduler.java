@@ -96,7 +96,7 @@ public class Scheduler {
 		Schedule currentSchedule = _openSchedules.poll();
 		if (_visualisation) {
 			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
-			_data.updateCurrentSchedule(currentSchedule);
+			_data.addSchedules(currentSchedule);
 			fireScheduleChangeEvent();
 		}
 		_closedSchedules.add(currentSchedule);

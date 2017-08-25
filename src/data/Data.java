@@ -1,34 +1,34 @@
 package data;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import graph.Graph;
 import scheduler.Schedule;
 
 /**
  * Data objects are used to store information regarding the current state of the scheduler. 
+ * Data is a singleton so used getInstance() method to get a Data object
  * @author Gillon Manalastas
  *
  */
 public class Data {
-	private Schedule _currentSchedule=null;
 	private boolean _isFinished=false;	
 	private int _totalNumberOfCreatedSchedules=0;
 	private long _startTime;
 	private long _endTime;
 	private Graph _graph;
 	private static Data _data = new Data();
+	private ConcurrentLinkedQueue<Schedule> _concurrentSchedules = new ConcurrentLinkedQueue<Schedule>();
 	
 	private Data(){
 	}
-	
+
+	/**
+	 * Returns the singleton Data object
+	 * @return Data object
+	 */
 	public static Data getInstance(){
 		return _data;
-	}
-	/**
-	 * Updates which schedule is currently being check at the head
-	 * @param the current schedule
-	 */
-	public void updateCurrentSchedule(Schedule currentSchedule) {
-		_currentSchedule=currentSchedule;
 	}
 	
 	/**
@@ -52,7 +52,11 @@ public class Data {
 	 * @return current schedule
 	 */
 	public Schedule getCurrentSchedule() {
-		return _currentSchedule;
+		return _concurrentSchedules.peek();
+	}
+	
+	public void clearSchedules(){
+		_concurrentSchedules.clear();
 	}
 	
 	/**
@@ -108,5 +112,13 @@ public class Data {
 	 */
 	public Graph getGraph(){
 		return _graph;
+	}
+	
+	/**
+	 * Adds a schedule to the list of concurectSchedules
+	 * @param The currentSchedule
+	 */
+	public void addSchedules(Schedule s){
+		_concurrentSchedules.add(s);
 	}
 }

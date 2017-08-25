@@ -146,5 +146,6 @@ public class VisualiserController implements ScheduleListener{
 		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_stopWatch.getElapsedTime());
 		//update node checked
 		updateNodeColour();
+		_data.clearSchedules();
 	}
 }
