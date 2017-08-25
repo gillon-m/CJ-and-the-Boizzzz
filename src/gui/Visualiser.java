@@ -43,6 +43,7 @@ public class Visualiser extends JFrame {
 		
 		lineChartPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		lineChartPanel.setBounds(10, 261, 270, 239);
+		lineChartPanel.setLayout(new BorderLayout(0, 0));
 		getContentPane().add(lineChartPanel);
 		
 		setSize(600,600);

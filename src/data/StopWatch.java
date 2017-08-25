@@ -4,10 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
+
+import org.jfree.data.time.RegularTimePeriod;
 
 /**
  * StopWatch is a singleton object that track the time elapsed given to the nearest millisecond.
@@ -82,5 +85,16 @@ public class StopWatch extends Timer{
 		long elapsedTime = _currentTime-_startTime;
 		_calendar.setTimeInMillis(elapsedTime);
 		return _timeFormat.format(_calendar.getTimeInMillis());
+	}
+	
+	/**
+	 * Returns the elapsed time in the representation of a Date object
+	 * @return Returns the elapsed time in a date
+	 */
+	public Date getElapsedTimeDate(){
+		long elapsedTime = _currentTime-_startTime;
+		_calendar.setTimeInMillis(elapsedTime);
+		Date elapsedTimeDate = _calendar.getTime();
+		return elapsedTimeDate;
 	}
 }

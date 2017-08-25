@@ -7,6 +7,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
+import org.jfree.ui.RefineryUtilities;
 
 import data.Data;
 import data.StopWatch;
@@ -25,11 +26,18 @@ public class VisualiserController implements ScheduleListener{
 	private Data _data;
 	private Schedule _currentSchedule;
 	private Schedule _bestSchedule;
+	private LineChart _lineChart;
 	
 	public VisualiserController(){
 		_visualiser = new Visualiser();
 		_data=Data.getInstance();
 		_stopWatch=StopWatch.getInstance();
+		_lineChart=new LineChart();
+		//_lineChart.pack();
+       // RefineryUtilities.centerFrameOnScreen(_lineChart);
+      //  _lineChart.setVisible(true);
+        _visualiser.lineChartPanel.add(_lineChart.getChart(), BorderLayout.CENTER);
+        _visualiser.lineChartPanel.validate();
 		createGraphVisual();
 	}
 
