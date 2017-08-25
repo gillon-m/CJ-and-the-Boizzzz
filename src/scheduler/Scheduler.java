@@ -86,33 +86,12 @@ public class Scheduler {
 		_timer.start();
 	}
 	
-	private void getBestSchedule(Schedule currentSchedule) {
-	if(_bestSchedule==null){
-		_bestSchedule=currentSchedule;
-	}
-	else{
-		List<Vertex> currentScheduleVertices = currentSchedule.getAllUsedVerticesWithoutEmpty();
-		List<Vertex> bestScheduleVertices = _bestSchedule.getAllUsedVerticesWithoutEmpty();
-		int currentScheduleTime = currentSchedule.getTimeOfSchedule();
-		int bestScheduleTime=_bestSchedule.getTimeOfSchedule();
-		if(currentScheduleVertices.size()>bestScheduleVertices.size()){
-			_bestSchedule=currentSchedule;
-		}
-		else if(currentScheduleVertices.size()==bestScheduleVertices.size()){
-			if(currentSchedule.getTimeOfSchedule()<_bestSchedule.getTimeOfSchedule()){
-				_bestSchedule=currentSchedule;
-			}
-		}
-	}
-	}
-	
 	/**
 	 * This method returns the optimal schedule
 	 * @return void
 	 * @throws Exception
 	 */
 	public Schedule getOptimalSchedule() {
-		//long start=System.currentTimeMillis();
 		this.addRootVerticesSchedulesToOpenSchedule();
 		_stopWatch.start();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
@@ -123,8 +102,6 @@ public class Scheduler {
 			_visualiserController.update(true);
 		}
 		_stopWatch.stop();
-	//	long end=System.currentTimeMillis()-start;
-	//	System.out.println("Time taken"+end);
 		return optimalSchedule;			
 	}
 

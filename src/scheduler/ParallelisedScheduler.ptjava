@@ -18,7 +18,7 @@ import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
 import data.StopWatch;
-
+import data.Data;
 /**
  * This Class uses the Schedule Class and Processor Class
  * to make schedules using the information from the Graph Variable which
@@ -45,6 +45,8 @@ public class ParallelisedScheduler {
 	private int timerCount;
 	private ScheduleListener _visualiserController;
 	private StopWatch _stopWatch;
+	private Schedule _bestSchedule;
+	private Data _data;
 	
 	public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -57,6 +59,7 @@ public class ParallelisedScheduler {
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
 		_stopWatch=StopWatch.getInstance();
+		_data=Data.getInstance();
 		if (_visualisation) {
 			_visualiserController = new VisualiserController();
 			setUpTimer();
@@ -67,11 +70,15 @@ public class ParallelisedScheduler {
 			public void actionPerformed(ActionEvent arg0) {
 				if (timerCount == 0) {
 					Schedule schedule = _openSchedules.peek();
-					_visualiserController.update(schedule, false, _openSchedules.size()+_closedSchedules.size());
+					_data.setCurrentSchedule(schedule);
+					_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
+					_visualiserController.update(false);
 				} else {
 					timerCount--;
 				}
 			}
+
+			
 		};
 		_timer = new Timer(1, action);
 		_timer.setInitialDelay(0);
@@ -89,7 +96,9 @@ public class ParallelisedScheduler {
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		if (_visualisation) {
 			_timer.stop();
-			_visualiserController.update(optimalSchedule, true, _openSchedules.size()+_closedSchedules.size());
+			_data.setCurrentSchedule(optimalSchedule);
+			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
+			_visualiserController.update(true);
 		}
 		_stopWatch.stop();
 		return optimalSchedule;						
