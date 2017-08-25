@@ -97,7 +97,7 @@ public class Scheduler {
 		if (_visualisation) {
 			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
 			_data.addSchedules(currentSchedule);
-			//fireScheduleChangeEvent();
+			fireScheduleChangeEvent();
 		}
 		_closedSchedules.add(currentSchedule);
 		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
