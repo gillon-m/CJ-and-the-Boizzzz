@@ -7,13 +7,14 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import graph.Graph;
 import graph.Vertex;
-import gui.Data;
 import gui.ScheduleListener;
 import gui.VisualiserController;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
+import data.Data;
+import data.StopWatch;
 /**
  * This Class uses the Schedule Class and Processor Class
  * to make schedules using the information from the Graph Variable which
@@ -37,6 +38,7 @@ public class Scheduler {
 	private boolean _visualisation;
 	private List<ScheduleListener> _listeners;
 	private Data _data;
+	private StopWatch _stopWatch;
 
 	public Scheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
@@ -49,8 +51,9 @@ public class Scheduler {
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
 		if (_visualisation) {
-			_data = new Data();
-			VisualiserController visualiserController = new VisualiserController(_data);
+			_data = Data.getInstance();
+			_stopWatch=StopWatch.getInstance();
+			VisualiserController visualiserController = new VisualiserController();
 			_listeners = new ArrayList<ScheduleListener>();
 			_listeners.add(visualiserController);
 		}
@@ -63,10 +66,10 @@ public class Scheduler {
 	 */
 	public Schedule getOptimalSchedule() {
 		if (_visualisation) {
-			_data.setStartTime();
+			_stopWatch.startTimer();
 			this.addRootVerticesSchedulesToOpenSchedule();
 			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
-			_data.isFinished(true);
+			_stopWatch.stop();
 			fireScheduleChangeEvent();
 			return optimalSchedule;			
 		} else {

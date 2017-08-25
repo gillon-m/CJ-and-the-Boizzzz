@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;//####[5]####
 import java.util.concurrent.PriorityBlockingQueue;//####[6]####
 import graph.Graph;//####[8]####
 import graph.Vertex;//####[9]####
-import gui.Data;//####[10]####
 import gui.ScheduleListener;//####[11]####
 import gui.VisualiserController;//####[12]####
 import heuristics.CostFunctionCalculator;//####[13]####
 import pruning.ListScheduling;//####[14]####
 import pruning.Pruning;//####[15]####
 import components.ScheduleComparator;//####[16]####
+import data.Data;
 //####[16]####
 //-- ParaTask related imports//####[16]####
 import pt.runtime.*;//####[16]####

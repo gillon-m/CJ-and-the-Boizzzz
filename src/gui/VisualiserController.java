@@ -16,6 +16,8 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
+import data.Data;
+import data.StopWatch;
 import graph.Vertex;
 
 /**
@@ -29,10 +31,11 @@ public class VisualiserController implements ScheduleListener{
 	private Data _data;
 	private Timer _timer;
 	private org.graphstream.graph.Graph _taskGraph;
+	private StopWatch _stopWatch;
 
 	/**
 	 * Timer task object used to track the total elapsed time
-	 */
+	 *//*
 	TimerTask _timerTask = new TimerTask() {
 		@Override
 		public void run() {
@@ -53,18 +56,19 @@ public class VisualiserController implements ScheduleListener{
 				e.printStackTrace();
 			}
 		}
-	};
+	};*/
 
-	public VisualiserController(Data data){
-		_data=data;
+	public VisualiserController(){
+		_data=Data.getInstance();
 		_visualiser = new Visualiser();
-		initialiseTimer();
+		_stopWatch=StopWatch.getInstance();
+		//initialiseTimer();
 		createGraphVisual();
 	}
 
 	/**
 	 * Initialises the timer
-	 */
+	 *//*
 	private void initialiseTimer(){
 		_calendar = Calendar.getInstance();
 		_timeFormat = new SimpleDateFormat("mm:ss.SSS");
@@ -75,7 +79,7 @@ public class VisualiserController implements ScheduleListener{
 		_calendar.set(Calendar.MINUTE, 0);
 		_calendar.set(Calendar.HOUR_OF_DAY, 10);
 		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
-	}
+	}*/
 
 	/**
 	 * Creates a graphstream Graph and converts the graph.Graph data structure into org.graphstream.graph.Graph
@@ -117,14 +121,14 @@ public class VisualiserController implements ScheduleListener{
 
 		List<Vertex> allUsedVertices = _data.getCurrentSchedule().getAllUsedVertices();
 		for(Vertex v: allUsedVertices){
-			if(!v.getName().equals("-")){
+			if(!v.getName().equals("-")){//check if imaginary node
 				Node node = _taskGraph.getNode(v.getName());
 				node.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 			}
 		}
 
 		String lastUsedVertexName = _data.getCurrentSchedule().getLastUsedVertex().getName();
-		if(!lastUsedVertexName.equals("-")){
+		if(!lastUsedVertexName.equals("-")){//check if imaginary node
 			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
 			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 20px, 20px;");
 			if(_data.isFinished()){
@@ -139,8 +143,7 @@ public class VisualiserController implements ScheduleListener{
 		//update count
 		_visualiser.scheduleCountLabel.setText("Schedules created: "+_data.getTotalNumberOfCreatedSchedules());
 		//update time
-		_calendar.setTimeInMillis(_data.getElapsedTime());
-		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_timeFormat.format(_calendar.getTimeInMillis()));
+		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_stopWatch.getElapsedTime());
 		//update node checked
 		updateNodeColour();
 	}

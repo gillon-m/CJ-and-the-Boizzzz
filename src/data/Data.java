@@ -1,4 +1,4 @@
-package gui;
+package data;
 
 import graph.Graph;
 import scheduler.Schedule;
@@ -15,7 +15,14 @@ public class Data {
 	private long _startTime;
 	private long _endTime;
 	private Graph _graph;
+	private static Data _data = new Data();
 	
+	private Data(){
+	}
+	
+	public static Data getInstance(){
+		return _data;
+	}
 	/**
 	 * Updates which schedule is currently being check at the head
 	 * @param the current schedule

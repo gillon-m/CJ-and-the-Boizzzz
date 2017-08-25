@@ -43,8 +43,8 @@ public class TaskScheduler {
 
 	public TaskScheduler(String[] args) throws Exception{
 		parseArguments(args);
-		//startExecution();
-		confirmOptionsAndExecute();
+		startExecution();
+		//confirmOptionsAndExecute();
 
 	}
 	/**
