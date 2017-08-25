@@ -10,8 +10,6 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.SystemColor;
-import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
 public class Visualiser extends JFrame {

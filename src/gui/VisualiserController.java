@@ -7,7 +7,6 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
-import org.jfree.ui.RefineryUtilities;
 
 import data.Data;
 import data.StopWatch;
@@ -21,7 +20,6 @@ import scheduler.Schedule;
 public class VisualiserController{
 	private Visualiser _visualiser;
 	private org.graphstream.graph.Graph _taskGraph;
-	private int elapsedTime;
 	private StopWatch _stopWatch;
 	private Data _data;
 	private Schedule _currentSchedule;
@@ -33,9 +31,6 @@ public class VisualiserController{
 		_data=Data.getInstance();
 		_stopWatch=StopWatch.getInstance();
 		_lineChart=new LineChart();
-		//_lineChart.pack();
-       // RefineryUtilities.centerFrameOnScreen(_lineChart);
-      //  _lineChart.setVisible(true);
         _visualiser.lineChartPanel.add(_lineChart.getChart(), BorderLayout.CENTER);
         _visualiser.lineChartPanel.validate();
 		createGraphVisual();

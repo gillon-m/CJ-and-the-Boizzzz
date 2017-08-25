@@ -11,14 +11,12 @@ import javax.swing.Timer;
 
 import graph.Graph;
 import graph.Vertex;
-import gui.ScheduleListener;
 import gui.VisualiserController;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
 import data.Data;
-import data.StopWatch;
 
 /**
  * This Class uses the Schedule Class and Processor Class
@@ -45,7 +43,6 @@ public class Scheduler {
 	private ActionListener action;
 	private int timerCount;
 	private VisualiserController _visualiserController;
-	private Schedule _bestSchedule;
 	private Data _data;
 	
 	public Scheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
@@ -58,12 +55,18 @@ public class Scheduler {
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
-		_data=Data.getInstance();
 		if (_visualisation) {
+			_data=Data.getInstance();
 			_visualiserController = new VisualiserController();
 			setUpTimer();
 		}
 	}
+	/**
+	 * Sets up a timer that goes off every 1 millisecond for GUI update.
+	 * When the timer goes off, the current head of the open schedules list is passed to the GUI components
+	 * so that GUI updates with the new changes. Data object stores the information about the update 
+	 * and visualiser controller fires update call to update GUI.
+	 */
 	private void setUpTimer() {
 		action = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -76,8 +79,6 @@ public class Scheduler {
 					timerCount--;
 				}
 			}
-
-			
 		};
 		_timer = new Timer(1, action);
 		_timer.setInitialDelay(0);
@@ -104,7 +105,6 @@ public class Scheduler {
 	/**
 	 * This method uses the A* algorithm to create schedules 
 	 * It only returns back once it finds an optimal schedule
-	 * It throws an exception if the openschedule queue is empty because that is not suppose to happen
 	 * 
 	 * @return optimal schedule
 	 */
@@ -114,6 +114,14 @@ public class Scheduler {
 		}
 		return _finalSchedule.get(0);			
 	}
+	
+	/**
+	 * Gets the head of the priority queue and expands it to the children schedules.
+	 * If the optimal schedule is found, it stores it to the final schedule list.
+	 * if not found, the children schedules get added to the open schedules list 
+	 * if pass the conditions required.
+	 * 
+	 */
 	private void searchAndExpand() {
 		Schedule currentSchedule = _openSchedules.poll();
 		_closedSchedules.add(currentSchedule);

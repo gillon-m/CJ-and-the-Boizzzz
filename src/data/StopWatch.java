@@ -10,8 +10,6 @@ import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
 
-import org.jfree.data.time.RegularTimePeriod;
-
 /**
  * StopWatch is a singleton object that track the time elapsed given to the nearest millisecond.
  * Instantiate a StopWatch object using the getInstance() method
@@ -21,7 +19,6 @@ import org.jfree.data.time.RegularTimePeriod;
 public class StopWatch extends Timer{
 	private Calendar _calendar;
 	private DateFormat _timeFormat;
-	private boolean _isFinished;
 	private TimerTask _timerTask;
 	private long _currentTime;
 	private long _startTime;
