@@ -35,31 +35,6 @@ public class VisualiserController implements ScheduleListener{
 	private StopWatch _stopWatch;
 	private Schedule _currentSchedule;
 
-	/**
-	 * Timer task object used to track the total elapsed time
-	 *//*
-	TimerTask _timerTask = new TimerTask() {
-		@Override
-		public void run() {
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					@Override
-					public void run() {
-						if(!_data.isFinished()){ //check is the scheduler has finished
-							_data.setCurrentTime();					
-						}
-						else{ //stop timer when scheduler has finished
-							_timer.cancel();
-							_timer.purge();
-						}
-					}
-				});
-			} catch (InvocationTargetException | InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	};*/
-
 	public VisualiserController(){
 		_data=Data.getInstance();
 		_visualiser = new Visualiser();
@@ -67,21 +42,6 @@ public class VisualiserController implements ScheduleListener{
 		//initialiseTimer();
 		createGraphVisual();
 	}
-
-	/**
-	 * Initialises the timer
-	 *//*
-	private void initialiseTimer(){
-		_calendar = Calendar.getInstance();
-		_timeFormat = new SimpleDateFormat("mm:ss.SSS");
-		_timer = new Timer();
-		//set timer to 0;
-		_calendar.set(Calendar.MILLISECOND, 0);
-		_calendar.set(Calendar.SECOND, 0);
-		_calendar.set(Calendar.MINUTE, 0);
-		_calendar.set(Calendar.HOUR_OF_DAY, 10);
-		_timer.scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond
-	}*/
 
 	/**
 	 * Creates a graphstream Graph and converts the graph.Graph data structure into org.graphstream.graph.Graph
@@ -92,7 +52,6 @@ public class VisualiserController implements ScheduleListener{
 		Viewer viewer = new Viewer(_taskGraph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		ViewPanel view = viewer.addDefaultView(false);
 		viewer.enableAutoLayout();
-		//_taskGraph.display();
 		_visualiser.taskGraphPanel.add(view, BorderLayout.CENTER);
 		graph.Graph inputGraph = graph.Graph.getInstance();
 		if(inputGraph!=null){
@@ -137,6 +96,9 @@ public class VisualiserController implements ScheduleListener{
 
 	}
 
+	/**
+	 * Displays the schedule
+	 */
 	private void displaySchedule(){
 		Schedule bestSchedule = _data.getBestSchedule();
 		_visualiser.schedulerText.setText("Vertex = " +bestSchedule.getLastUsedVertex().getName() + 
@@ -144,6 +106,9 @@ public class VisualiserController implements ScheduleListener{
 
 	}
 
+	/**
+	 * Colour all nodes green
+	 */
 	private void finishAllNodes(){
 		for( Node n : _taskGraph.getEachNode() ){
 			n.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
