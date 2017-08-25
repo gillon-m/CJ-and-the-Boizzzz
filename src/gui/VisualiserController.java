@@ -103,7 +103,7 @@ public class VisualiserController{
 	}
 	
 	private void displaySchedule() {
-		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+ _stopWatch.getElapsedTime());
+		
 		_visualiser.schedulerText.setText("Number of vertices used = " +_bestSchedule.getAllUsedVerticesWithoutEmpty().size() + 
 				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());				
 	}
@@ -118,8 +118,10 @@ public class VisualiserController{
 				displaySchedule();
 			}
 		}
+		//update timer
+		_visualiser.timeElapsedLabel.setText(_stopWatch.getElapsedTime());
 		//update count
-		_visualiser.scheduleCountLabel.setText("Schedules created: "+ _data.getTotalNumberOfCreatedSchedules());
+		_visualiser.scheduleCountLabel.setText(""+_data.getTotalNumberOfCreatedSchedules());
 		//update line chart
 		_lineChart.actionPerformed();
 	}

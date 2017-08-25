@@ -3,50 +3,63 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
+import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
 public class Visualiser extends JFrame {
 	JTextArea schedulerText = new JTextArea("0");
-	JLabel timeElapsedLabel = new JLabel("New label");
-	JLabel scheduleCountLabel = new JLabel("New label");
+	JLabel timeElapsedLabel = new JLabel("",SwingConstants.RIGHT);
+	JLabel scheduleCountLabel = new JLabel("",SwingConstants.RIGHT);
 	JPanel schedulePanel = new JPanel();
 	JPanel taskGraphPanel = new JPanel();
 	JPanel lineChartPanel = new JPanel();
+	JPanel textPanel = new JPanel();
+	private final JLabel scheduleCountHeaderLabel = new JLabel("Schedules Created:");
+	private final JLabel timeElapsedHeaderLabel = new JLabel("Time Elapsed:");
 	
 	public Visualiser() {
 		super("Optimal Task Schedule Generator");
+		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
+		schedulePanel.setBackground(Color.WHITE);
 		
-		schedulePanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		schedulePanel.setBounds(290, 11, 284, 539);
+		schedulePanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		schedulePanel.setBounds(317, 22, 273, 517);
 		getContentPane().add(schedulePanel);
 		schedulePanel.setLayout(null);
-		schedulerText.setBounds(10, 11, 264, 517);
-		schedulePanel.add(schedulerText);
+		taskGraphPanel.setBackground(Color.WHITE);
 		
-		timeElapsedLabel.setBounds(10, 511, 226, 14);
-		getContentPane().add(timeElapsedLabel);
-		
-		scheduleCountLabel.setBounds(10, 536, 206, 14);
-		getContentPane().add(scheduleCountLabel);
-		
-		taskGraphPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		taskGraphPanel.setBounds(10, 11, 270, 239);
+		taskGraphPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		taskGraphPanel.setBounds(26, 22, 254, 244);
 		getContentPane().add(taskGraphPanel);
 		taskGraphPanel.setLayout(new BorderLayout(0, 0));
+		lineChartPanel.setBackground(Color.WHITE);
 		
-		lineChartPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		lineChartPanel.setBounds(10, 261, 270, 239);
+		lineChartPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		lineChartPanel.setBounds(26, 292, 254, 244);
 		lineChartPanel.setLayout(new BorderLayout(0, 0));
 		getContentPane().add(lineChartPanel);
+		textPanel.setBackground(Color.WHITE);
 		
-		setSize(600,600);
+		lineChartPanel.add(textPanel, BorderLayout.SOUTH);
+		textPanel.setLayout(new GridLayout(2, 2, 0, 0));
+		textPanel.add(scheduleCountHeaderLabel);
+		textPanel.add(scheduleCountLabel);
+		
+		textPanel.add(timeElapsedHeaderLabel);
+		textPanel.add(timeElapsedLabel);
+		schedulerText.setBounds(317, 22, 273, 517);
+		getContentPane().add(schedulerText);
+		
+		setSize(633,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}

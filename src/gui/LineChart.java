@@ -18,13 +18,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.time.FixedMillisecond;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 import data.Data;
 import data.StopWatch;
@@ -68,12 +65,11 @@ public class LineChart{// implements ActionListener {
 	
 	public LineChart() {
 		_data=Data.getInstance();
-		_stopWatch=StopWatch.getInstance();
 		this.series = new TimeSeries("Total schedule");
 		final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
 		final JFreeChart chart = createChart(dataset);
 		//timer.setInitialDelay(1000);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
+		chart.setBackgroundPaint(Color.WHITE);
 		chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(800, 500));
 		//Timer timer = new Timer();
@@ -88,9 +84,9 @@ public class LineChart{// implements ActionListener {
 	 * @return A sample chart.
 	 */
 	public JFreeChart createChart(final XYDataset dataset) {
-		final JFreeChart result = ChartFactory.createTimeSeriesChart(
+		final JFreeChart lineChart = ChartFactory.createTimeSeriesChart(
 				"Schedules Created",
-				"Time",
+				"Schedules",
 				"Value",
 				dataset,
 				false,
@@ -98,14 +94,14 @@ public class LineChart{// implements ActionListener {
 				false
 				);
 
-		final XYPlot plot = result.getXYPlot();
-
-		plot.setBackgroundPaint(new Color(0xffffe0));
+		final XYPlot plot = lineChart.getXYPlot();
+		lineChart.setBackgroundPaint(new Color(0x382721));
+		plot.setBackgroundPaint(new Color(0xffffff));
 		plot.setDomainGridlinesVisible(true);
 		plot.setDomainGridlinePaint(Color.lightGray);
 		plot.setRangeGridlinesVisible(true);
 		plot.setRangeGridlinePaint(Color.lightGray);
-
+		
 		ValueAxis xaxis = plot.getDomainAxis();
 		xaxis.setTickLabelsVisible(false);
 		xaxis.setAutoRange(true);
@@ -113,12 +109,11 @@ public class LineChart{// implements ActionListener {
 		yaxis.setTickLabelsVisible(false);
 		yaxis.setAutoRange(true);
 
-		return result;
+		return lineChart;
 	}
 
 	//public void actionPerformed(final ActionEvent e) {
 	public void actionPerformed() {
-		String elapsedTime = _stopWatch.getElapsedTime();
 		int totalCreated = _data.getTotalNumberOfCreatedSchedules();
 		this.series.add(new Millisecond(), totalCreated);
 		//this.series.add(new FixedMillisecond(_stopWatch.getElapsedTimeDate()), totalCreated);

@@ -45,7 +45,6 @@ public class Scheduler {
 	private ActionListener action;
 	private int timerCount;
 	private VisualiserController _visualiserController;
-	private StopWatch _stopWatch;
 	private Schedule _bestSchedule;
 	private Data _data;
 	
@@ -59,7 +58,6 @@ public class Scheduler {
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
-		_stopWatch=StopWatch.getInstance();
 		_data=Data.getInstance();
 		if (_visualisation) {
 			_visualiserController = new VisualiserController();
@@ -93,7 +91,6 @@ public class Scheduler {
 	 */
 	public Schedule getOptimalSchedule() {
 		this.addRootVerticesSchedulesToOpenSchedule();
-		_stopWatch.start();
 		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		if (_visualisation) {
 			_timer.stop();
@@ -101,7 +98,6 @@ public class Scheduler {
 			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
 			_visualiserController.update(true);
 		}
-		_stopWatch.stop();
 		return optimalSchedule;			
 	}
 

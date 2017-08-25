@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import data.StopWatch;
 import fileManager.*;
 import graph.Graph;
 import scheduler.ParallelisedScheduler;
@@ -31,6 +32,7 @@ public class TaskScheduler {
 	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
 	boolean _visualisation = false; // by default visualisation is off
 	Path _filepath = null; 
+	StopWatch _stopWatch;
 	
 	/**
 	 * Main program. It takes arguments from the user input and pass them to other methods to process.
@@ -42,6 +44,7 @@ public class TaskScheduler {
 	}
 
 	public TaskScheduler(String[] args) throws Exception{
+		_stopWatch=StopWatch.getInstance();
 		parseArguments(args);
 		startExecution();
 		//confirmOptionsAndExecute();
@@ -67,7 +70,9 @@ public class TaskScheduler {
 		graph.setUpForMakingSchedules();
 		ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
 		//Scheduler scheduler = new Scheduler(_noOfProcessors, _noOfCores, _visualisation);	
+		_stopWatch.start();
 		Schedule s = scheduler.getOptimalSchedule();
+		_stopWatch.stop();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
