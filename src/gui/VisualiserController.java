@@ -1,15 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.swing.SwingUtilities;
 
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -27,19 +19,17 @@ import scheduler.Schedule;
  */
 public class VisualiserController implements ScheduleListener{
 	private Visualiser _visualiser;
-	private Calendar _calendar;
-	private DateFormat _timeFormat;
-	private Data _data;
-	private Timer _timer;
 	private org.graphstream.graph.Graph _taskGraph;
+	private int elapsedTime;
 	private StopWatch _stopWatch;
+	private Data _data;
 	private Schedule _currentSchedule;
-
+	private Schedule _bestSchedule;
+	
 	public VisualiserController(){
-		_data=Data.getInstance();
 		_visualiser = new Visualiser();
+		_data=Data.getInstance();
 		_stopWatch=StopWatch.getInstance();
-		//initialiseTimer();
 		createGraphVisual();
 	}
 
@@ -97,16 +87,6 @@ public class VisualiserController implements ScheduleListener{
 	}
 
 	/**
-	 * Displays the schedule
-	 */
-	private void displaySchedule(){
-		Schedule bestSchedule = _data.getBestSchedule();
-		_visualiser.schedulerText.setText("Vertex = " +bestSchedule.getLastUsedVertex().getName() + 
-				"\t|Time Taken = " + bestSchedule.getTimeOfSchedule() + "\n" + bestSchedule.toString());
-
-	}
-
-	/**
 	 * Colour all nodes green
 	 */
 	private void finishAllNodes(){
@@ -114,22 +94,25 @@ public class VisualiserController implements ScheduleListener{
 			n.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 		}
 	}
+	
+	private void displaySchedule() {
+		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+ _stopWatch.getElapsedTime());
+		_visualiser.schedulerText.setText("Number of vertices used = " +_bestSchedule.getAllUsedVerticesWithoutEmpty().size() + 
+				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());				
+	}
 	@Override
-	public void update() {
+	public void update(boolean isOptimal) {
 		_currentSchedule=_data.getCurrentSchedule();
-		if(_currentSchedule!=null){
-			displaySchedule();
-			updateNodeColour();
-		}
-		else{
-			finishAllNodes();
+		_bestSchedule=_data.getBestSchedule();
+		if (_currentSchedule != null) {
+			if (isOptimal) {
+				finishAllNodes();
+			} else {
+				updateNodeColour();
+				displaySchedule();
+			}
 		}
 		//update count
-		_visualiser.scheduleCountLabel.setText("Schedules created: "+_data.getTotalNumberOfCreatedSchedules());
-		//update time
-		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_stopWatch.getElapsedTime());
-		//update node checked
-		
-		_data.clearSchedules();
+		_visualiser.scheduleCountLabel.setText("Schedules created: "+ _data.getTotalNumberOfCreatedSchedules());
 	}
 }

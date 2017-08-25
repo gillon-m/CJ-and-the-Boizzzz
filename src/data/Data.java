@@ -20,8 +20,8 @@ public class Data {
 	private long _endTime;
 	private Graph _graph;
 	private static Data _data = new Data();
-	private ConcurrentLinkedQueue<Schedule> _allSchedules = new ConcurrentLinkedQueue<Schedule>();
 	private Schedule _bestSchedule;
+	private Schedule _currentSchedule;
 	
 	private Data(){
 	}
@@ -55,14 +55,7 @@ public class Data {
 	 * @return current schedule
 	 */
 	public Schedule getCurrentSchedule() {
-		return _allSchedules.peek();
-	}
-	
-	/**
-	 * Clears the schedule in the schedule list
-	 */
-	public void clearSchedules(){
-		_allSchedules.clear();
+		return _currentSchedule;
 	}
 	
 	/**
@@ -124,8 +117,8 @@ public class Data {
 	 * Adds the current schedule to the list of concurectSchedules. Determines which schedule is the best
 	 * @param The currentSchedule
 	 */
-	public void addSchedules(Schedule currentSchedule){
-		_allSchedules.add(currentSchedule);
+	public void setCurrentSchedule(Schedule currentSchedule){
+		_currentSchedule=currentSchedule;
 		if(_bestSchedule==null){
 			_bestSchedule=currentSchedule;
 		}

@@ -1,19 +1,24 @@
 package scheduler;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import javax.swing.Timer;
+
 import graph.Graph;
 import graph.Vertex;
-import gui.Data;
 import gui.ScheduleListener;
 import gui.VisualiserController;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
+import data.StopWatch;
+
 /**
  * This Class uses the Schedule Class and Processor Class
  * to make schedules using the information from the Graph Variable which
@@ -35,9 +40,12 @@ public class ParallelisedScheduler {
 	private int _upperBoundCost;
 	private int _numberOfCores;
 	private boolean _visualisation;
-	private List<ScheduleListener> _listeners;
-	private Data _data;
-
+	private Timer _timer;
+	private ActionListener action;
+	private int timerCount;
+	private ScheduleListener _visualiserController;
+	private StopWatch _stopWatch;
+	
 	public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
 		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
 		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
@@ -48,12 +56,26 @@ public class ParallelisedScheduler {
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
 		_visualisation = visualisation;
+		_stopWatch=StopWatch.getInstance();
 		if (_visualisation) {
-			_data = new Data();
-			VisualiserController visualiserController = new VisualiserController(_data);
-			_listeners = new ArrayList<ScheduleListener>();
-			_listeners.add(visualiserController);
+			_visualiserController = new VisualiserController();
+			setUpTimer();
 		}
+	}
+	private void setUpTimer() {
+		action = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (timerCount == 0) {
+					Schedule schedule = _openSchedules.peek();
+					_visualiserController.update(schedule, false, _openSchedules.size()+_closedSchedules.size());
+				} else {
+					timerCount--;
+				}
+			}
+		};
+		_timer = new Timer(1, action);
+		_timer.setInitialDelay(0);
+		_timer.start();
 	}
 
 	/**
@@ -62,18 +84,15 @@ public class ParallelisedScheduler {
 	 * @throws Exception
 	 */
 	public Schedule getOptimalSchedule() {
+		this.addRootVerticesSchedulesToOpenSchedule();
+		_stopWatch.start();
+		Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 		if (_visualisation) {
-			_data.setStartTime();
-			this.addRootVerticesSchedulesToOpenSchedule();
-			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
-			_data.isFinished(true);
-			fireScheduleChangeEvent();
-			return optimalSchedule;			
-		} else {
-			this.addRootVerticesSchedulesToOpenSchedule();
-			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
-			return optimalSchedule;						
+			_timer.stop();
+			_visualiserController.update(optimalSchedule, true, _openSchedules.size()+_closedSchedules.size());
 		}
+		_stopWatch.stop();
+		return optimalSchedule;						
 	}
 
 	/**
@@ -108,11 +127,6 @@ public class ParallelisedScheduler {
 	}
 	private void searchAndExpand() {
 		Schedule currentSchedule = _openSchedules.poll();
-		if (_visualisation) {
-			_data.updateTotalNumberOfCreatedSchedules(_openSchedules.size()+_closedSchedules.size());
-			_data.updateCurrentSchedule(currentSchedule);
-			fireScheduleChangeEvent();
-		}
 		_closedSchedules.add(currentSchedule);
 		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
 			_finalSchedule.add(currentSchedule);
@@ -243,9 +257,5 @@ public class ParallelisedScheduler {
 			_openSchedules.add(rootSchedules[0]);
 		}
 	}
-	private void fireScheduleChangeEvent() {
-		for (ScheduleListener listener : _listeners) {
-			listener.update();
-		}
-	}
+
 }
