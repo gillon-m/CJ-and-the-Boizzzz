@@ -1,8 +1,10 @@
 package data;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import graph.Graph;
+import graph.Vertex;
 import scheduler.Schedule;
 
 /**
@@ -18,7 +20,8 @@ public class Data {
 	private long _endTime;
 	private Graph _graph;
 	private static Data _data = new Data();
-	private ConcurrentLinkedQueue<Schedule> _concurrentSchedules = new ConcurrentLinkedQueue<Schedule>();
+	private ConcurrentLinkedQueue<Schedule> _allSchedules = new ConcurrentLinkedQueue<Schedule>();
+	private Schedule _bestSchedule;
 	
 	private Data(){
 	}
@@ -52,11 +55,14 @@ public class Data {
 	 * @return current schedule
 	 */
 	public Schedule getCurrentSchedule() {
-		return _concurrentSchedules.peek();
+		return _allSchedules.peek();
 	}
 	
+	/**
+	 * Clears the schedule in the schedule list
+	 */
 	public void clearSchedules(){
-		_concurrentSchedules.clear();
+		_allSchedules.clear();
 	}
 	
 	/**
@@ -115,10 +121,35 @@ public class Data {
 	}
 	
 	/**
-	 * Adds a schedule to the list of concurectSchedules
+	 * Adds the current schedule to the list of concurectSchedules. Determines which schedule is the best
 	 * @param The currentSchedule
 	 */
-	public void addSchedules(Schedule s){
-		_concurrentSchedules.add(s);
+	public void addSchedules(Schedule currentSchedule){
+		_allSchedules.add(currentSchedule);
+		if(_bestSchedule==null){
+			_bestSchedule=currentSchedule;
+		}
+		else{
+			List<Vertex> currentScheduleVertices = currentSchedule.getAllUsedVerticesWithoutEmpty();
+			List<Vertex> bestScheduleVertices = _bestSchedule.getAllUsedVerticesWithoutEmpty();
+			int currentScheduleTime = currentSchedule.getTimeOfSchedule();
+			int bestScheduleTime=_bestSchedule.getTimeOfSchedule();
+			if(currentScheduleVertices.size()>bestScheduleVertices.size()){
+				_bestSchedule=currentSchedule;
+			}
+			else if(currentScheduleVertices.size()==bestScheduleVertices.size()){
+				if(currentSchedule.getTimeOfSchedule()<_bestSchedule.getTimeOfSchedule()){
+					_bestSchedule=currentSchedule;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns the most completed schedule with the fastest time
+	 * @return Schedule with the most completed nodes and fastest time
+	 */
+	public Schedule getBestSchedule() {
+		return _bestSchedule;
 	}
 }

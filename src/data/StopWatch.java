@@ -22,7 +22,6 @@ public class StopWatch extends Timer{
 	private TimerTask _timerTask;
 	private long _currentTime;
 	private long _startTime;
-	private Timer _timer;
 	private static StopWatch _stopWatch=new StopWatch();
 
 	private StopWatch(){
@@ -35,7 +34,7 @@ public class StopWatch extends Timer{
 		_calendar.set(Calendar.MINUTE, 0);
 		_calendar.set(Calendar.HOUR_OF_DAY, 10);
 	}
-	
+
 	/**
 	 * Returns the singleton StopWatch instance
 	 * @return StopWatch instance
@@ -43,11 +42,11 @@ public class StopWatch extends Timer{
 	public static StopWatch getInstance(){
 		return _stopWatch;
 	}
-	
+
 	/**
 	 * Start the timer
 	 */
-	public void startTimer(){
+	public void start(){
 		_startTime = System.currentTimeMillis();
 		_timerTask = new TimerTask() {
 			@Override
@@ -56,14 +55,7 @@ public class StopWatch extends Timer{
 					SwingUtilities.invokeAndWait(new Runnable() {
 						@Override
 						public void run() {
-							//if(!_isFinished){ //check is the scheduler has finished
-								_currentTime=System.currentTimeMillis();	
-								System.out.println(getElapsedTime());
-							//}
-							//else{ //stop timer when scheduler has finished
-							//	cancel();
-							//	purge();
-							//}
+							_currentTime=System.currentTimeMillis();	
 						}
 					});
 				} catch (InvocationTargetException | InterruptedException e) {
@@ -73,15 +65,15 @@ public class StopWatch extends Timer{
 		};
 		scheduleAtFixedRate(_timerTask, 1, 1); //invoke timer every millisecond	
 	}
-	
+
 	/**
 	 * Stops the timer
 	 */
 	public void stop(){
-		_timer.cancel();
-		_timer.purge();
+		cancel();
+		purge();
 	}
-	
+
 	/**
 	 * Returns the time elapsed to the nearest millisecond
 	 * @return Formatted string of the time elapsed

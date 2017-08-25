@@ -19,6 +19,7 @@ import org.graphstream.ui.view.Viewer;
 import data.Data;
 import data.StopWatch;
 import graph.Vertex;
+import scheduler.Schedule;
 
 /**
  * VisualiserController controls the information displayed on the GUI from the scheduling algorithm
@@ -32,6 +33,7 @@ public class VisualiserController implements ScheduleListener{
 	private Timer _timer;
 	private org.graphstream.graph.Graph _taskGraph;
 	private StopWatch _stopWatch;
+	private Schedule _currentSchedule;
 
 	/**
 	 * Timer task object used to track the total elapsed time
@@ -119,7 +121,7 @@ public class VisualiserController implements ScheduleListener{
 			n.addAttribute("ui.style", "fill-color: grey; size: 20px, 20px;");
 		}
 
-		List<Vertex> allUsedVertices = _data.getCurrentSchedule().getAllUsedVertices();
+		List<Vertex> allUsedVertices = _currentSchedule.getAllUsedVertices();
 		for(Vertex v: allUsedVertices){
 			if(!v.getName().equals("-")){//check if imaginary node
 				Node node = _taskGraph.getNode(v.getName());
@@ -127,25 +129,42 @@ public class VisualiserController implements ScheduleListener{
 			}
 		}
 
-		String lastUsedVertexName = _data.getCurrentSchedule().getLastUsedVertex().getName();
+		String lastUsedVertexName = _currentSchedule.getLastUsedVertex().getName();
 		if(!lastUsedVertexName.equals("-")){//check if imaginary node
 			Node lastUsedNode = _taskGraph.getNode(lastUsedVertexName);
 			lastUsedNode.addAttribute("ui.style", "fill-color: red; size: 20px, 20px;");
-			if(_data.isFinished()){
-				lastUsedNode.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
-			}
+		}
+
+	}
+
+	private void displaySchedule(){
+		Schedule bestSchedule = _data.getBestSchedule();
+		_visualiser.schedulerText.setText("Vertex = " +bestSchedule.getLastUsedVertex().getName() + 
+				"\t|Time Taken = " + bestSchedule.getTimeOfSchedule() + "\n" + bestSchedule.toString());
+
+	}
+
+	private void finishAllNodes(){
+		for( Node n : _taskGraph.getEachNode() ){
+			n.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 		}
 	}
 	@Override
 	public void update() {
-		_visualiser.schedulerText.setText("Vertex = " +_data.getCurrentSchedule().getLastUsedVertex().getName() + 
-				"\t|Time Taken = " + _data.getCurrentSchedule().getTimeOfSchedule() + "\n" + _data.getCurrentSchedule().toString());
+		_currentSchedule=_data.getCurrentSchedule();
+		if(_currentSchedule!=null){
+			displaySchedule();
+			updateNodeColour();
+		}
+		else{
+			finishAllNodes();
+		}
 		//update count
 		_visualiser.scheduleCountLabel.setText("Schedules created: "+_data.getTotalNumberOfCreatedSchedules());
 		//update time
 		_visualiser.timeElapsedLabel.setText("Time Elapsed: "+_stopWatch.getElapsedTime());
 		//update node checked
-		updateNodeColour();
+		
 		_data.clearSchedules();
 	}
 }

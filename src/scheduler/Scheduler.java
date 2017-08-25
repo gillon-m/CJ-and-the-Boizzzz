@@ -66,7 +66,7 @@ public class Scheduler {
 	 */
 	public Schedule getOptimalSchedule() {
 		if (_visualisation) {
-			_stopWatch.startTimer();
+			_stopWatch.start();
 			this.addRootVerticesSchedulesToOpenSchedule();
 			Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();
 			_stopWatch.stop();
