@@ -75,7 +75,7 @@ public class TaskScheduler {
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
-		//Temporary check for the output
+		//Print output to command line
 		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
 							+"\n"+ s.toString();
 		System.out.println(output);

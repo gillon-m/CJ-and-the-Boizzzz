@@ -15,7 +15,7 @@ import scheduler.Schedule;
 
 /**
  * VisualiserController controls the information displayed on the GUI from the scheduling algorithm
- * @author Gillon Manalastas
+ * @author Gillon Manalastas, Brad Miller
  */
 public class VisualiserController{
 	private Visualiser _visualiser;
@@ -25,6 +25,8 @@ public class VisualiserController{
 	private Schedule _currentSchedule;
 	private Schedule _bestSchedule;
 	private LineChart _lineChart;
+	private GanttChart _ganttChart;
+	private boolean firstSchedule = true;
 	
 	public VisualiserController(){
 		_visualiser = new Visualiser();
@@ -100,7 +102,14 @@ public class VisualiserController{
 	private void displaySchedule() {
 		
 		_visualiser.schedulerText.setText("Number of vertices used = " +_bestSchedule.getAllUsedVerticesWithoutEmpty().size() + 
-				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());				
+				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());
+		
+		if (firstSchedule) {
+			_ganttChart = new GanttChart();
+			firstSchedule = false;
+		}
+		
+		_ganttChart.actionPerformed();
 	}
 	public void update(boolean isOptimal) {
 		_currentSchedule=_data.getCurrentSchedule();
@@ -110,8 +119,8 @@ public class VisualiserController{
 				finishAllNodes();
 			} else {
 				updateNodeColour();
-				displaySchedule();
 			}
+			displaySchedule();
 		}
 		//update timer
 		_visualiser.timeElapsedLabel.setText(_stopWatch.getElapsedTime());

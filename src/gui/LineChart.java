@@ -78,7 +78,7 @@ public class LineChart {
 
 	public void actionPerformed () {
 		int totalCreated = _data.getTotalNumberOfCreatedSchedules();
-		this.series.add(new Millisecond(), totalCreated);
+		this.series.addOrUpdate(new Millisecond(), totalCreated);
 	}
 	
 	public ChartPanel getChart(){
