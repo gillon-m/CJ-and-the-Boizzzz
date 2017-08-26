@@ -45,7 +45,8 @@ public class GanttChart {
 		TaskSeriesCollection collection = new TaskSeriesCollection();
 		
     	for (int i = 0; i < _numProcessors; i++) {
-    		Processor processor = _data.getCurrentSchedule().getProcessor(i);
+//    		Processor processor = _data.getCurrentSchedule().getProcessor(i);
+    		Processor processor = _data.getBestSchedule().getProcessor(i);
     		TaskSeries taskSeries = new TaskSeries("Processor " + i);
     		
     		Task task = new Task("Processor " + i, new SimpleTimePeriod(0,processor.getLatestTime()));
