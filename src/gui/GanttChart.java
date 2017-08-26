@@ -46,18 +46,19 @@ public class GanttChart {
 		
     	for (int i = 0; i < _numProcessors; i++) {
     		Processor processor = _data.getCurrentSchedule().getProcessor(i);
-    		TaskSeries taskSeries = new TaskSeries("ProcessorTask " + i);
+    		TaskSeries taskSeries = new TaskSeries("Processor " + i);
     		
     		Task task = new Task("Processor " + i, new SimpleTimePeriod(0,processor.getLatestTime()));
     		int timeTakenForProcessor = 0;
     		for (Vertex v : processor.getScheduleOfProcessor()) {
     			if (!v.getName().equals("-")) {
-    				Task subTask = new Task(v.getName(), new SimpleTimePeriod(timeTakenForProcessor,timeTakenForProcessor + v.getWeight()));
-    				task.addSubtask(subTask);
+    				Task subTask = new Task("Task " + v.getName(), new SimpleTimePeriod(timeTakenForProcessor,timeTakenForProcessor + v.getWeight()));
+    				//task.addSubtask(subTask);
+    				taskSeries.add(subTask);
     			}
     			timeTakenForProcessor += v.getWeight();
     		}
-    		taskSeries.add(task);
+    		//taskSeries.add(task);
     		collection.add(taskSeries);
     	}
     	
@@ -72,7 +73,7 @@ public class GanttChart {
     	TaskSeriesCollection collection = new TaskSeriesCollection();
     	
     	for (int i = 0; i < _numProcessors; i++) {
-    		TaskSeries taskSeries = new TaskSeries("ProcessorTask " + i);
+    		TaskSeries taskSeries = new TaskSeries("Processor " + i);
     		Task task = new Task("Processor " + i, new SimpleTimePeriod(0,0));
     		taskSeries.add(task);
     		collection.add(taskSeries);
@@ -87,7 +88,7 @@ public class GanttChart {
      * @return JFreeChart
      */
     private JFreeChart createChart(final TaskSeriesCollection dataset) {
-        final JFreeChart chart = ChartFactory.createGanttChart("Current Schedule", "Processor", "Time", dataset, false, true, false);
+        final JFreeChart chart = ChartFactory.createGanttChart("Current Schedule", "Tasks", "Time", dataset, true, true, false);
         CategoryPlot plot = chart.getCategoryPlot();
         DateAxis axis = (DateAxis) plot.getRangeAxis();
         axis.setDateFormatOverride(new SimpleDateFormat("S"));

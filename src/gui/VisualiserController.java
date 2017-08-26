@@ -100,10 +100,7 @@ public class VisualiserController{
 	}
 	
 	private void displaySchedule() {
-		
-		_visualiser.schedulerText.setText("Number of vertices used = " +_bestSchedule.getAllUsedVerticesWithoutEmpty().size() + 
-				"\n|Time Taken = " + _bestSchedule.getTimeOfSchedule() + "\n" + _bestSchedule.toString());
-		
+
 		if (firstSchedule) {
 			_ganttChart = new GanttChart();
 			firstSchedule = false;

@@ -13,7 +13,6 @@ import java.awt.GridLayout;
 
 @SuppressWarnings("serial")
 public class Visualiser extends JFrame {
-	JTextArea schedulerText = new JTextArea("0");
 	JLabel timeElapsedLabel = new JLabel("",SwingConstants.RIGHT);
 	JLabel scheduleCountLabel = new JLabel("",SwingConstants.RIGHT);
 	JPanel schedulePanel = new JPanel();
@@ -54,8 +53,6 @@ public class Visualiser extends JFrame {
 		
 		textPanel.add(timeElapsedHeaderLabel);
 		textPanel.add(timeElapsedLabel);
-		schedulerText.setBounds(317, 22, 273, 517);
-		getContentPane().add(schedulerText);
 		
 		setSize(633,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
