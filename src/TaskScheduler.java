@@ -1,6 +1,4 @@
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import fileManager.*;
 import graph.Graph;
@@ -30,7 +28,6 @@ public class TaskScheduler {
 	int _noOfProcessors;
 	int _noOfCores = -1; // by default number of cores is not set = it is sequential.
 	boolean _visualisation = false; // by default visualisation is off
-	Path _filepath = null; 
 	StopWatch _stopWatch;
 	
 	/**
@@ -45,8 +42,7 @@ public class TaskScheduler {
 	public TaskScheduler(String[] args) throws Exception{
 		_stopWatch=StopWatch.getInstance();
 		parseArguments(args);
-		startExecution();
-		//confirmOptionsAndExecute();
+		confirmOptionsAndExecute();
 
 	}
 	/**
@@ -57,28 +53,15 @@ public class TaskScheduler {
 	 * @throws Exception 
 	 */
 	private void startExecution() throws Exception {
-		//InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
-
-		Path currentRelativePath = Paths.get("");
-		Path currentDir = currentRelativePath.toAbsolutePath(); // <-- Get the Path and use resolve on it.		
-		String filename = "input" + File.separatorChar + _inputFileName;
-		_filepath = currentDir.resolve(filename);
-		InputReader ir = new InputReader(_filepath.toString());
-
+		InputReader ir = new InputReader(_inputFileName); //input file must be in same directory as jar file
 		Graph graph = ir.readFile();
 		graph.setUpForMakingSchedules();
 		ParallelisedScheduler scheduler = new ParallelisedScheduler(_noOfProcessors, _noOfCores, _visualisation);
-		//Scheduler scheduler = new Scheduler(_noOfProcessors, _noOfCores, _visualisation);	
 		_stopWatch.start();
 		Schedule s = scheduler.getOptimalSchedule();
 		_stopWatch.stop();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
-		ow.writeToFile();
-		
-//		//Print output to command line
-//		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
-//							+"\n"+ s.toString();
-//		System.out.println(output);
+		ow.writeToFile();		
 	}
 	
 	/**
@@ -91,13 +74,7 @@ public class TaskScheduler {
 		try { // first argument is the file name. The output file name is determined by the input file name.
 			_inputFileName = args[0];
 			_outputFileName = _inputFileName.substring(0, _inputFileName.length()-4) + "-output.dot";
-			//FileReader fr = new FileReader(new File(_inputFileName)); // try to read input file to see if it exists
-			
-			Path currentRelativePath = Paths.get("");
-			Path currentDir = currentRelativePath.toAbsolutePath(); // <-- Get the Path and use resolve on it.		
-			String filename = "input" + File.separatorChar + _inputFileName;
-			_filepath = currentDir.resolve(filename);
-			FileReader fr = new FileReader(new File(_filepath.toString()));
+			FileReader fr = new FileReader(new File(_inputFileName)); // try to read input file to see if it exists			
 		} catch (ArrayIndexOutOfBoundsException e){ // when the argument is not given
 			System.out.println(FILENAME_NOT_GIVEN);
 			System.exit(0);

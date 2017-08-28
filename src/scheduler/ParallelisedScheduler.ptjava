@@ -36,7 +36,7 @@ public class ParallelisedScheduler {
 	private PriorityBlockingQueue<Schedule> _openSchedules;
 	private ConcurrentLinkedQueue<Schedule> _closedSchedules;
 	private List<Schedule> _partialExpanded;
-	private List<Schedule> _finalSchedule;
+	private PriorityBlockingQueue<Schedule> _finalSchedules;
 	private int _upperBoundCost;
 	private int _numberOfCores;
 	private boolean _visualisation;
@@ -47,15 +47,16 @@ public class ParallelisedScheduler {
 	private Data _data;
 	
 	public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {
-		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());
-		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
-		_partialExpanded = new ArrayList<Schedule>();
-		_finalSchedule = new ArrayList<Schedule>();
 		_numberOfProcessors = numberOfProcessors;
 		_numberOfCores = numberOfCores;
+		_visualisation = visualisation;
+		ScheduleComparator comparator = new ScheduleComparator();
+		_openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), comparator);
+		_closedSchedules = new ConcurrentLinkedQueue<Schedule>();
+		_partialExpanded = new ArrayList<Schedule>();
 		ListScheduling ls = new ListScheduling(_numberOfProcessors);
 		_upperBoundCost = ls.getUpperBoundCostFunction();
-		_visualisation = visualisation;
+		_finalSchedules = new PriorityBlockingQueue<Schedule>(1, comparator);
 		if (_visualisation) {
 			_data=Data.getInstance();
 			_visualiserController = new VisualiserController();
@@ -113,15 +114,15 @@ public class ParallelisedScheduler {
 	 */
 	private Schedule makeSchedulesUsingAlgorithm() {
 		if (_numberOfCores == -1) { // if parallelisation is off 
-			while (_finalSchedule.isEmpty()) {
+			while (_finalSchedules.isEmpty()) {
 				searchAndExpand();
 			}
-			return _finalSchedule.get(0);
+			return _finalSchedules.poll();
 		} else { 
-			while(_finalSchedule.isEmpty() && (_openSchedules.size() < _numberOfCores)) {
+			while((_finalSchedules.size() < _numberOfCores) && (_openSchedules.size() < _numberOfCores)) {
 				searchAndExpand();
 			}
-			if (_finalSchedule.isEmpty()) {
+			if (_finalSchedules.size() < _numberOfCores) {
 				TaskIDGroup g = paralleliseSearch(_openSchedules);
 		        try {
 					g.waitTillFinished();
@@ -131,7 +132,7 @@ public class ParallelisedScheduler {
 					e.printStackTrace();
 				}			
 			}
-	        return _finalSchedule.get(0);			
+	        return _finalSchedules.poll();			
 		}
 	}
 	
@@ -146,7 +147,8 @@ public class ParallelisedScheduler {
 		Schedule currentSchedule = _openSchedules.poll();
 		_closedSchedules.add(currentSchedule);
 		if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) {
-			_finalSchedule.add(currentSchedule);
+			_finalSchedules.add(currentSchedule);
+			return;
 		}
 		this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);		
 	}
@@ -162,7 +164,7 @@ public class ParallelisedScheduler {
 	 * 
 	 */
 	TASK(_numberOfCores) private void paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {
-		while (_finalSchedule.isEmpty()) {
+		while (_finalSchedules.size() < _numberOfCores) {
 			searchAndExpand();
 		}
 	}

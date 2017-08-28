@@ -60,7 +60,7 @@ public class ParallelisedScheduler {//####[34]####
 //####[38]####
     private List<Schedule> _partialExpanded;//####[38]####
 //####[39]####
-    private List<Schedule> _finalSchedule;//####[39]####
+    private PriorityBlockingQueue<Schedule> _finalSchedules;//####[39]####
 //####[40]####
     private int _upperBoundCost;//####[40]####
 //####[41]####
@@ -79,131 +79,133 @@ public class ParallelisedScheduler {//####[34]####
     private Data _data;//####[47]####
 //####[49]####
     public ParallelisedScheduler(int numberOfProcessors, int numberOfCores, boolean visualisation) {//####[49]####
-        _openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), new ScheduleComparator());//####[50]####
-        _closedSchedules = new ConcurrentLinkedQueue<Schedule>();//####[51]####
-        _partialExpanded = new ArrayList<Schedule>();//####[52]####
-        _finalSchedule = new ArrayList<Schedule>();//####[53]####
-        _numberOfProcessors = numberOfProcessors;//####[54]####
-        _numberOfCores = numberOfCores;//####[55]####
-        ListScheduling ls = new ListScheduling(_numberOfProcessors);//####[56]####
-        _upperBoundCost = ls.getUpperBoundCostFunction();//####[57]####
-        _visualisation = visualisation;//####[58]####
-        if (_visualisation) //####[59]####
-        {//####[59]####
-            _data = Data.getInstance();//####[60]####
-            _visualiserController = new VisualiserController();//####[61]####
-            setUpTimer();//####[62]####
-        }//####[63]####
-    }//####[64]####
-//####[72]####
+        _numberOfProcessors = numberOfProcessors;//####[50]####
+        _numberOfCores = numberOfCores;//####[51]####
+        _visualisation = visualisation;//####[52]####
+        ScheduleComparator comparator = new ScheduleComparator();//####[53]####
+        _openSchedules = new PriorityBlockingQueue<Schedule>(Graph.getInstance().getVertices().size(), comparator);//####[54]####
+        _closedSchedules = new ConcurrentLinkedQueue<Schedule>();//####[55]####
+        _partialExpanded = new ArrayList<Schedule>();//####[56]####
+        ListScheduling ls = new ListScheduling(_numberOfProcessors);//####[57]####
+        _upperBoundCost = ls.getUpperBoundCostFunction();//####[58]####
+        _finalSchedules = new PriorityBlockingQueue<Schedule>(1, comparator);//####[59]####
+        if (_visualisation) //####[60]####
+        {//####[60]####
+            _data = Data.getInstance();//####[61]####
+            _visualiserController = new VisualiserController();//####[62]####
+            setUpTimer();//####[63]####
+        }//####[64]####
+    }//####[65]####
+//####[73]####
     /**
 	 * Sets up a timer that goes off every 1 millisecond for GUI update.
 	 * When the timer goes off, the current head of the open schedules list is passed to the GUI components
 	 * so that GUI updates with the new changes. Data object stores the information about the update 
 	 * and visualiser controller fires update call to update GUI.
-	 *///####[72]####
-    private void setUpTimer() {//####[72]####
-        action = new ActionListener() {//####[72]####
-//####[74]####
-            public void actionPerformed(ActionEvent arg0) {//####[74]####
-                if (timerCount == 0) //####[75]####
-                {//####[75]####
-                    Schedule schedule = _openSchedules.peek();//####[76]####
-                    _data.setCurrentSchedule(schedule);//####[77]####
-                    _data.updateTotalNumberOfCreatedSchedules(_openSchedules.size() + _closedSchedules.size());//####[78]####
-                    _visualiserController.update(false);//####[79]####
-                } else {//####[80]####
-                    timerCount--;//####[81]####
-                }//####[82]####
-            }//####[83]####
-        };//####[83]####
-        _timer = new Timer(1, action);//####[85]####
-        _timer.setInitialDelay(0);//####[86]####
-        _timer.start();//####[87]####
-    }//####[88]####
-//####[95]####
+	 *///####[73]####
+    private void setUpTimer() {//####[73]####
+        action = new ActionListener() {//####[73]####
+//####[75]####
+            public void actionPerformed(ActionEvent arg0) {//####[75]####
+                if (timerCount == 0) //####[76]####
+                {//####[76]####
+                    Schedule schedule = _openSchedules.peek();//####[77]####
+                    _data.setCurrentSchedule(schedule);//####[78]####
+                    _data.updateTotalNumberOfCreatedSchedules(_openSchedules.size() + _closedSchedules.size());//####[79]####
+                    _visualiserController.update(false);//####[80]####
+                } else {//####[81]####
+                    timerCount--;//####[82]####
+                }//####[83]####
+            }//####[84]####
+        };//####[84]####
+        _timer = new Timer(1, action);//####[86]####
+        _timer.setInitialDelay(0);//####[87]####
+        _timer.start();//####[88]####
+    }//####[89]####
+//####[96]####
     /**
 	 * This method returns the optimal schedule
 	 * @return void
 	 * @throws Exception
-	 *///####[95]####
-    public Schedule getOptimalSchedule() {//####[95]####
-        this.addRootVerticesSchedulesToOpenSchedule();//####[96]####
-        Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();//####[97]####
-        if (_visualisation) //####[98]####
-        {//####[98]####
-            _timer.stop();//####[99]####
-            _data.setCurrentSchedule(optimalSchedule);//####[100]####
-            _data.updateTotalNumberOfCreatedSchedules(_openSchedules.size() + _closedSchedules.size());//####[101]####
-            _visualiserController.update(true);//####[102]####
-        }//####[103]####
-        return optimalSchedule;//####[104]####
-    }//####[105]####
-//####[114]####
+	 *///####[96]####
+    public Schedule getOptimalSchedule() {//####[96]####
+        this.addRootVerticesSchedulesToOpenSchedule();//####[97]####
+        Schedule optimalSchedule = this.makeSchedulesUsingAlgorithm();//####[98]####
+        if (_visualisation) //####[99]####
+        {//####[99]####
+            _timer.stop();//####[100]####
+            _data.setCurrentSchedule(optimalSchedule);//####[101]####
+            _data.updateTotalNumberOfCreatedSchedules(_openSchedules.size() + _closedSchedules.size());//####[102]####
+            _visualiserController.update(true);//####[103]####
+        }//####[104]####
+        return optimalSchedule;//####[105]####
+    }//####[106]####
+//####[115]####
     /**
 	 * This method uses the A* algorithm to create schedules 
 	 * It only returns back once it finds an optimal schedule
 	 * It throws an exception if the openschedule queue is empty because that is not suppose to happen
 	 * 
 	 * @return optimal schedule
-	 *///####[114]####
-    private Schedule makeSchedulesUsingAlgorithm() {//####[114]####
-        if (_numberOfCores == -1) //####[115]####
-        {//####[115]####
-            while (_finalSchedule.isEmpty()) //####[116]####
-            {//####[116]####
-                searchAndExpand();//####[117]####
-            }//####[118]####
-            return _finalSchedule.get(0);//####[119]####
-        } else {//####[120]####
-            while (_finalSchedule.isEmpty() && (_openSchedules.size() < _numberOfCores)) //####[121]####
-            {//####[121]####
-                searchAndExpand();//####[122]####
-            }//####[123]####
-            if (_finalSchedule.isEmpty()) //####[124]####
-            {//####[124]####
-                TaskIDGroup g = paralleliseSearch(_openSchedules);//####[125]####
-                try {//####[126]####
-                    g.waitTillFinished();//####[127]####
-                } catch (ExecutionException e) {//####[128]####
-                    e.printStackTrace();//####[129]####
-                } catch (InterruptedException e) {//####[130]####
-                    e.printStackTrace();//####[131]####
-                }//####[132]####
-            }//####[133]####
-            return _finalSchedule.get(0);//####[134]####
-        }//####[135]####
-    }//####[136]####
-//####[145]####
+	 *///####[115]####
+    private Schedule makeSchedulesUsingAlgorithm() {//####[115]####
+        if (_numberOfCores == -1) //####[116]####
+        {//####[116]####
+            while (_finalSchedules.isEmpty()) //####[117]####
+            {//####[117]####
+                searchAndExpand();//####[118]####
+            }//####[119]####
+            return _finalSchedules.poll();//####[120]####
+        } else {//####[121]####
+            while ((_finalSchedules.size() < _numberOfCores) && (_openSchedules.size() < _numberOfCores)) //####[122]####
+            {//####[122]####
+                searchAndExpand();//####[123]####
+            }//####[124]####
+            if (_finalSchedules.size() < _numberOfCores) //####[125]####
+            {//####[125]####
+                TaskIDGroup g = paralleliseSearch(_openSchedules);//####[126]####
+                try {//####[127]####
+                    g.waitTillFinished();//####[128]####
+                } catch (ExecutionException e) {//####[129]####
+                    e.printStackTrace();//####[130]####
+                } catch (InterruptedException e) {//####[131]####
+                    e.printStackTrace();//####[132]####
+                }//####[133]####
+            }//####[134]####
+            return _finalSchedules.poll();//####[135]####
+        }//####[136]####
+    }//####[137]####
+//####[146]####
     /**
 	 * Gets the head of the priority queue and expands it to the children schedules.
 	 * If the optimal schedule is found, it stores it to the final schedule list.
 	 * if not found, the children schedules get added to the open schedules list 
 	 * if pass the conditions required.
 	 * 
-	 *///####[145]####
-    private void searchAndExpand() {//####[145]####
-        Schedule currentSchedule = _openSchedules.poll();//####[146]####
-        _closedSchedules.add(currentSchedule);//####[147]####
-        if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) //####[148]####
-        {//####[148]####
-            _finalSchedule.add(currentSchedule);//####[149]####
-        }//####[150]####
-        this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);//####[151]####
-    }//####[152]####
-//####[164]####
-    private static volatile Method __pt__paralleliseSearch_PriorityBlockingQueueSchedule_method = null;//####[164]####
-    private synchronized static void __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet() {//####[164]####
-        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[164]####
-            try {//####[164]####
-                __pt__paralleliseSearch_PriorityBlockingQueueSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__paralleliseSearch", new Class[] {//####[164]####
-                    PriorityBlockingQueue.class//####[164]####
-                });//####[164]####
-            } catch (Exception e) {//####[164]####
-                e.printStackTrace();//####[164]####
-            }//####[164]####
-        }//####[164]####
-    }//####[164]####
+	 *///####[146]####
+    private void searchAndExpand() {//####[146]####
+        Schedule currentSchedule = _openSchedules.poll();//####[147]####
+        _closedSchedules.add(currentSchedule);//####[148]####
+        if (this.hasScheduleUsedAllPossibleVertices(currentSchedule)) //####[149]####
+        {//####[149]####
+            _finalSchedules.add(currentSchedule);//####[150]####
+            return;//####[151]####
+        }//####[152]####
+        this.addCurrentSchedulePossibleSuccessorsToOpenSchedule(currentSchedule);//####[153]####
+    }//####[154]####
+//####[166]####
+    private static volatile Method __pt__paralleliseSearch_PriorityBlockingQueueSchedule_method = null;//####[166]####
+    private synchronized static void __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet() {//####[166]####
+        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[166]####
+            try {//####[166]####
+                __pt__paralleliseSearch_PriorityBlockingQueueSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__paralleliseSearch", new Class[] {//####[166]####
+                    PriorityBlockingQueue.class//####[166]####
+                });//####[166]####
+            } catch (Exception e) {//####[166]####
+                e.printStackTrace();//####[166]####
+            }//####[166]####
+        }//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -213,11 +215,11 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {//####[164]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[164]####
-        return paralleliseSearch(_openSchedules, new TaskInfo());//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {//####[166]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[166]####
+        return paralleliseSearch(_openSchedules, new TaskInfo());//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -227,17 +229,17 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules, TaskInfo taskinfo) {//####[164]####
-        // ensure Method variable is set//####[164]####
-        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[164]####
-            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[164]####
-        }//####[164]####
-        taskinfo.setParameters(_openSchedules);//####[164]####
-        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[164]####
-        taskinfo.setInstance(this);//####[164]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules, TaskInfo taskinfo) {//####[166]####
+        // ensure Method variable is set//####[166]####
+        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[166]####
+            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[166]####
+        }//####[166]####
+        taskinfo.setParameters(_openSchedules);//####[166]####
+        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[166]####
+        taskinfo.setInstance(this);//####[166]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -247,11 +249,11 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(TaskID<PriorityBlockingQueue<Schedule>> _openSchedules) {//####[164]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[164]####
-        return paralleliseSearch(_openSchedules, new TaskInfo());//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(TaskID<PriorityBlockingQueue<Schedule>> _openSchedules) {//####[166]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[166]####
+        return paralleliseSearch(_openSchedules, new TaskInfo());//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -261,19 +263,19 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(TaskID<PriorityBlockingQueue<Schedule>> _openSchedules, TaskInfo taskinfo) {//####[164]####
-        // ensure Method variable is set//####[164]####
-        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[164]####
-            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[164]####
-        }//####[164]####
-        taskinfo.setTaskIdArgIndexes(0);//####[164]####
-        taskinfo.addDependsOn(_openSchedules);//####[164]####
-        taskinfo.setParameters(_openSchedules);//####[164]####
-        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[164]####
-        taskinfo.setInstance(this);//####[164]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(TaskID<PriorityBlockingQueue<Schedule>> _openSchedules, TaskInfo taskinfo) {//####[166]####
+        // ensure Method variable is set//####[166]####
+        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[166]####
+            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[166]####
+        }//####[166]####
+        taskinfo.setTaskIdArgIndexes(0);//####[166]####
+        taskinfo.addDependsOn(_openSchedules);//####[166]####
+        taskinfo.setParameters(_openSchedules);//####[166]####
+        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[166]####
+        taskinfo.setInstance(this);//####[166]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -283,11 +285,11 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(BlockingQueue<PriorityBlockingQueue<Schedule>> _openSchedules) {//####[164]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[164]####
-        return paralleliseSearch(_openSchedules, new TaskInfo());//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(BlockingQueue<PriorityBlockingQueue<Schedule>> _openSchedules) {//####[166]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[166]####
+        return paralleliseSearch(_openSchedules, new TaskInfo());//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -297,19 +299,19 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    private TaskIDGroup<Void> paralleliseSearch(BlockingQueue<PriorityBlockingQueue<Schedule>> _openSchedules, TaskInfo taskinfo) {//####[164]####
-        // ensure Method variable is set//####[164]####
-        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[164]####
-            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[164]####
-        }//####[164]####
-        taskinfo.setQueueArgIndexes(0);//####[164]####
-        taskinfo.setIsPipeline(true);//####[164]####
-        taskinfo.setParameters(_openSchedules);//####[164]####
-        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[164]####
-        taskinfo.setInstance(this);//####[164]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[164]####
-    }//####[164]####
+	 *///####[166]####
+    private TaskIDGroup<Void> paralleliseSearch(BlockingQueue<PriorityBlockingQueue<Schedule>> _openSchedules, TaskInfo taskinfo) {//####[166]####
+        // ensure Method variable is set//####[166]####
+        if (__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method == null) {//####[166]####
+            __pt__paralleliseSearch_PriorityBlockingQueueSchedule_ensureMethodVarSet();//####[166]####
+        }//####[166]####
+        taskinfo.setQueueArgIndexes(0);//####[166]####
+        taskinfo.setIsPipeline(true);//####[166]####
+        taskinfo.setParameters(_openSchedules);//####[166]####
+        taskinfo.setMethod(__pt__paralleliseSearch_PriorityBlockingQueueSchedule_method);//####[166]####
+        taskinfo.setInstance(this);//####[166]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, _numberOfCores);//####[166]####
+    }//####[166]####
     /**
 	 * Parallelises searchAndExpand method to run a number of threads in execution.
 	 * _numberOfCores specifies the number of cores that user selected to use in parallel.
@@ -319,15 +321,15 @@ public class ParallelisedScheduler {//####[34]####
 	 * 
 	 * The search keeps running unless the optimal schedule is found.
 	 * 
-	 *///####[164]####
-    public void __pt__paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {//####[164]####
-        while (_finalSchedule.isEmpty()) //####[165]####
-        {//####[165]####
-            searchAndExpand();//####[166]####
-        }//####[167]####
-    }//####[168]####
-//####[168]####
-//####[178]####
+	 *///####[166]####
+    public void __pt__paralleliseSearch(PriorityBlockingQueue<Schedule> _openSchedules) {//####[166]####
+        while (_finalSchedules.size() < _numberOfCores) //####[167]####
+        {//####[167]####
+            searchAndExpand();//####[168]####
+        }//####[169]####
+    }//####[170]####
+//####[170]####
+//####[180]####
     /**
 	 * For the current schedule we are processing,
 	 * it tries to find successor schedules that are available
@@ -335,68 +337,68 @@ public class ParallelisedScheduler {//####[34]####
 	 * passes the conditions required 
 	 *
 	 * @param currentSchedule
-	 *///####[178]####
-    private void addCurrentSchedulePossibleSuccessorsToOpenSchedule(Schedule currentSchedule) {//####[178]####
-        List<Vertex> currentVertexSuccessors = currentSchedule.getChildVertices();//####[179]####
-        for (Vertex childVertex : currentVertexSuccessors) //####[180]####
-        {//####[180]####
-            Schedule currentScheduleCopy = new Schedule(currentSchedule);//####[182]####
-            Schedule[] currentChildVertexSchedules = new Schedule[_numberOfProcessors];//####[183]####
-            currentChildVertexSchedules = currentScheduleCopy.generateAllPossibleScheduleForSpecifiedVertex(childVertex);//####[185]####
-            CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();//####[187]####
-            int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);//####[188]####
-            if (_partialExpanded.contains(currentSchedule)) //####[190]####
-            {//####[190]####
-                for (int i = 0; i < _numberOfProcessors; i++) //####[191]####
-                {//####[191]####
-                    int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[192]####
-                    if (childScheduleCost <= _upperBoundCost) //####[194]####
-                    {//####[194]####
-                        if (parentScheduleCost > costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) //####[195]####
-                        {//####[195]####
-                            if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[196]####
-                            {//####[196]####
-                                _openSchedules.add(currentChildVertexSchedules[i]);//####[197]####
-                            }//####[198]####
-                        }//####[199]####
-                    }//####[200]####
-                }//####[201]####
-            } else {//####[202]####
-                boolean partialExpanded = false;//####[203]####
-                for (int i = 0; i < _numberOfProcessors; i++) //####[204]####
-                {//####[204]####
-                    int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[205]####
-                    if (parentScheduleCost >= childScheduleCost) //####[206]####
-                    {//####[206]####
-                        if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[207]####
-                        {//####[207]####
-                            _openSchedules.add(currentChildVertexSchedules[i]);//####[208]####
-                            partialExpanded = true;//####[209]####
-                        }//####[210]####
-                    }//####[211]####
-                }//####[212]####
-                if (!partialExpanded) //####[213]####
-                {//####[213]####
-                    for (int i = 0; i < _numberOfProcessors; i++) //####[214]####
-                    {//####[214]####
-                        int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[215]####
-                        if (childScheduleCost <= _upperBoundCost) //####[217]####
-                        {//####[217]####
-                            if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[218]####
-                            {//####[218]####
-                                _openSchedules.add(currentChildVertexSchedules[i]);//####[219]####
-                            }//####[220]####
-                        }//####[221]####
-                    }//####[222]####
-                } else {//####[223]####
-                    _openSchedules.add(currentSchedule);//####[224]####
-                    _closedSchedules.remove(currentSchedule);//####[225]####
-                    _partialExpanded.add(currentSchedule);//####[226]####
-                }//####[227]####
-            }//####[228]####
-        }//####[229]####
-    }//####[230]####
-//####[244]####
+	 *///####[180]####
+    private void addCurrentSchedulePossibleSuccessorsToOpenSchedule(Schedule currentSchedule) {//####[180]####
+        List<Vertex> currentVertexSuccessors = currentSchedule.getChildVertices();//####[181]####
+        for (Vertex childVertex : currentVertexSuccessors) //####[182]####
+        {//####[182]####
+            Schedule currentScheduleCopy = new Schedule(currentSchedule);//####[184]####
+            Schedule[] currentChildVertexSchedules = new Schedule[_numberOfProcessors];//####[185]####
+            currentChildVertexSchedules = currentScheduleCopy.generateAllPossibleScheduleForSpecifiedVertex(childVertex);//####[187]####
+            CostFunctionCalculator costFunctionCalculator = new CostFunctionCalculator();//####[189]####
+            int parentScheduleCost = costFunctionCalculator.getTotalCostFunction(currentSchedule);//####[190]####
+            if (_partialExpanded.contains(currentSchedule)) //####[192]####
+            {//####[192]####
+                for (int i = 0; i < _numberOfProcessors; i++) //####[193]####
+                {//####[193]####
+                    int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[194]####
+                    if (childScheduleCost <= _upperBoundCost) //####[196]####
+                    {//####[196]####
+                        if (parentScheduleCost > costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i])) //####[197]####
+                        {//####[197]####
+                            if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[198]####
+                            {//####[198]####
+                                _openSchedules.add(currentChildVertexSchedules[i]);//####[199]####
+                            }//####[200]####
+                        }//####[201]####
+                    }//####[202]####
+                }//####[203]####
+            } else {//####[204]####
+                boolean partialExpanded = false;//####[205]####
+                for (int i = 0; i < _numberOfProcessors; i++) //####[206]####
+                {//####[206]####
+                    int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[207]####
+                    if (parentScheduleCost >= childScheduleCost) //####[208]####
+                    {//####[208]####
+                        if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[209]####
+                        {//####[209]####
+                            _openSchedules.add(currentChildVertexSchedules[i]);//####[210]####
+                            partialExpanded = true;//####[211]####
+                        }//####[212]####
+                    }//####[213]####
+                }//####[214]####
+                if (!partialExpanded) //####[215]####
+                {//####[215]####
+                    for (int i = 0; i < _numberOfProcessors; i++) //####[216]####
+                    {//####[216]####
+                        int childScheduleCost = costFunctionCalculator.getTotalCostFunction(currentChildVertexSchedules[i]);//####[217]####
+                        if (childScheduleCost <= _upperBoundCost) //####[219]####
+                        {//####[219]####
+                            if (this.checkScheduleThroughPruning(currentChildVertexSchedules[i])) //####[220]####
+                            {//####[220]####
+                                _openSchedules.add(currentChildVertexSchedules[i]);//####[221]####
+                            }//####[222]####
+                        }//####[223]####
+                    }//####[224]####
+                } else {//####[225]####
+                    _openSchedules.add(currentSchedule);//####[226]####
+                    _closedSchedules.remove(currentSchedule);//####[227]####
+                    _partialExpanded.add(currentSchedule);//####[228]####
+                }//####[229]####
+            }//####[230]####
+        }//####[231]####
+    }//####[232]####
+//####[246]####
     /**
 	 * This method checks if the successor schedules have the conditions required to
 	 * get added into the openschedule.
@@ -408,16 +410,16 @@ public class ParallelisedScheduler {//####[34]####
 	 *
 	 * @param childSchedule
 	 * @return
-	 *///####[244]####
-    private boolean checkScheduleThroughPruning(Schedule childSchedule) {//####[244]####
-        Pruning pruning = new Pruning();//####[245]####
-        if (pruning.isCurrentScheduleNeeded(_openSchedules, _closedSchedules, childSchedule)) //####[246]####
-        {//####[246]####
-            return true;//####[247]####
-        }//####[248]####
-        return false;//####[249]####
-    }//####[251]####
-//####[261]####
+	 *///####[246]####
+    private boolean checkScheduleThroughPruning(Schedule childSchedule) {//####[246]####
+        Pruning pruning = new Pruning();//####[247]####
+        if (pruning.isCurrentScheduleNeeded(_openSchedules, _closedSchedules, childSchedule)) //####[248]####
+        {//####[248]####
+            return true;//####[249]####
+        }//####[250]####
+        return false;//####[251]####
+    }//####[253]####
+//####[263]####
     /**
 	 * This method checks if the current schedule is a finished schedule
 	 *
@@ -426,32 +428,32 @@ public class ParallelisedScheduler {//####[34]####
 	 *
 	 * @param currentSchedule
 	 * @return
-	 *///####[261]####
-    private boolean hasScheduleUsedAllPossibleVertices(Schedule currentSchedule) {//####[261]####
-        List<Vertex> currentScheduleUsedVertices = currentSchedule.getAllUsedVertices();//####[262]####
-        for (Vertex vertex : Graph.getInstance().getVertices()) //####[263]####
-        {//####[263]####
-            if (!currentScheduleUsedVertices.contains(vertex)) //####[264]####
-            {//####[264]####
-                return false;//####[265]####
-            }//####[266]####
-        }//####[267]####
-        return true;//####[268]####
-    }//####[269]####
-//####[278]####
+	 *///####[263]####
+    private boolean hasScheduleUsedAllPossibleVertices(Schedule currentSchedule) {//####[263]####
+        List<Vertex> currentScheduleUsedVertices = currentSchedule.getAllUsedVertices();//####[264]####
+        for (Vertex vertex : Graph.getInstance().getVertices()) //####[265]####
+        {//####[265]####
+            if (!currentScheduleUsedVertices.contains(vertex)) //####[266]####
+            {//####[266]####
+                return false;//####[267]####
+            }//####[268]####
+        }//####[269]####
+        return true;//####[270]####
+    }//####[271]####
+//####[280]####
     /**
 	 * This method adds root schedules to openschedules
 	 * since at the start of schedule the first _timerTask is the same no matter which processor
 	 * it is put on so only one variation of root schedule is added.
 	 *
-	 *///####[278]####
-    private void addRootVerticesSchedulesToOpenSchedule() {//####[278]####
-        for (Vertex rootVertex : Graph.getInstance().getRootVertices()) //####[279]####
-        {//####[279]####
-            Schedule emptySchedule = new Schedule(_numberOfProcessors);//####[280]####
-            Schedule[] rootSchedules = new Schedule[_numberOfProcessors];//####[281]####
-            rootSchedules = emptySchedule.generateAllPossibleScheduleForSpecifiedVertex(rootVertex);//####[283]####
-            _openSchedules.add(rootSchedules[0]);//####[285]####
-        }//####[286]####
-    }//####[287]####
-}//####[287]####
+	 *///####[280]####
+    private void addRootVerticesSchedulesToOpenSchedule() {//####[280]####
+        for (Vertex rootVertex : Graph.getInstance().getRootVertices()) //####[281]####
+        {//####[281]####
+            Schedule emptySchedule = new Schedule(_numberOfProcessors);//####[282]####
+            Schedule[] rootSchedules = new Schedule[_numberOfProcessors];//####[283]####
+            rootSchedules = emptySchedule.generateAllPossibleScheduleForSpecifiedVertex(rootVertex);//####[285]####
+            _openSchedules.add(rootSchedules[0]);//####[287]####
+        }//####[288]####
+    }//####[289]####
+}//####[289]####
