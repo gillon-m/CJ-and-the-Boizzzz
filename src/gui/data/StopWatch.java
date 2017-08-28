@@ -1,4 +1,4 @@
-package data;
+package gui.data;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;

@@ -2,9 +2,9 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import data.StopWatch;
 import fileManager.*;
 import graph.Graph;
+import gui.data.StopWatch;
 import scheduler.ParallelisedScheduler;
 import scheduler.Schedule;
 /**
@@ -75,10 +75,10 @@ public class TaskScheduler {
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
 		ow.writeToFile();
 		
-		//Print output to command line
-		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
-							+"\n"+ s.toString();
-		System.out.println(output);
+//		//Print output to command line
+//		String output = "Last Vertex = " + s.getLastUsedVertex().getName() +"\t|Time Taken = "+s.getTimeOfSchedule() + "\t|Note = - means empty\t|Format= Vertex:time"
+//							+"\n"+ s.toString();
+//		System.out.println(output);
 	}
 	
 	/**

@@ -8,9 +8,12 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
-import data.Data;
-import data.StopWatch;
 import graph.Vertex;
+import gui.chart.Chart;
+import gui.chart.GanttChart;
+import gui.chart.LineChart;
+import gui.data.Data;
+import gui.data.StopWatch;
 import scheduler.Schedule;
 
 /**
@@ -24,8 +27,8 @@ public class VisualiserController{
 	private Data _data;
 	private Schedule _currentSchedule;
 	private Schedule _bestSchedule;
-	private LineChart _lineChart;
-	private GanttChart _ganttChart;
+	private Chart _lineChart;
+	private Chart _ganttChart;
 	private boolean firstSchedule = true;
 	
 	public VisualiserController(){
@@ -106,7 +109,7 @@ public class VisualiserController{
 			firstSchedule = false;
 		}
 		
-		_ganttChart.actionPerformed();
+		_ganttChart.updateChart();
 		_visualiser.schedulePanel.add(_ganttChart.getChart(), BorderLayout.CENTER);
         _visualiser.schedulePanel.validate();
 	}
@@ -126,6 +129,6 @@ public class VisualiserController{
 		//update count
 		_visualiser.scheduleCountLabel.setText(""+_data.getTotalNumberOfCreatedSchedules());
 		//update line chart
-		_lineChart.actionPerformed();
+		_lineChart.updateChart();
 	}
 }

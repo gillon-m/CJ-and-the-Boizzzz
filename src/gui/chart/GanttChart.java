@@ -1,4 +1,4 @@
-package gui;
+package gui.chart;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,8 +16,8 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 
-import data.Data;
 import graph.Vertex;
+import gui.data.Data;
 import scheduler.Processor;
 
 /**
@@ -25,7 +25,7 @@ import scheduler.Processor;
  * @author Brad Miller
  *
  */
-public class GanttChart {
+public class GanttChart implements Chart{
 
 	private Data _data;
 	private int _numProcessors;
@@ -47,7 +47,6 @@ public class GanttChart {
 		TaskSeriesCollection collection = new TaskSeriesCollection();
 		
     	for (int i = 0; i < _numProcessors; i++) {
-//    		Processor processor = _data.getCurrentSchedule().getProcessor(i);
     		Processor processor = _data.getBestSchedule().getProcessor(i);
     		TaskSeries taskSeries = new TaskSeries("Processor " + i);
     		
@@ -56,12 +55,10 @@ public class GanttChart {
     		for (Vertex v : processor.getScheduleOfProcessor()) {
     			if (!v.getName().equals("-")) {
     				Task subTask = new Task("Task " + v.getName(), new SimpleTimePeriod(timeTakenForProcessor,timeTakenForProcessor + v.getWeight()));
-    				//task.addSubtask(subTask);
     				taskSeries.add(subTask);
     			}
     			timeTakenForProcessor += v.getWeight();
     		}
-    		//taskSeries.add(task);
     		collection.add(taskSeries);
     	}
     	
@@ -81,7 +78,6 @@ public class GanttChart {
     		taskSeries.add(task);
     		collection.add(taskSeries);
     	}
-    	
     	return collection;
     }
 
@@ -98,24 +94,24 @@ public class GanttChart {
 
         axis.setDateFormatOverride(new SimpleDateFormat("S"));
         
-        //Now set task colors to help distinguish tasks - Uncomment the following lines to use subtask coloring
-        //MyRenderer renderer = new MyRenderer(dataset);
-        //plot.setRenderer(renderer);
-        
         return chart;
     }
 	
     /**
-     * Called from VisualiserController to update current schedule
+     * @see Chart#updateChart()
      */
-	public void actionPerformed() {
+	public void updateChart() {
 		TaskSeriesCollection dataset = updateDataset();
 		createVisualSchedule(dataset);
 	}
 	
+	/**
+	 * @see Chart#getChart()
+	 */
 	public ChartPanel getChart(){
 		return _ganttChart;
 	}
+	
 	/**
 	 * Sets JFrame panel for schedule
 	 * @param dataset

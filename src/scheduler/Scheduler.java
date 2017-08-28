@@ -12,11 +12,11 @@ import javax.swing.Timer;
 import graph.Graph;
 import graph.Vertex;
 import gui.VisualiserController;
+import gui.data.Data;
 import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
-import data.Data;
 
 /**
  * This Class uses the Schedule Class and Processor Class

@@ -1,4 +1,4 @@
-package gui;
+package gui.chart;
 
 import java.awt.Color;
 
@@ -12,24 +12,16 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-import data.Data;
+import gui.data.Data;
 
 /**
- * An example to show how we can create a dynamic chart.
+ * LineChart represent a line chart that shows the total number of schedules created over time
  */
-public class LineChart {
-
-	/** The time series data. */
+public class LineChart implements Chart{
 	private TimeSeries series;
-	/** Timer to refresh graph after every 1/4th of a second */
 	private Data _data;
 	final ChartPanel chartPanel;
 
-	/**
-	 * Constructs a new dynamic chart application.
-	 *
-	 * @param title  the frame title.
-	 */	
 	public LineChart() {
 		_data=Data.getInstance();
 		this.series = new TimeSeries("Total schedule");
@@ -41,13 +33,11 @@ public class LineChart {
 	}
 	
 	/**
-	 * Creates a sample chart.
-	 *
-	 * @param dataset  the dataset.
-	 *
-	 * @return A sample chart.
+	 * Creates a line chart
+	 * @param dataset
+	 * @return Line chart
 	 */
-	public JFreeChart createChart(final XYDataset dataset) {
+	private  JFreeChart createChart(final XYDataset dataset) {
 		final JFreeChart lineChart = ChartFactory.createTimeSeriesChart(
 				"Schedules Created",
 				"Time",
@@ -75,12 +65,18 @@ public class LineChart {
 
 		return lineChart;
 	}
-
-	public void actionPerformed () {
+	
+	/**
+	 * @see Chart#updateChart()
+	 */
+	public void updateChart () {
 		int totalCreated = _data.getTotalNumberOfCreatedSchedules();
 		this.series.addOrUpdate(new Millisecond(), totalCreated);
 	}
 	
+	/**
+	 * @see Chart#getChart()
+	 */
 	public ChartPanel getChart(){
 		return chartPanel;
 	}
