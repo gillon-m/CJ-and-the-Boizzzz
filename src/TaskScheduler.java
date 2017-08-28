@@ -61,7 +61,9 @@ public class TaskScheduler {
 		Schedule s = scheduler.getOptimalSchedule();
 		_stopWatch.stop();
 		OutputWriter ow = new OutputWriter(_outputFileName, graph, s);
-		ow.writeToFile();		
+		ow.writeToFile();	
+		System.out.println("\n\nThe optimal schedule has been found!");
+		System.out.println("The output file is in the folder named 'output'.");
 	}
 	
 	/**
