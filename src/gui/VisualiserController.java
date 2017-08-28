@@ -27,17 +27,18 @@ public class VisualiserController{
 	private Data _data;
 	private Schedule _currentSchedule;
 	private Schedule _bestSchedule;
+	private Schedule _previousBestSchedule;
 	private Chart _lineChart;
 	private Chart _ganttChart;
 	private boolean firstSchedule = true;
-	
+
 	public VisualiserController(){
 		_visualiser = new Visualiser();
 		_data=Data.getInstance();
 		_stopWatch=StopWatch.getInstance();
 		_lineChart=new LineChart();
-        _visualiser.lineChartPanel.add(_lineChart.getChart(), BorderLayout.CENTER);
-        _visualiser.lineChartPanel.validate();
+		_visualiser.lineChartPanel.add(_lineChart.getChart(), BorderLayout.CENTER);
+		_visualiser.lineChartPanel.validate();
 		createGraphVisual();
 	}
 
@@ -101,17 +102,24 @@ public class VisualiserController{
 			n.addAttribute("ui.style", "fill-color: green; size: 20px, 20px;");
 		}
 	}
-	
+
 	private void displaySchedule() {
 
 		if (firstSchedule) {
 			_ganttChart = new GanttChart();
 			firstSchedule = false;
 		}
-		
-		_ganttChart.updateChart();
-		_visualiser.schedulePanel.add(_ganttChart.getChart(), BorderLayout.CENTER);
-        _visualiser.schedulePanel.validate();
+
+		if(_previousBestSchedule==null){
+			_previousBestSchedule=_bestSchedule;
+		}
+		else if(!_previousBestSchedule.equals(_bestSchedule)){
+			_ganttChart.updateChart();
+			_visualiser.schedulePanel.removeAll();
+			_visualiser.schedulePanel.add(_ganttChart.getChart(), BorderLayout.CENTER);
+			_visualiser.schedulePanel.validate();
+			_previousBestSchedule=_bestSchedule;
+		}
 	}
 	public void update(boolean isOptimal) {
 		_currentSchedule=_data.getCurrentSchedule();

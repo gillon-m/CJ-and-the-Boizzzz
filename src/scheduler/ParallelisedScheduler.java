@@ -10,11 +10,11 @@ import javax.swing.Timer;//####[10]####
 import graph.Graph;//####[12]####
 import graph.Vertex;//####[13]####
 import gui.VisualiserController;//####[14]####
-import gui.data.Data;
 import heuristics.CostFunctionCalculator;//####[15]####
 import pruning.ListScheduling;//####[16]####
 import pruning.Pruning;//####[17]####
 import components.ScheduleComparator;//####[18]####
+import gui.data.Data;//####[19]####
 //####[19]####
 //-- ParaTask related imports//####[19]####
 import pt.runtime.*;//####[19]####

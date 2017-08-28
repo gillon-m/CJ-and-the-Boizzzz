@@ -16,7 +16,7 @@ import heuristics.CostFunctionCalculator;
 import pruning.ListScheduling;
 import pruning.Pruning;
 import components.ScheduleComparator;
-import data.Data;
+import gui.data.Data;
 /**
  * This Class uses the Schedule Class and Processor Class
  * to make schedules using the information from the Graph Variable which
