@@ -112,6 +112,10 @@ public class VisualiserController{
 
 		if(_previousBestSchedule==null){
 			_previousBestSchedule=_bestSchedule;
+			_ganttChart.updateChart();
+			_visualiser.schedulePanel.removeAll();
+			_visualiser.schedulePanel.add(_ganttChart.getChart(), BorderLayout.CENTER);
+			_visualiser.schedulePanel.validate();
 		}
 		else if(!_previousBestSchedule.equals(_bestSchedule)){
 			_ganttChart.updateChart();
