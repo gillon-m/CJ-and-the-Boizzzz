@@ -29,19 +29,19 @@ public class Visualiser extends JFrame {
 		schedulePanel.setBackground(Color.WHITE);
 		
 		schedulePanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
-		schedulePanel.setBounds(317, 22, 273, 517);
+		schedulePanel.setBounds(26, 22, 594, 244);
 		getContentPane().add(schedulePanel);
-		schedulePanel.setLayout(null);
+		schedulePanel.setLayout(new BorderLayout(0,0));
 		taskGraphPanel.setBackground(Color.WHITE);
 		
 		taskGraphPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
-		taskGraphPanel.setBounds(26, 22, 254, 244);
+		taskGraphPanel.setBounds(340, 292, 280, 244);
 		getContentPane().add(taskGraphPanel);
 		taskGraphPanel.setLayout(new BorderLayout(0, 0));
 		lineChartPanel.setBackground(Color.WHITE);
 		
 		lineChartPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
-		lineChartPanel.setBounds(26, 292, 254, 244);
+		lineChartPanel.setBounds(26, 292, 280, 244);
 		lineChartPanel.setLayout(new BorderLayout(0, 0));
 		getContentPane().add(lineChartPanel);
 		textPanel.setBackground(Color.WHITE);
@@ -54,7 +54,7 @@ public class Visualiser extends JFrame {
 		textPanel.add(timeElapsedHeaderLabel);
 		textPanel.add(timeElapsedLabel);
 		
-		setSize(633,600);
+		setSize(650,600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}

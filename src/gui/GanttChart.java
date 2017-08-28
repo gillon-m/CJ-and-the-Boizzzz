@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JFrame;
@@ -29,6 +30,7 @@ public class GanttChart {
 	private Data _data;
 	private int _numProcessors;
 	private JFrame frame = new JFrame("Schedule");
+	private ChartPanel _ganttChart;
 	
 	public GanttChart() {
 		_data = Data.getInstance();
@@ -89,9 +91,11 @@ public class GanttChart {
      * @return JFreeChart
      */
     private JFreeChart createChart(final TaskSeriesCollection dataset) {
-        final JFreeChart chart = ChartFactory.createGanttChart("Current Schedule", "Tasks", "Time", dataset, true, true, false);
+        final JFreeChart chart = ChartFactory.createGanttChart("Best Current Schedule", "Tasks", "Time", dataset, true, true, false);
         CategoryPlot plot = chart.getCategoryPlot();
         DateAxis axis = (DateAxis) plot.getRangeAxis();
+		plot.setRangeGridlinesVisible(true);
+
         axis.setDateFormatOverride(new SimpleDateFormat("S"));
         
         //Now set task colors to help distinguish tasks - Uncomment the following lines to use subtask coloring
@@ -109,6 +113,9 @@ public class GanttChart {
 		createVisualSchedule(dataset);
 	}
 	
+	public ChartPanel getChart(){
+		return _ganttChart;
+	}
 	/**
 	 * Sets JFrame panel for schedule
 	 * @param dataset
@@ -117,10 +124,6 @@ public class GanttChart {
 		JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(chartPanel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setBounds(50, 50, 800, 400);
-        frame.setVisible(true);
+        _ganttChart=chartPanel;
 	}
 }

@@ -107,6 +107,8 @@ public class VisualiserController{
 		}
 		
 		_ganttChart.actionPerformed();
+		_visualiser.schedulePanel.add(_ganttChart.getChart(), BorderLayout.CENTER);
+        _visualiser.schedulePanel.validate();
 	}
 	public void update(boolean isOptimal) {
 		_currentSchedule=_data.getCurrentSchedule();

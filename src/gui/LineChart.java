@@ -50,8 +50,8 @@ public class LineChart {
 	public JFreeChart createChart(final XYDataset dataset) {
 		final JFreeChart lineChart = ChartFactory.createTimeSeriesChart(
 				"Schedules Created",
+				"Time",
 				"Schedules",
-				"Value",
 				dataset,
 				false,
 				true,
